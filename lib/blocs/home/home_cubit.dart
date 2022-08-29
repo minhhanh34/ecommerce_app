@@ -23,4 +23,9 @@ class HomeCubit extends Cubit<HomeState> {
   void accountTab() {
     emit(AccountState());
   }
+
+  void logout() {
+    emit(LoadingState());
+    emit(LogoutState());
+  }
 }

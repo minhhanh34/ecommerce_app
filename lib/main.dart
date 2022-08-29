@@ -1,10 +1,11 @@
 import 'package:ecommerce_app/blocs/home/home_cubit.dart';
 import 'package:ecommerce_app/firebase_options.dart';
-import 'package:ecommerce_app/screen/home_page.dart';
+import 'package:ecommerce_app/screen/login_page.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'blocs/login/login_cubit.dart';
@@ -13,6 +14,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.values.first);
   runApp(const EcommerceApp());
 }
 
@@ -32,7 +34,7 @@ class EcommerceApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: const HomePage(),
+        home: const LoginPage(),
       ),
     );
   }

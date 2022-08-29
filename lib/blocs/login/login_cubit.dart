@@ -2,30 +2,30 @@ import 'package:ecommerce_app/blocs/login/login_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 
-import '../../screen/home_page.dart';
-
 class LoginCubit extends Cubit<LoginState> {
-  LoginCubit() : super(SignInState());
-  // final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  // final accountController = TextEditingController();
-  // final passController = TextEditingController();
-  // final confirmPassword = TextEditingController();
+  LoginCubit(
+      {this.isLogin = true,
+      this.saveAcount = false,
+      this.isShowPassword = false})
+      : super(SignInState());
   // bool showPassword = false;
+  bool isLogin;
+  bool saveAcount;
+  bool isShowPassword;
 
-  bool isLogin = false;
+  void showHidePass() {
+    isShowPassword = !isShowPassword;
+    emit(SignInState());
+  }
 
-  bool saveAcount = false;
-
-  void showHidePass(bool showPassword) {
-    showPassword = !showPassword;
+  void setInitial() {
+    isLogin = true;
+    isShowPassword = false;
+    saveAcount = false;
     emit(SignInState());
   }
 
   void changeSignState() {
-    accountController.clear();
-    passController.clear();
-    confirmPassword.clear();
-    formKey.currentState!.reset();
     isLogin = !isLogin;
     if (isLogin) {
       emit(SignInState());
@@ -51,21 +51,17 @@ class LoginCubit extends Cubit<LoginState> {
     return null;
   }
 
-  void login(BuildContext context) {
-    bool result = formKey.currentState!.validate();
+  void login(GlobalKey<FormState> key) {
+    bool result = key.currentState!.validate();
     if (result) {
-      emit(LoginedState());
+      navToHome();
     }
   }
 
-  void navToHome(BuildContext context) {
+  void navToHome() {
     emit(SignLoadingState());
     Future.delayed(const Duration(seconds: 1), () {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (_) => const HomePage(),
-        ),
-      );
+      emit(LoginedState());
     });
   }
 

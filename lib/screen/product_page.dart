@@ -1,12 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:ecommerce_app/blocs/home/home_cubit.dart';
 import 'package:ecommerce_app/components/cart_icon.dart';
 import 'package:ecommerce_app/components/header_row.dart';
-import 'package:ecommerce_app/components/products_widget.dart';
 import 'package:ecommerce_app/model/product_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProductPage extends StatefulWidget {
   const ProductPage({Key? key, required this.product}) : super(key: key);
@@ -16,10 +13,10 @@ class ProductPage extends StatefulWidget {
 }
 
 class _ProductPageState extends State<ProductPage> {
-  int isSelected = 0;
   late PageController controller;
   int currentPage = 1;
   bool isFavorite = false;
+  late List<ProductModel> sameProducts;
   @override
   void initState() {
     super.initState();
@@ -36,49 +33,45 @@ class _ProductPageState extends State<ProductPage> {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     return Scaffold(
-      bottomNavigationBar: Container(
-        height: 56,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(32),
-            topRight: Radius.circular(32),
+      bottomNavigationBar: SafeArea(
+        child: SizedBox(
+          height: 56,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(0),
+                      ),
+                    ),
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Colors.blue),
+                  ),
+                  onPressed: () {},
+                  child: const Text('Thêm vào giỏ hàng'),
+                ),
+              ),
+              Expanded(
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(0),
+                      ),
+                    ),
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Colors.red),
+                  ),
+                  onPressed: () {},
+                  child: const Text('Mua ngay'),
+                ),
+              ),
+            ],
           ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(
-              child: ElevatedButton(
-                style: ButtonStyle(
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(0),
-                    ),
-                  ),
-                  backgroundColor:
-                      MaterialStateProperty.all<Color>(Colors.blue),
-                ),
-                onPressed: () {},
-                child: const Text('Thêm vào giỏ hàng'),
-              ),
-            ),
-            Expanded(
-              child: ElevatedButton(
-                style: ButtonStyle(
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(0),
-                    ),
-                  ),
-                  backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
-                ),
-                onPressed: () {},
-                child: const Text('Mua ngay'),
-              ),
-            ),
-          ],
         ),
       ),
       backgroundColor: Colors.grey.shade200,
@@ -102,9 +95,9 @@ class _ProductPageState extends State<ProductPage> {
                     scrollDirection: Axis.horizontal,
                     controller: controller,
                     onPageChanged: (page) {
-                      setState(() {
-                        currentPage = page + 1;
-                      });
+                      // setState(() {
+                      //   currentPage = page + 1;
+                      // });
                     },
                     children: [
                       for (int i = 0;
@@ -165,16 +158,6 @@ class _ProductPageState extends State<ProductPage> {
               ),
             ),
           ),
-          // Row(
-          //   crossAxisAlignment: CrossAxisAlignment.start,
-          //   children: const [
-          //      Padding(
-          //       padding: EdgeInsets.only(left: 16.0),
-          //       child: Text('Màu:'),
-          //     ),
-
-          //   ],
-          // ),
           Row(
             children: [
               const SizedBox(width: 20),
@@ -267,7 +250,7 @@ class _ProductPageState extends State<ProductPage> {
                     },
                   );
                 }
-                return SizedBox();
+                return const SizedBox();
               },
             ),
           ),
@@ -277,8 +260,10 @@ class _ProductPageState extends State<ProductPage> {
   }
 
   Future<List<ProductModel>> getAllProducts() async {
+    // if (sameProducts.isNotEmpty) return Future.value(sameProducts);
     final docs = await FirebaseFirestore.instance.collection('products').get();
-    return docs.docs.map((QueryDocumentSnapshot<Map<String, dynamic>> doc) {
+    sameProducts =
+        docs.docs.map((QueryDocumentSnapshot<Map<String, dynamic>> doc) {
       final data = doc.data();
       return ProductModel(
         name: data['name'],
@@ -289,19 +274,20 @@ class _ProductPageState extends State<ProductPage> {
         sold: data['sold'],
       );
     }).toList();
+    return sameProducts;
   }
 
-  Widget buildColorOptions(List<Color> colors) {
-    return ListView.builder(
-      scrollDirection: Axis.horizontal,
-      itemCount: colors.length,
-      itemBuilder: (context, index) => Container(
-        padding: isSelected == index ? const EdgeInsets.all(4.0) : null,
-        color: isSelected == index ? Colors.black : Colors.transparent,
-        width: 20,
-        height: 20,
-        child: Container(color: colors[index]),
-      ),
-    );
-  }
+  // Widget buildColorOptions(List<Color> colors) {
+  //   return ListView.builder(
+  //     scrollDirection: Axis.horizontal,
+  //     itemCount: colors.length,
+  //     itemBuilder: (context, index) => Container(
+  //       padding: isSelected == index ? const EdgeInsets.all(4.0) : null,
+  //       color: isSelected == index ? Colors.black : Colors.transparent,
+  //       width: 20,
+  //       height: 20,
+  //       child: Container(color: colors[index]),
+  //     ),
+  //   );
+  // }
 }
