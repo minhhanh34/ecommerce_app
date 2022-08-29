@@ -1,0 +1,39 @@
+import 'package:ecommerce_app/blocs/home/home_cubit.dart';
+import 'package:ecommerce_app/firebase_options.dart';
+import 'package:ecommerce_app/screen/home_page.dart';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'blocs/login/login_cubit.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
+  runApp(const EcommerceApp());
+}
+
+class EcommerceApp extends StatelessWidget {
+  const EcommerceApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => HomeCubit()),
+        BlocProvider(create: (_) => LoginCubit()),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: const HomePage(),
+      ),
+    );
+  }
+}
