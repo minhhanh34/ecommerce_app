@@ -12,6 +12,12 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+
+
+
+  
+
+
   Widget _buildLoadingLogin() {
     return Scaffold(
       appBar: AppBar(centerTitle: true, title: const Text('My shop')),
@@ -21,10 +27,11 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    LoginCubit loginCubit = BlocProvider.of<LoginCubit>(context);
     return BlocConsumer<LoginCubit, LoginState>(
       listener: (context, state) {
         if (state is LoginedState) {
-          context.read<LoginCubit>().navToHome(context);
+          loginCubit.navToHome(context);
         }
       },
       builder: (context, state) {
@@ -38,7 +45,7 @@ class _LoginPageState extends State<LoginPage> {
             elevation: 0,
             actions: [
               TextButton(
-                onPressed: context.read<LoginCubit>().changeSignState,
+                onPressed: loginCubit.changeSignState,
                 child: Text(
                   state is SignInState ? 'Đăng ký' : 'Đăng nhập',
                   style: Theme.of(context).textTheme.labelLarge!.copyWith(
@@ -62,7 +69,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             child: Form(
-              key: context.read<LoginCubit>().formKey,
+              key: loginCubit.formKey,
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -86,10 +93,9 @@ class _LoginPageState extends State<LoginPage> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 40),
                       child: TextFormField(
-                        validator: context.read<LoginCubit>().validateAccount,
+                        validator: loginCubit.validateAccount,
                         keyboardType: TextInputType.phone,
-                        controller:
-                            context.read<LoginCubit>().accountController,
+                        controller: loginCubit.accountController,
                         decoration: InputDecoration(
                           labelText: 'Số điện thoại',
                           labelStyle: Theme.of(context).textTheme.bodyText2,
@@ -108,16 +114,16 @@ class _LoginPageState extends State<LoginPage> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 40),
                       child: TextFormField(
-                        validator: context.read<LoginCubit>().validatePassword,
-                        obscureText: !context.read<LoginCubit>().showPassword,
-                        controller: context.read<LoginCubit>().passController,
+                        validator: loginCubit.validatePassword,
+                        obscureText: !loginCubit.showPassword,
+                        controller: loginCubit.passController,
                         decoration: InputDecoration(
                           prefixIcon: const Icon(
                             Icons.password_outlined,
                             color: Colors.blue,
                           ),
                           suffixIcon: state is SignInState
-                              ? (context.read<LoginCubit>().showPassword
+                              ? (loginCubit.showPassword
                                   ? IconButton(
                                       icon: const Icon(Icons.visibility),
                                       onPressed: context
@@ -146,10 +152,8 @@ class _LoginPageState extends State<LoginPage> {
                         : Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 40),
                             child: TextFormField(
-                              obscureText:
-                                  !context.read<LoginCubit>().showPassword,
-                              controller:
-                                  context.read<LoginCubit>().confirmPassword,
+                              obscureText: !loginCubit.showPassword,
+                              controller: loginCubit.confirmPassword,
                               decoration: InputDecoration(
                                 prefixIcon: const Icon(
                                   Icons.confirmation_num_outlined,
@@ -168,8 +172,8 @@ class _LoginPageState extends State<LoginPage> {
                             children: [
                               const SizedBox(width: 45),
                               Checkbox(
-                                value: context.read<LoginCubit>().saveAcount,
-                                onChanged: context.read<LoginCubit>().changeCB,
+                                value: loginCubit.saveAcount,
+                                onChanged: loginCubit.changeCB,
                               ),
                               const Text('Ghi nhớ đăng nhập')
                             ],
@@ -190,8 +194,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: IconButton(
                           iconSize: 40,
                           color: Colors.white,
-                          onPressed: () =>
-                              context.read<LoginCubit>().login(context),
+                          onPressed: () => loginCubit.login(context),
                           icon: const Icon(Icons.arrow_forward),
                         ),
                       ),
@@ -201,8 +204,7 @@ class _LoginPageState extends State<LoginPage> {
                         ? Align(
                             alignment: Alignment.center,
                             child: TextButton(
-                              onPressed:
-                                  context.read<LoginCubit>().createNewPassword,
+                              onPressed: loginCubit.createNewPassword,
                               child: const Text('Quên mật khẩu?'),
                             ),
                           )

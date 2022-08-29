@@ -6,17 +6,17 @@ import '../../screen/home_page.dart';
 
 class LoginCubit extends Cubit<LoginState> {
   LoginCubit() : super(SignInState());
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final accountController = TextEditingController();
-  final passController = TextEditingController();
-  final confirmPassword = TextEditingController();
-  bool showPassword = false;
+  // final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  // final accountController = TextEditingController();
+  // final passController = TextEditingController();
+  // final confirmPassword = TextEditingController();
+  // bool showPassword = false;
 
   bool isLogin = false;
 
   bool saveAcount = false;
 
-  void showHidePass() {
+  void showHidePass(bool showPassword) {
     showPassword = !showPassword;
     emit(SignInState());
   }
