@@ -1,6 +1,6 @@
-import 'package:ecommerce_app/blocs/home/home_cubit.dart';
-import 'package:ecommerce_app/blocs/home/home_state.dart';
-import 'package:ecommerce_app/blocs/login/login_cubit.dart';
+import 'package:ecommerce_app/cubit/home/home_cubit.dart';
+import 'package:ecommerce_app/cubit/home/home_state.dart';
+import 'package:ecommerce_app/cubit/login/login_cubit.dart';
 import 'package:ecommerce_app/components/account_container.dart';
 import 'package:ecommerce_app/components/bottom_navigation_bar.dart';
 import 'package:ecommerce_app/components/cart_icon.dart';

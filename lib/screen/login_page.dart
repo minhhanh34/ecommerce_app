@@ -2,8 +2,8 @@ import 'package:ecommerce_app/screen/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../blocs/login/login_cubit.dart';
-import '../blocs/login/login_state.dart';
+import '../cubit/login/login_cubit.dart';
+import '../cubit/login/login_state.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);

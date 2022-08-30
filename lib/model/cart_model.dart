@@ -1,13 +1,17 @@
+import 'package:json_annotation/json_annotation.dart';
+part 'cart_model.g.dart';
+
+@JsonSerializable()
 class CartModel {
-  String imageURL;
-  String name;
-  int price;
-  int saleOff;
-  int quantity;
-  bool isFavorite;
-  String color;
-  int rom;
-  int ram;
+  final String imageURL;
+  final String name;
+  final int price;
+  final int saleOff;
+  final int quantity;
+  final bool isFavorite;
+  final String color;
+  final int rom;
+  final int ram;
   CartModel({
     required this.imageURL,
     required this.name,
@@ -19,4 +23,9 @@ class CartModel {
     required this.rom,
     required this.ram,
   });
+
+  factory CartModel.fromJson(Map<String, dynamic> json) =>
+      _$CartModelFromJson(json);
+
+  Map<String, dynamic> toJson() => _$CartModelToJson(this);
 }

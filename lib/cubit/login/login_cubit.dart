@@ -1,4 +1,4 @@
-import 'package:ecommerce_app/blocs/login/login_state.dart';
+import 'package:ecommerce_app/cubit/login/login_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 

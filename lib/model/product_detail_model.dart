@@ -1,3 +1,7 @@
+import 'package:json_annotation/json_annotation.dart';
+part 'product_detail_model.g.dart';
+
+@JsonSerializable()
 class ProductDetailModel {
   String? screenSize;
   String? resolution;
@@ -38,4 +42,9 @@ class ProductDetailModel {
     this.rom,
     this.wifi,
   });
+
+  factory ProductDetailModel.fromJson(Map<String, dynamic> json) =>
+      _$ProductDetailModelFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ProductDetailModelToJson(this);
 }

@@ -1,5 +1,6 @@
-import 'package:ecommerce_app/blocs/home/home_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../cubit/home/home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
   HomeCubit() : super(MainState());
