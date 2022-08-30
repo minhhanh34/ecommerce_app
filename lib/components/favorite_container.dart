@@ -26,11 +26,11 @@ class _FavoriteProductContainerState extends State<FavoriteProductContainer> {
       productModels.add(
         ProductModel(
           name: prodData.data()!['name'],
-          imageUrls: prodData.data()!['imageURL'],
+          imageURL: prodData.data()!['imageURL'],
           price: prodData.data()!['price'],
           sold: prodData.data()!['sold'],
           grade: prodData.data()!['grade'],
-        ),
+        )..buildImage(),
       );
     }
     return productModels;
@@ -43,7 +43,7 @@ class _FavoriteProductContainerState extends State<FavoriteProductContainer> {
       child: Column(
         children: [
           const HeaderRow(title: 'Sản phẩm yêu thích'),
-          FutureBuilder<List<ProductModel>?>(
+          FutureBuilder<List<ProductModel>>(
             future: getFavoritProducts('user1'),
             builder: (context, snapshot) {
               if (snapshot.hasData &&
@@ -76,7 +76,7 @@ class _FavoriteProductContainerState extends State<FavoriteProductContainer> {
                                 leading: Hero(
                                   tag: product.name,
                                   child: CachedNetworkImage(
-                                    imageUrl: product.imageUrls['image1'],
+                                    imageUrl: product.imageURL['image1'],
                                     placeholder: (context, url) {
                                       return Container(
                                         color: Colors.grey.shade300,

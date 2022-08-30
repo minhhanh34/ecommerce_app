@@ -2,12 +2,12 @@
 
 import 'dart:async';
 
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:ecommerce_app/model/banner_model.dart';
 import 'package:flutter/material.dart';
 
 class HeaderBanner extends StatefulWidget {
-  const HeaderBanner({Key? key, required this.bannerUrls}) : super(key: key);
-  final List<String> bannerUrls;
+  const HeaderBanner({Key? key, required this.model}) : super(key: key);
+  final BannerModel model;
 
   @override
   State<HeaderBanner> createState() => _HeaderBannerState();
@@ -34,7 +34,7 @@ class _HeaderBannerState extends State<HeaderBanner> {
   @override
   void initState() {
     super.initState();
-    bannerCounts = widget.bannerUrls.length;
+    bannerCounts = widget.model.banners.length;
     _timer = Timer.periodic(
       const Duration(seconds: 3),
       (timer) {
@@ -69,35 +69,15 @@ class _HeaderBannerState extends State<HeaderBanner> {
         right: 16,
         bottom: 0,
       ),
-      child: Container(
+      child: SizedBox(
         height: 120,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          color: Colors.grey.shade100,
-          gradient: LinearGradient(
-            colors: [
-              Colors.orange.shade300,
-              Colors.green.shade300,
-            ],
-          ),
-        ),
         child: Stack(
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(16),
               child: PageView(
                 controller: _controller,
-                children: [
-                  for (int i = 0; i < widget.bannerUrls.length; i++)
-                    CachedNetworkImage(
-                      fit: BoxFit.cover,
-                      imageUrl: widget.bannerUrls[i],
-                      placeholder: (context, url) => Container(
-                        color: Colors.grey.shade300,
-                        child: const Icon(Icons.image),
-                      ),
-                    ),
-                ],
+                children: widget.model.banners,
               ),
             ),
           ],

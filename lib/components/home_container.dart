@@ -2,6 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce_app/components/banner.dart';
 import 'package:ecommerce_app/components/products_catalog.dart';
 import 'package:ecommerce_app/components/products_widget.dart';
+import 'package:ecommerce_app/model/banner_model.dart';
+import 'package:ecommerce_app/services/banner_service.dart';
+import 'package:ecommerce_app/services/firebase_service.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
@@ -23,7 +26,7 @@ class _HomeContainerState extends State<HomeContainer> {
       final data = doc.data();
       return ProductModel(
         name: data['name'],
-        imageUrls: data['imageURL'],
+        imageURL: data['imageURL'],
         price: data['price'],
         grade: data['grade'],
         //isFavorite: data['isFavorite'],
@@ -49,24 +52,25 @@ class _HomeContainerState extends State<HomeContainer> {
       child: Column(
         // mainAxisSize: MainAxisSize.min,
         children: [
-          FutureBuilder<List<String>>(
-            future: getBanners(),
+          FutureBuilder<BannerModel>(
+            future: BannerService(database: FirebaseFirestore.instance)
+                .getBanners(),
             builder: (context, snapshot) {
               if (snapshot.hasData &&
                   snapshot.connectionState == ConnectionState.done) {
                 return HeaderBanner(
-                  bannerUrls: snapshot.data!,
+                  model: snapshot.data!,
                 );
               }
               return Padding(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(12.0),
                 child: Container(
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
                     color: Colors.grey,
+                    borderRadius: BorderRadius.circular(12),
                   ),
+                  height: 115,
                   width: MediaQuery.of(context).size.width,
-                  height: 150,
                   child: const Icon(Icons.image),
                 ),
               );
@@ -82,8 +86,9 @@ class _HomeContainerState extends State<HomeContainer> {
             hasMore: true,
           ),
           //buildProducts(products),
-          FutureBuilder<List<ProductModel>>(
-            future: getAllProducts(),
+          FutureBuilder<List<ProductModel>?>(
+            future: ProductServiceIml(database: FirebaseFirestore.instance)
+                .getAllProducts(),
             builder: (context, snapshot) {
               if (snapshot.hasData &&
                   snapshot.connectionState == ConnectionState.done) {

@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ecommerce_app/model/product_model.dart';
 import 'package:ecommerce_app/screen/product_page.dart';
 import 'package:ecommerce_app/utils/price_format.dart';
@@ -48,23 +47,25 @@ class ProductsWidgetState extends State<ProductsWidget> {
                           // ),
                           Hero(
                             tag: product.name,
-                            child: CachedNetworkImage(
-                              imageUrl: product.imageUrls['image1'],
-                              fit: BoxFit.cover,
-                              placeholder: (_, value) => Container(
-                                height: MediaQuery.of(context).size.width * 0.35,
-                                width: MediaQuery.of(context).size.width * 0.5,
-                                color: Colors.grey.shade800,
-                                child: const Center(
-                                  child: Icon(
-                                    Icons.image,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                              errorWidget: (context, url, error) =>
-                                  const Icon(Icons.error),
-                            ),
+                            child: product.images['image1']!,
+                            // child: CachedNetworkImage(
+                            //   imageUrl: product.imageURL['image1'],
+                            //   fit: BoxFit.cover,
+                            //   placeholder: (_, value) => Container(
+                            //     height:
+                            //         MediaQuery.of(context).size.width * 0.35,
+                            //     width: MediaQuery.of(context).size.width * 0.5,
+                            //     color: Colors.grey.shade800,
+                            //     child: const Center(
+                            //       child: Icon(
+                            //         Icons.image,
+                            //         color: Colors.white,
+                            //       ),
+                            //     ),
+                            //   ),
+                            //   errorWidget: (context, url, error) =>
+                            //       const Icon(Icons.error),
+                            // ),
                           ),
                         ],
                       ),

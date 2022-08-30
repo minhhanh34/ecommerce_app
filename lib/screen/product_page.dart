@@ -92,38 +92,38 @@ class _ProductPageState extends State<ProductPage> {
                 Hero(
                   tag: widget.product.name,
                   child: PageView(
-                    scrollDirection: Axis.horizontal,
-                    controller: controller,
-                    onPageChanged: (page) {
-                      // setState(() {
-                      //   currentPage = page + 1;
-                      // });
-                    },
-                    children: [
-                      for (int i = 0;
-                          i < widget.product.imageUrls.keys.length;
-                          i++)
-                        CachedNetworkImage(
-                          imageUrl: widget.product.imageUrls['image${i + 1}'],
-                          fit: BoxFit.cover,
-                          placeholder: (_, value) => Container(
-                            color: Colors.grey.shade800,
-                            child: const Center(
-                              child: Icon(
-                                Icons.image,
-                                size: 24,
-                              ),
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
+                      scrollDirection: Axis.horizontal,
+                      controller: controller,
+                      onPageChanged: (page) {
+                        // setState(() {
+                        //   currentPage = page + 1;
+                        // });
+                      },
+                      children: [
+                        for (int i = 0;
+                            i < widget.product.images.keys.length;
+                            i++)
+                          widget.product.images['image${i + 1}']!,
+                        // CachedNetworkImage(
+                        //   imageUrl: widget.product.imageURL['image${i + 1}'],
+                        //   fit: BoxFit.cover,
+                        //   placeholder: (_, value) => Container(
+                        //     color: Colors.grey.shade800,
+                        //     child: const Center(
+                        //       child: Icon(
+                        //         Icons.image,
+                        //         size: 24,
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
+                      ]),
                 ),
                 Positioned(
                   right: 4,
                   bottom: 8,
                   child: Text(
-                    '$currentPage/${widget.product.imageUrls.keys.length}',
+                    '$currentPage/${widget.product.imageURL.keys.length}',
                     style: const TextStyle(
                       color: Colors.white,
                       backgroundColor: Colors.black,
@@ -233,7 +233,7 @@ class _ProductPageState extends State<ProductPage> {
                             CachedNetworkImage(
                               height: 150,
                               imageUrl:
-                                  snapshot.data![index].imageUrls['image1'],
+                                  snapshot.data![index].imageURL['image1'],
                               fit: BoxFit.cover,
                             ),
                             Padding(
@@ -267,7 +267,7 @@ class _ProductPageState extends State<ProductPage> {
       final data = doc.data();
       return ProductModel(
         name: data['name'],
-        imageUrls: data['imageURL'],
+        imageURL: data['imageURL'],
         price: data['price'],
         grade: data['grade'],
         //isFavorite: data['isFavorite'],

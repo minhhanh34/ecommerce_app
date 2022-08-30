@@ -6,7 +6,7 @@ import 'package:ecommerce_app/components/bottom_navigation_bar.dart';
 import 'package:ecommerce_app/components/cart_icon.dart';
 import 'package:ecommerce_app/components/favorite_container.dart';
 import 'package:ecommerce_app/components/history_container.dart';
-import 'package:ecommerce_app/components/home_comtainer.dart';
+import 'package:ecommerce_app/components/home_container.dart';
 import 'package:ecommerce_app/components/order_container.dart';
 import 'package:ecommerce_app/screen/login_page.dart';
 
@@ -47,122 +47,120 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       drawer: Drawer(
-        child: SafeArea(
-          child: Column(
-            children: [
-              SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: DrawerHeader(
-                  curve: Curves.easeInOut,
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      transform: GradientRotation(2),
-                      colors: [
-                        Colors.red,
-                        Colors.blue,
-                        Colors.orange,
-                      ],
-                    ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: const [
-                      CircleAvatar(
-                        maxRadius: 40,
-                        child: FlutterLogo(size: 40),
-                      ),
-                      Text(
-                        'Minh Hanh',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 1.5,
-                        ),
-                      ),
+        child: Column(
+          children: [
+            SizedBox(
+              width: MediaQuery.of(context).size.width,
+              child: DrawerHeader(
+                curve: Curves.easeInOut,
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    transform: GradientRotation(2),
+                    colors: [
+                      Colors.red,
+                      Colors.blue,
+                      Colors.orange,
                     ],
                   ),
                 ),
-              ),
-              ListTile(
-                selected: true,
-                selectedTileColor: Colors.pink.shade100,
-                selectedColor: Colors.white,
-                onTap: () {},
-                leading: const Icon(Icons.home_rounded),
-                title: Text(
-                  'Trang chủ',
-                  style: Theme.of(context).textTheme.titleLarge,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: const [
+                    CircleAvatar(
+                      maxRadius: 40,
+                      child: FlutterLogo(size: 40),
+                    ),
+                    Text(
+                      'Minh Hanh',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.5,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              ListTile(
-                selected: false,
-                selectedTileColor: Colors.pink.shade100,
-                selectedColor: Colors.white,
-                onTap: () {},
-                leading: const Icon(Icons.shopping_cart_rounded),
-                title: Text(
-                  'Giỏ hàng',
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
+            ),
+            ListTile(
+              selected: true,
+              selectedTileColor: Colors.pink.shade100,
+              selectedColor: Colors.white,
+              onTap: () {},
+              leading: const Icon(Icons.home_rounded),
+              title: Text(
+                'Trang chủ',
+                style: Theme.of(context).textTheme.titleLarge,
               ),
-              // const Divider(color: Colors.black),
-              ListTile(
-                selected: false,
-                selectedTileColor: Colors.pink.shade100,
-                selectedColor: Colors.white,
-                onTap: () {},
-                leading: const Icon(Icons.border_all_rounded),
-                title: Text(
-                  'Tất cả sản phẩm',
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
+            ),
+            ListTile(
+              selected: false,
+              selectedTileColor: Colors.pink.shade100,
+              selectedColor: Colors.white,
+              onTap: () {},
+              leading: const Icon(Icons.shopping_cart_rounded),
+              title: Text(
+                'Giỏ hàng',
+                style: Theme.of(context).textTheme.titleLarge,
               ),
-              ListTile(
-                selected: false,
-                selectedTileColor: Colors.pink.shade100,
-                selectedColor: Colors.white,
-                onTap: () {},
-                leading: const Icon(Icons.category_rounded),
-                title: Text(
-                  'Danh mục',
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
+            ),
+            // const Divider(color: Colors.black),
+            ListTile(
+              selected: false,
+              selectedTileColor: Colors.pink.shade100,
+              selectedColor: Colors.white,
+              onTap: () {},
+              leading: const Icon(Icons.border_all_rounded),
+              title: Text(
+                'Tất cả sản phẩm',
+                style: Theme.of(context).textTheme.titleLarge,
               ),
-              ListTile(
-                selected: false,
-                selectedTileColor: Colors.pink.shade100,
-                selectedColor: Colors.white,
-                onTap: () {},
-                leading: const Icon(Icons.feedback_rounded),
-                title: Text(
-                  'Phản hồi',
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
+            ),
+            ListTile(
+              selected: false,
+              selectedTileColor: Colors.pink.shade100,
+              selectedColor: Colors.white,
+              onTap: () {},
+              leading: const Icon(Icons.category_rounded),
+              title: Text(
+                'Danh mục',
+                style: Theme.of(context).textTheme.titleLarge,
               ),
-              ListTile(
-                selected: false,
-                selectedTileColor: Colors.pink.shade100,
-                selectedColor: Colors.white,
-                onTap: () {},
-                leading: const Icon(Icons.info_rounded),
-                title: Text(
-                  'Thông tin',
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
+            ),
+            ListTile(
+              selected: false,
+              selectedTileColor: Colors.pink.shade100,
+              selectedColor: Colors.white,
+              onTap: () {},
+              leading: const Icon(Icons.feedback_rounded),
+              title: Text(
+                'Phản hồi',
+                style: Theme.of(context).textTheme.titleLarge,
               ),
-              const Spacer(),
-              const Divider(color: Colors.black, height: 2),
-              ListTile(
-                onTap: homeCubit.logout,
-                title: const Text('Đăng xuất'),
-                trailing: Icon(
-                  Icons.logout_rounded,
-                  color: Colors.red.shade900,
-                ),
+            ),
+            ListTile(
+              selected: false,
+              selectedTileColor: Colors.pink.shade100,
+              selectedColor: Colors.white,
+              onTap: () {},
+              leading: const Icon(Icons.info_rounded),
+              title: Text(
+                'Thông tin',
+                style: Theme.of(context).textTheme.titleLarge,
               ),
-            ],
-          ),
+            ),
+            const Spacer(),
+            const Divider(color: Colors.black, height: 2),
+            ListTile(
+              onTap: homeCubit.logout,
+              title: const Text('Đăng xuất'),
+              trailing: Icon(
+                Icons.logout_rounded,
+                color: Colors.red.shade900,
+              ),
+            ),
+          ],
         ),
       ),
       body: BlocConsumer<HomeCubit, HomeState>(

@@ -1,8 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce_app/cubit/home/home_cubit.dart';
 import 'package:ecommerce_app/firebase_options.dart';
 import 'package:ecommerce_app/screen/home_page.dart';
-import 'package:ecommerce_app/services/firebase_service.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -16,8 +14,8 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
   //SystemChrome.setEnabledSystemUIMode(SystemUiMode.values.first);
+
   runApp(const EcommerceApp());
-  
 }
 
 class EcommerceApp extends StatelessWidget {

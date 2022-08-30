@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce_app/model/product_model.dart';
 
@@ -14,17 +16,17 @@ class ProductServiceIml implements ProductService {
   final FirebaseFirestore database;
 
   @override
-  Future<List<ProductModel>> getAllProducts() async {
+  Future<List<ProductModel>?> getAllProducts() async {
     String collection = 'products';
     try {
       QuerySnapshot<Map<String, dynamic>> colRef =
           await database.collection(collection).get();
       return colRef.docs.map((QueryDocumentSnapshot<Map<String, dynamic>> doc) {
         Map<String, dynamic> json = doc.data();
-        return ProductModel.fromJson(json);
+        return ProductModel.fromJson(json)..buildImage();
       }).toList();
     } catch (e) {
-      print(e);
+      log('error', error: e);
     }
     return [];
   }
@@ -38,9 +40,8 @@ class ProductServiceIml implements ProductService {
       Map<String, dynamic> json = docRef.data()!;
       return ProductModel.fromJson(json);
     } catch (e) {
-      print(e);
+      log('error', error: e);
     }
     return null;
   }
 }
-
