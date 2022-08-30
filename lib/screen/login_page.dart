@@ -128,7 +128,7 @@ class _LoginPageState extends State<LoginPage> {
                               Icons.phone,
                               color: Colors.blue,
                             ),
-                            hintText: 'Tài khoản Đăng nhập cua ban',
+                            hintText: 'Số điện thoại của bạn',
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(16),
                             ),
@@ -238,7 +238,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
           );
         }
-        return const SizedBox();
+        return _buildLoadingLogin();
       },
     );
   }

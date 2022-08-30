@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ecommerce_app/components/banner.dart';
 import 'package:ecommerce_app/components/products_catalog.dart';
 import 'package:ecommerce_app/components/products_widget.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 import '../model/product_model.dart';
-import 'Banner.dart';
+import 'banner.dart';
 import 'header_row.dart';
 
 class HomeContainer extends StatefulWidget {
@@ -30,13 +32,46 @@ class _HomeContainerState extends State<HomeContainer> {
     }).toList();
   }
 
+  Future<List<String>> getBanners() async {
+    List<String> urls = [];
+    ListResult results =
+        await FirebaseStorage.instance.ref().child('banner').listAll();
+    for (int i = 0; i < results.items.length; i++) {
+      String url = await results.items[i].getDownloadURL();
+      urls.add(url);
+    }
+    return urls;
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
         // mainAxisSize: MainAxisSize.min,
         children: [
-          const HeaderBanner(),
+          FutureBuilder<List<String>>(
+            future: getBanners(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData &&
+                  snapshot.connectionState == ConnectionState.done) {
+                return HeaderBanner(
+                  bannerUrls: snapshot.data!,
+                );
+              }
+              return Padding(
+                padding: const EdgeInsets.all(12),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: Colors.grey,
+                  ),
+                  width: MediaQuery.of(context).size.width,
+                  height: 150,
+                  child: const Icon(Icons.image),
+                ),
+              );
+            },
+          ),
           const HeaderRow(
             title: 'Danh mục',
             hasMore: true,

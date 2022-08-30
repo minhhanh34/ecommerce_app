@@ -2,10 +2,12 @@
 
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class HeaderBanner extends StatefulWidget {
-  const HeaderBanner({Key? key}) : super(key: key);
+  const HeaderBanner({Key? key, required this.bannerUrls}) : super(key: key);
+  final List<String> bannerUrls;
 
   @override
   State<HeaderBanner> createState() => _HeaderBannerState();
@@ -14,43 +16,39 @@ class HeaderBanner extends StatefulWidget {
 class _HeaderBannerState extends State<HeaderBanner> {
   late Timer _timer;
   final _controller = PageController();
-  final bannerContent = const <Widget>[
-    Icon(
-      Icons.circle,
-      size: 10,
-      color: Colors.white,
-    ),
-    Icon(
-      Icons.circle,
-      size: 10,
-      color: Colors.white,
-    ),
-    Icon(
-      Icons.circle,
-      size: 10,
-      color: Colors.white,
-    ),
-  ];
 
-  Widget buildDotNav() {
-    return Row(
-      children: bannerContent,
-    );
-  }
+  // Future<List<String>> getBanners() async {
+  //   List<String> urls = [];
+  //   ListResult results =
+  //       await FirebaseStorage.instance.ref().child('banner').listAll();
+  //   for (int i = 0; i < results.items.length; i++) {
+  //     String url = await results.items[i].getDownloadURL();
+  //     urls.add(url);
+  //   }
+  //   bannerCounts = results.items.length;
+  //   return urls;
+  // }
+
+  int bannerCounts = 0;
 
   @override
   void initState() {
     super.initState();
+    bannerCounts = widget.bannerUrls.length;
     _timer = Timer.periodic(
       const Duration(seconds: 3),
       (timer) {
-        if (_controller.page!.toInt() == bannerContent.length - 1) {
-          _controller.jumpTo(0);
-        }
         _controller.nextPage(
           duration: const Duration(milliseconds: 250),
           curve: Curves.easeInOut,
         );
+        if (_controller.page!.round() == bannerCounts - 1) {
+          _controller.animateToPage(
+            0,
+            duration: const Duration(milliseconds: 250),
+            curve: Curves.easeInOut,
+          );
+        }
       },
     );
   }
@@ -72,7 +70,7 @@ class _HeaderBannerState extends State<HeaderBanner> {
         bottom: 0,
       ),
       child: Container(
-        height: 150,
+        height: 120,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           color: Colors.grey.shade100,
@@ -89,23 +87,18 @@ class _HeaderBannerState extends State<HeaderBanner> {
               borderRadius: BorderRadius.circular(16),
               child: PageView(
                 controller: _controller,
-                children: const [
-                  FlutterLogo(
-                    size: 100,
-                  ),
-                  FlutterLogo(
-                    size: 100,
-                  ),
-                  FlutterLogo(
-                    size: 100,
-                  ),
+                children: [
+                  for (int i = 0; i < widget.bannerUrls.length; i++)
+                    CachedNetworkImage(
+                      fit: BoxFit.cover,
+                      imageUrl: widget.bannerUrls[i],
+                      placeholder: (context, url) => Container(
+                        color: Colors.grey.shade300,
+                        child: const Icon(Icons.image),
+                      ),
+                    ),
                 ],
               ),
-            ),
-            Positioned(
-              left: MediaQuery.of(context).size.width * 0.5 - 23,
-              bottom: 0,
-              child: buildDotNav(),
             ),
           ],
         ),
