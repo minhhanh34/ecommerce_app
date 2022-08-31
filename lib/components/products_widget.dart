@@ -41,31 +41,9 @@ class ProductsWidgetState extends State<ProductsWidget> {
                     children: [
                       Stack(
                         children: [
-                          // SizedBox(
-                          //   height: MediaQuery.of(context).size.width * 0.3,
-                          //   width: MediaQuery.of(context).size.width * 0.5,
-                          // ),
                           Hero(
                             tag: product.name,
                             child: product.images['image1']!,
-                            // child: CachedNetworkImage(
-                            //   imageUrl: product.imageURL['image1'],
-                            //   fit: BoxFit.cover,
-                            //   placeholder: (_, value) => Container(
-                            //     height:
-                            //         MediaQuery.of(context).size.width * 0.35,
-                            //     width: MediaQuery.of(context).size.width * 0.5,
-                            //     color: Colors.grey.shade800,
-                            //     child: const Center(
-                            //       child: Icon(
-                            //         Icons.image,
-                            //         color: Colors.white,
-                            //       ),
-                            //     ),
-                            //   ),
-                            //   errorWidget: (context, url, error) =>
-                            //       const Icon(Icons.error),
-                            // ),
                           ),
                         ],
                       ),
@@ -120,24 +98,6 @@ class ProductsWidgetState extends State<ProductsWidget> {
                     ],
                   ),
                 ),
-                // Positioned(
-                //   top: -5,
-                //   right: -5,
-                //   child: IconButton(
-                //     splashRadius: 5,
-                //     onPressed: () async {
-                //       setState(() {
-                //         product.isFavorite = !product.isFavorite;
-                //       });
-                //     },
-                //     icon: product.isFavorite
-                //         ? const Icon(
-                //             Icons.favorite_rounded,
-                //             color: Colors.red,
-                //           )
-                //         : const Icon(Icons.favorite_border_rounded),
-                //   ),
-                // ),
               ],
             ),
           ),

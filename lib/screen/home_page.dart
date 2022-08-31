@@ -8,6 +8,7 @@ import 'package:ecommerce_app/components/favorite_container.dart';
 import 'package:ecommerce_app/components/history_container.dart';
 import 'package:ecommerce_app/components/home_container.dart';
 import 'package:ecommerce_app/components/order_container.dart';
+import 'package:ecommerce_app/screen/cart_page.dart';
 import 'package:ecommerce_app/screen/login_page.dart';
 
 import 'package:flutter/material.dart';
@@ -98,7 +99,13 @@ class _HomePageState extends State<HomePage> {
               selected: false,
               selectedTileColor: Colors.pink.shade100,
               selectedColor: Colors.white,
-              onTap: () {},
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => const CartPage(),
+                  ),
+                );
+              },
               leading: const Icon(Icons.shopping_cart_rounded),
               title: Text(
                 'Giỏ hàng',
@@ -173,13 +180,22 @@ class _HomePageState extends State<HomePage> {
           }
         },
         builder: (context, state) {
-          if (state is MainState) return const HomeContainer();
-          if (state is FavoriteState) return const FavoriteProductContainer();
+          if (state is MainState) {
+            return HomeContainer(
+              banners: state.banners,
+              products: state.products,
+            );
+          }
+          if (state is FavoriteState) {
+            return FavoriteProductContainer(
+              favoritedProducts: state.favoritedProducts,
+            );
+          }
           if (state is OrderState) return const OrderContainer();
           if (state is HistoryState) return const HistoryContainer();
           if (state is AccountState) return const AccountContainer();
           if (state is LoadingState) return buildLoading();
-          return const HomeContainer();
+          return buildLoading();
         },
       ),
       bottomNavigationBar: const BottomNavBar(),

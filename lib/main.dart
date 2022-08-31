@@ -1,6 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ecommerce_app/cubit/cart/cart_cubit.dart';
 import 'package:ecommerce_app/cubit/home/home_cubit.dart';
 import 'package:ecommerce_app/firebase_options.dart';
 import 'package:ecommerce_app/screen/home_page.dart';
+import 'package:ecommerce_app/services/banner_service.dart';
+import 'package:ecommerce_app/services/cart_service.dart';
+import 'package:ecommerce_app/services/firebase_service.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -20,13 +25,24 @@ void main() async {
 
 class EcommerceApp extends StatelessWidget {
   const EcommerceApp({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => HomeCubit()),
+        BlocProvider(
+          create: (_) => HomeCubit(
+            bannerService:
+                BannerServiceIml(database: FirebaseFirestore.instance),
+            productService:
+                ProductServiceIml(database: FirebaseFirestore.instance),
+          ),
+        ),
         BlocProvider(create: (_) => LoginCubit()),
+        BlocProvider(
+          create: (_) => CartCubit(
+            service: CartServiceIml(),
+          ),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

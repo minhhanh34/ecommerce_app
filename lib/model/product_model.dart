@@ -20,7 +20,7 @@ class ProductModel {
     this.sold = 0,
   });
   factory ProductModel.fromJson(Map<String, dynamic> json) =>
-      _$ProductModelFromJson(json);
+      _$ProductModelFromJson(json)..buildImage();
 
   Map<String, dynamic> toJson() => _$ProductModelToJson(this);
 
