@@ -6,6 +6,7 @@ import 'package:ecommerce_app/screen/home_page.dart';
 import 'package:ecommerce_app/services/banner_service.dart';
 import 'package:ecommerce_app/services/cart_service.dart';
 import 'package:ecommerce_app/services/firebase_service.dart';
+import 'package:ecommerce_app/services/sign_service.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -37,7 +38,7 @@ class EcommerceApp extends StatelessWidget {
                 ProductServiceIml(database: FirebaseFirestore.instance),
           ),
         ),
-        BlocProvider(create: (_) => LoginCubit()),
+        BlocProvider(create: (_) => LoginCubit(service: SignServiceIml())),
         BlocProvider(
           create: (_) => CartCubit(
             service: CartServiceIml(),

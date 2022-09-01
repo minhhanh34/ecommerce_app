@@ -180,6 +180,11 @@ class _HomePageState extends State<HomePage> {
           }
         },
         builder: (context, state) {
+          if (state is InitialState) {
+            context.read<HomeCubit>().mainTab();
+            return buildLoading();
+          }
+
           if (state is MainState) {
             return HomeContainer(
               banners: state.banners,

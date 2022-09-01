@@ -31,6 +31,7 @@ class _CartPageState extends State<CartPage> {
             // if (state is CartLoading) return buildLoading();
             if (state is CartInitial) {
               context.read<CartCubit>().getCart(uid: 'user1');
+              return buildLoading();
             }
             if (state is CartLoading) {
               return buildLoading();

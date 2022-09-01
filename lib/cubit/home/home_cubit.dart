@@ -1,14 +1,15 @@
+import 'dart:developer';
+
 import 'package:ecommerce_app/services/banner_service.dart';
 import 'package:ecommerce_app/services/firebase_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../cubit/home/home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
   HomeCubit({required this.bannerService, required this.productService})
-      : super(LoadingState()) {
-    mainTab();
-  }
+      : super(InitialState());
   final BannerService bannerService;
   final ProductService productService;
 
@@ -42,8 +43,14 @@ class HomeCubit extends Cubit<HomeState> {
     emit(AccountState());
   }
 
-  void logout() {
+  void logout() async {
     emit(LoadingState());
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('uid');
+    } catch (e) {
+      log('error', error: e);
+    }
     emit(LogoutState());
   }
 }
