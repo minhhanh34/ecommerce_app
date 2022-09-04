@@ -11,9 +11,10 @@ class CartServiceIml implements CartService {
   @override
   Future<CartModel> getCart({required String userId}) async {
     List<ProductModel> products = [];
-    DocumentSnapshot<Map<String, dynamic>> snapshot =
-        await FirebaseFirestore.instance.collection('cart').doc(userId).get();
-    Map<String, dynamic> data = snapshot.data()!;
+    final snapshot = await FirebaseFirestore.instance.collection('cart').get();
+    final doc =
+        snapshot.docs.where((element) => element['uid'] == userId).first;
+    Map<String, dynamic> data = doc.data()['cart'];
     for (DocumentReference<Map<String, dynamic>> docRef in data.values) {
       DocumentSnapshot<Map<String, dynamic>> doc = await docRef.get();
       Map<String, dynamic> json = doc.data()!;

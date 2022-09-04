@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 
-class ProductsCatalog extends StatefulWidget {
+class ProductsCatalog extends StatelessWidget {
   const ProductsCatalog({Key? key}) : super(key: key);
 
-  @override
-  State<ProductsCatalog> createState() => _ProductsCatalogState();
-}
-
-class _ProductsCatalogState extends State<ProductsCatalog> {
-  final products = ['Iphone', 'Samsung', 'Oppo', 'Xiaomi', 'Gaming\nPhone'];
+  final products = const [
+    'Iphone',
+    'Samsung',
+    'Oppo',
+    'Xiaomi',
+    'Gaming\nPhone'
+  ];
 
   @override
   Widget build(BuildContext context) {

@@ -10,8 +10,6 @@ class AccountContainer extends StatefulWidget {
 class _AccountContainerState extends State<AccountContainer> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: const Center(child: Text('Account')),
-    );
+    return const Center(child: Text('Account'));
   }
 }

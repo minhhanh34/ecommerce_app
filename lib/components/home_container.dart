@@ -1,7 +1,6 @@
-
 import 'package:ecommerce_app/components/banner.dart';
 import 'package:ecommerce_app/components/products_catalog.dart';
-import 'package:ecommerce_app/components/products_widget.dart';
+import 'package:ecommerce_app/components/product_widget.dart';
 import 'package:ecommerce_app/model/banner_model.dart';
 import 'package:flutter/material.dart';
 
@@ -22,23 +21,40 @@ class HomeContainer extends StatefulWidget {
 class _HomeContainerState extends State<HomeContainer> {
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        // mainAxisSize: MainAxisSize.min,
-        children: [
-          HeaderBanner(model: widget.banners),
-          const HeaderRow(
-            title: 'Danh mục',
-            hasMore: true,
+    var column = Column(
+      // mainAxisSize: MainAxisSize.min,
+      children: [
+        HeaderBanner(model: widget.banners),
+        const HeaderRow(
+          title: 'Danh mục',
+          hasMore: true,
+        ),
+        const ProductsCatalog(),
+        const HeaderRow(
+          title: 'Sản phẩm gợi ý',
+          hasMore: true,
+        ),
+        // Expanded(
+        //   child: ProductsWidget(products: widget.products),
+        // ),
+      ],
+    );
+    return CustomScrollView(
+      slivers: [
+        SliverList(
+          delegate: SliverChildListDelegate([column]),
+        ),
+        SliverGrid(
+          delegate: SliverChildBuilderDelegate(
+            childCount: widget.products.length,
+            (context, index) =>
+                ProductWidget(product: widget.products[index]),
           ),
-          const ProductsCatalog(),
-          const HeaderRow(
-            title: 'Sản phẩm gợi ý',
-            hasMore: true,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
           ),
-          ProductsWidget(products: widget.products),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

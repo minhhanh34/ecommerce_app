@@ -14,26 +14,7 @@ class FavoriteProductContainer extends StatefulWidget {
 }
 
 class _FavoriteProductContainerState extends State<FavoriteProductContainer> {
-  // Future<List<ProductModel>> getFavoritProducts(String user) async {
-  //   List<ProductModel> productModels = [];
-  //   DocumentSnapshot<Map<String, dynamic>> snapshot =
-  //       await FirebaseFirestore.instance.collection('favorite').doc(user).get();
-  //   Map<String, dynamic> data = snapshot.data()!['favorite'];
-  //   for (DocumentReference<Map<String, dynamic>> product in data.values) {
-  //     DocumentSnapshot<Map<String, dynamic>> prodData = await product.get();
-
-  //     productModels.add(
-  //       ProductModel(
-  //         name: prodData.data()!['name'],
-  //         imageURL: prodData.data()!['imageURL'],
-  //         price: prodData.data()!['price'],
-  //         sold: prodData.data()!['sold'],
-  //         grade: prodData.data()!['grade'],
-  //       )..buildImage(),
-  //     );
-  //   }
-  //   return productModels;
-  // }
+  
 
   @override
   Widget build(BuildContext context) {

@@ -15,7 +15,6 @@ class _CartIconState extends State<CartIcon> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () async {
-        // final model = await CartServiceIml().getCart('user1');
         Navigator.of(context).push(
           CupertinoPageRoute(
             builder: (context) => const CartPage(),

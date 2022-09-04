@@ -25,3 +25,15 @@ class LogoutState extends HomeState {}
 class LoadingState extends HomeState {}
 
 class InitialState extends HomeState {}
+
+class ProductDetail extends HomeState {
+  final ProductModel product;
+  ProductDetail(this.product);
+}
+
+class CheckCartState extends HomeState {}
+
+class Nav extends HomeState {
+  final int index;
+  Nav([this.index = 0]);
+}

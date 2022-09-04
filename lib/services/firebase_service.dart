@@ -7,7 +7,7 @@ abstract class Service {}
 
 abstract class ProductService extends Service {
   Future<List<ProductModel>?> getAllProducts();
-  Future<ProductModel?> getProduct({required String id});
+  Future<ProductModel?> getProduct({required String prodID});
   Future<List<ProductModel>> getFavoritedProduct({required String userID});
 }
 
@@ -33,11 +33,11 @@ class ProductServiceIml implements ProductService {
   }
 
   @override
-  Future<ProductModel?> getProduct({required String id}) async {
+  Future<ProductModel?> getProduct({required String prodID}) async {
     String collection = 'products';
     try {
       DocumentSnapshot<Map<String, dynamic>> docRef =
-          await database.collection(collection).doc(id).get();
+          await database.collection(collection).doc(prodID).get();
       Map<String, dynamic> json = docRef.data()!;
       return ProductModel.fromJson(json);
     } catch (e) {
@@ -51,16 +51,17 @@ class ProductServiceIml implements ProductService {
       {required String userID}) async {
     final products = <ProductModel>[];
     const String collection = 'favorite';
-    DocumentSnapshot<Map<String, dynamic>> doc =
-        await database.collection(collection).doc(userID).get();
-    Map<String, dynamic> data = doc.data()!;
-    for (DocumentReference<Map<String, dynamic>> ref in data.values) {
+    final docs = await database.collection(collection).get();
+    final doc =
+        docs.docs.where((element) => element.data()['uid'] == userID).first;
+    
+    Map<String, dynamic> data = doc.data()['favorite'];
+    for (var ref in data.values) {
       DocumentSnapshot<Map<String, dynamic>> json = await ref.get();
       Map<String, dynamic> result = json.data()!;
 
       products.add(ProductModel.fromJson(result));
     }
-
     return products;
   }
 }

@@ -1,6 +1,5 @@
 import 'package:ecommerce_app/cubit/home/home_cubit.dart';
 import 'package:ecommerce_app/cubit/home/home_state.dart';
-import 'package:ecommerce_app/cubit/login/login_cubit.dart';
 import 'package:ecommerce_app/components/account_container.dart';
 import 'package:ecommerce_app/components/bottom_navigation_bar.dart';
 import 'package:ecommerce_app/components/cart_icon.dart';
@@ -9,7 +8,7 @@ import 'package:ecommerce_app/components/history_container.dart';
 import 'package:ecommerce_app/components/home_container.dart';
 import 'package:ecommerce_app/components/order_container.dart';
 import 'package:ecommerce_app/screen/cart_page.dart';
-import 'package:ecommerce_app/screen/login_page.dart';
+import 'package:ecommerce_app/screen/sign_in_page.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -47,7 +46,67 @@ class _HomePageState extends State<HomePage> {
           const CartIcon(),
         ],
       ),
-      drawer: Drawer(
+      drawer: MyDrawer(homeCubit: homeCubit),
+      body: BlocBuilder<HomeCubit, HomeState>(
+        builder: (context, state) {
+          if (state is InitialState) {
+            context.read<HomeCubit>().mainTab();
+            return buildLoading();
+          }
+          if (state is MainState) {
+            return HomeContainer(
+              banners: state.banners,
+              products: state.products,
+            );
+          }
+          if (state is FavoriteState) {
+            return FavoriteProductContainer(
+              favoritedProducts: state.favoritedProducts,
+            );
+          }
+          if (state is OrderState) return const OrderContainer();
+          if (state is HistoryState) return const HistoryContainer();
+          if (state is AccountState) return const AccountContainer();
+          if (state is LoadingState) return buildLoading();
+          return buildLoading();
+        },
+      ),
+      bottomNavigationBar: const BottomNavBar(),
+    );
+  }
+
+  Widget buildLoading() {
+    return const Center(
+      child: CircularProgressIndicator(),
+    );
+  }
+}
+
+class MyDrawer extends StatelessWidget {
+  const MyDrawer({
+    Key? key,
+    required this.homeCubit,
+  }) : super(key: key);
+
+  final HomeCubit homeCubit;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<HomeCubit, HomeState>(
+      listener: (context, state) {
+        if (state is LogoutState) {
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => const SignInPage()),
+            (route) => false,
+          );
+        }
+        if (state is CheckCartState) {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => const CartPage()),
+          );
+        }
+      },
+      child: Drawer(
         child: Column(
           children: [
             SizedBox(
@@ -84,132 +143,81 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
-            ListTile(
-              selected: true,
-              selectedTileColor: Colors.pink.shade100,
-              selectedColor: Colors.white,
-              onTap: () {},
-              leading: const Icon(Icons.home_rounded),
-              title: Text(
-                'Trang chủ',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
+            DrawerListTile(
+              leading: Icons.home_rounded,
+              ontap: () {},
+              title: 'Trang chủ',
+              isSelected: true,
             ),
-            ListTile(
-              selected: false,
-              selectedTileColor: Colors.pink.shade100,
-              selectedColor: Colors.white,
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => const CartPage(),
-                  ),
-                );
-              },
-              leading: const Icon(Icons.shopping_cart_rounded),
-              title: Text(
-                'Giỏ hàng',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
+            DrawerListTile(
+              leading: Icons.shopping_cart_outlined,
+              ontap: homeCubit.onCartTab,
+              title: 'Giỏ hàng',
             ),
             // const Divider(color: Colors.black),
-            ListTile(
-              selected: false,
-              selectedTileColor: Colors.pink.shade100,
-              selectedColor: Colors.white,
-              onTap: () {},
-              leading: const Icon(Icons.border_all_rounded),
-              title: Text(
-                'Tất cả sản phẩm',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
+            DrawerListTile(
+              ontap: () {},
+              leading: Icons.border_all_rounded,
+              title: 'Tất cả sản phẩm',
             ),
-            ListTile(
-              selected: false,
-              selectedTileColor: Colors.pink.shade100,
-              selectedColor: Colors.white,
-              onTap: () {},
-              leading: const Icon(Icons.category_rounded),
-              title: Text(
-                'Danh mục',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
+            DrawerListTile(
+              leading: Icons.category_rounded,
+              ontap: () {},
+              title: 'Danh mục',
             ),
-            ListTile(
-              selected: false,
-              selectedTileColor: Colors.pink.shade100,
-              selectedColor: Colors.white,
-              onTap: () {},
-              leading: const Icon(Icons.feedback_rounded),
-              title: Text(
-                'Phản hồi',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
+            DrawerListTile(
+              ontap: () {},
+              leading: Icons.feedback_rounded,
+              title: 'Phản hồi',
             ),
-            ListTile(
-              selected: false,
-              selectedTileColor: Colors.pink.shade100,
-              selectedColor: Colors.white,
-              onTap: () {},
-              leading: const Icon(Icons.info_rounded),
-              title: Text(
-                'Thông tin',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
+            DrawerListTile(
+              ontap: () {},
+              leading: Icons.info_rounded,
+              title: 'Thông tin',
             ),
             const Spacer(),
             const Divider(color: Colors.black, height: 2),
-            ListTile(
-              onTap: homeCubit.logout,
-              title: const Text('Đăng xuất'),
-              trailing: Icon(
-                Icons.logout_rounded,
-                color: Colors.red.shade900,
-              ),
+            DrawerListTile(
+              ontap: homeCubit.logout,
+              title: 'Đăng xuất',
+              trailing: Icons.logout_rounded,
             ),
           ],
         ),
       ),
-      body: BlocConsumer<HomeCubit, HomeState>(
-        listener: (context, state) {
-          if (state is LogoutState) {
-            context.read<LoginCubit>().setInitial();
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (_) => const LoginPage()),
-            );
-          }
-        },
-        builder: (context, state) {
-          if (state is InitialState) {
-            context.read<HomeCubit>().mainTab();
-            return buildLoading();
-          }
-
-          if (state is MainState) {
-            return HomeContainer(
-              banners: state.banners,
-              products: state.products,
-            );
-          }
-          if (state is FavoriteState) {
-            return FavoriteProductContainer(
-              favoritedProducts: state.favoritedProducts,
-            );
-          }
-          if (state is OrderState) return const OrderContainer();
-          if (state is HistoryState) return const HistoryContainer();
-          if (state is AccountState) return const AccountContainer();
-          if (state is LoadingState) return buildLoading();
-          return buildLoading();
-        },
-      ),
-      bottomNavigationBar: const BottomNavBar(),
     );
   }
+}
 
-  Widget buildLoading() {
-    return const Center(
-      child: CircularProgressIndicator(),
+class DrawerListTile extends StatelessWidget {
+  const DrawerListTile({
+    Key? key,
+    this.isSelected = false,
+    this.leading,
+    required this.ontap,
+    required this.title,
+    this.trailing,
+  }) : super(key: key);
+
+  final bool isSelected;
+  final VoidCallback ontap;
+  final IconData? leading;
+  final String title;
+  final IconData? trailing;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      selected: isSelected,
+      selectedTileColor: Colors.pink.shade100,
+      selectedColor: Colors.white,
+      onTap: ontap,
+      leading: Icon(leading),
+      trailing: Icon(trailing),
+      title: Text(
+        title,
+        style: Theme.of(context).textTheme.titleLarge,
+      ),
     );
   }
 }
