@@ -1,13 +1,14 @@
-import 'package:ecommerce_app/cubit/cart/cart_cubit.dart';
-import 'package:ecommerce_app/model/cart_model.dart';
+import 'package:ecommerce_app/model/product_model.dart';
 import 'package:ecommerce_app/screen/product_page.dart';
 import 'package:ecommerce_app/utils/price_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../cubit/cart/cart_cubit.dart';
+
 class CartPage extends StatefulWidget {
-  const CartPage({Key? key, this.model}) : super(key: key);
-  final CartModel? model;
+  const CartPage({Key? key, required this.products}) : super(key: key);
+  final List<ProductModel> products;
   @override
   State<CartPage> createState() => _CartPageState();
 }
@@ -37,7 +38,7 @@ class _CartPageState extends State<CartPage> {
           } else if (state is CartLoaded) {
             return ListView.builder(
               padding: const EdgeInsets.symmetric(horizontal: 4),
-              itemCount: state.model.products.length,
+              itemCount: state.products.length,
               itemBuilder: (context, index) {
                 return Row(
                   children: [
@@ -58,17 +59,16 @@ class _CartPageState extends State<CartPage> {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                     builder: (_) => ProductPage(
-                                        product: state.model.products[index])),
+                                        product: state.products[index])),
                               );
                             },
                             isThreeLine: true,
                             leading: Hero(
-                              tag: state.model.products[index].name,
-                              child:
-                                  state.model.products[index].images['image1']!,
+                              tag: state.products[index].name,
+                              child: state.products[index].images['image1']!,
                             ),
                             title: Text(
-                              state.model.products[index].name,
+                              state.products[index].name,
                               style: Theme.of(context).textTheme.titleLarge,
                             ),
                             subtitle: Column(
@@ -76,7 +76,7 @@ class _CartPageState extends State<CartPage> {
                               children: [
                                 Text(
                                   PriceFormat.format(
-                                      state.model.products[index].price),
+                                      state.products[index].price),
                                   style: Theme.of(context)
                                       .textTheme
                                       .titleSmall
@@ -89,7 +89,7 @@ class _CartPageState extends State<CartPage> {
                                 Row(
                                   children: [
                                     for (int i = 0;
-                                        i < state.model.products[index].grade;
+                                        i < state.products[index].grade;
                                         i++)
                                       Icon(
                                         Icons.star_rounded,

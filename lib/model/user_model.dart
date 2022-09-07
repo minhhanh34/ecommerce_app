@@ -6,9 +6,14 @@ part 'user_model.g.dart';
 class UserModel {
   final String uid;
   final String phone;
-  final String? name;
-  final String? address;
-  UserModel({required this.uid, required this.phone, this.name, this.address});
+  final String name;
+  final String address;
+  UserModel({
+    required this.uid,
+    required this.phone,
+    required this.name,
+    required this.address,
+  });
 
   factory UserModel.fromJson(Map<String, dynamic> json) =>
       _$UserModelFromJson(json);

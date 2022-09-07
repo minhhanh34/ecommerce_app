@@ -1,66 +1,43 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ecommerce_app/model/favorite_model.dart';
 import 'package:ecommerce_app/model/product_model.dart';
+import 'package:ecommerce_app/repository/product_repository.dart';
 
 abstract class Service {}
 
 abstract class ProductService extends Service {
   Future<List<ProductModel>?> getAllProducts();
   Future<ProductModel?> getProduct({required String prodID});
-  Future<List<ProductModel>> getFavoritedProduct({required String userID});
+  Future<List<ProductModel>> getFavorite({required String uid});
 }
 
 class ProductServiceIml implements ProductService {
-  const ProductServiceIml({required this.database});
+  const ProductServiceIml(
+      {required this.productRepo, required this.favotireRepo});
 
-  final FirebaseFirestore database;
+  final Repository<ProductModel> productRepo;
+  final Repository<FavoriteModel> favotireRepo;
 
   @override
   Future<List<ProductModel>?> getAllProducts() async {
-    String collection = 'products';
-    try {
-      QuerySnapshot<Map<String, dynamic>> colRef =
-          await database.collection(collection).get();
-      return colRef.docs.map((QueryDocumentSnapshot<Map<String, dynamic>> doc) {
-        Map<String, dynamic> json = doc.data();
-        return ProductModel.fromJson(json);
-      }).toList();
-    } catch (e) {
-      log('error', error: e);
-    }
-    return [];
+    return await productRepo.list();
   }
 
   @override
   Future<ProductModel?> getProduct({required String prodID}) async {
-    String collection = 'products';
-    try {
-      DocumentSnapshot<Map<String, dynamic>> docRef =
-          await database.collection(collection).doc(prodID).get();
-      Map<String, dynamic> json = docRef.data()!;
-      return ProductModel.fromJson(json);
-    } catch (e) {
-      log('error', error: e);
-    }
-    return null;
+    return await productRepo.getOne(prodID);
   }
 
   @override
-  Future<List<ProductModel>> getFavoritedProduct(
-      {required String userID}) async {
+  Future<List<ProductModel>> getFavorite({required String uid}) async {
     final products = <ProductModel>[];
-    const String collection = 'favorite';
-    final docs = await database.collection(collection).get();
-    final doc =
-        docs.docs.where((element) => element.data()['uid'] == userID).first;
-    
-    Map<String, dynamic> data = doc.data()['favorite'];
-    for (var ref in data.values) {
-      DocumentSnapshot<Map<String, dynamic>> json = await ref.get();
-      Map<String, dynamic> result = json.data()!;
-
-      products.add(ProductModel.fromJson(result));
+    final favorite = await favotireRepo.getOne(uid);
+    final prodsRef = favorite.favorite;
+    for (var ref in prodsRef.values) {
+      final prodData = await (ref as DocumentReference<Map<String, dynamic>>).get();
+      final product =
+          ProductModel.fromJson(prodData.data()!);
+      products.add(product);
     }
     return products;
   }

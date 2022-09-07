@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce_app/model/cart_model.dart';
 import 'package:ecommerce_app/model/product_model.dart';
 import 'package:ecommerce_app/services/cart_service.dart';
@@ -13,12 +14,22 @@ class CartCubit extends Cubit<CartState> {
 
   final chosen = [];
 
+  final collection = 'cart';
+
   void getCart() async {
+    emit(CartLoading());
     final pfres = await SharedPreferences.getInstance();
     final uid = pfres.getString('uid');
-    emit(CartLoading());
+    final products = <ProductModel>[];
     CartModel model = await service.getCart(userId: uid!);
-    emit(CartLoaded(model: model));
+    final cart = model.cart;
+    for (var ref in cart.values) {
+      final prodJson =
+          await (ref as DocumentReference<Map<String, dynamic>>).get();
+      final product = ProductModel.fromJson(prodJson.data()!);
+      products.add(product);
+    }
+    emit(CartLoaded(products: products));
   }
 
   void onItemTap(ProductModel product) {

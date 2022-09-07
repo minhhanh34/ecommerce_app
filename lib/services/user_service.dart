@@ -4,7 +4,7 @@ import '../model/user_model.dart';
 
 abstract class UserService {
   Future<UserModel> getUser(String uid);
-  Future<void> setAddress(String uid, String address);
+  Future<void> setAddressAndName(String uid, String address, String name);
 }
 
 class UserServiceIml implements UserService {
@@ -19,9 +19,10 @@ class UserServiceIml implements UserService {
   }
 
   @override
-  Future<void> setAddress(String uid, String address) async {
+  Future<void> setAddressAndName(String uid, String address, String name) async {
     final data = <String, dynamic>{
       'address': address,
+      'name': name,
     };
     await FirebaseFirestore.instance.collection(collection).doc(uid).set(data);
   }

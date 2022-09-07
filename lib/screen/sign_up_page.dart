@@ -162,7 +162,10 @@ class _SignUpPageState extends State<SignUpPage> {
                       await context.read<SignUpCubit>().onSignUp(
                           phoneController.text,
                           passController.text,
-                          confirmController.text);
+                          confirmController.text,
+                          nameController.text,
+                          addressController.text,
+                      );
                     }
                   },
                   child: const Icon(Icons.arrow_forward),

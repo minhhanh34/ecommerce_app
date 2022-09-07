@@ -1,7 +1,7 @@
-import 'package:ecommerce_app/components/header_row.dart';
 import 'package:ecommerce_app/model/product_model.dart';
 import 'package:ecommerce_app/screen/product_page.dart';
 import 'package:ecommerce_app/utils/price_format.dart';
+import '../widgets/header_row.dart';
 import 'package:flutter/material.dart';
 
 class FavoriteProductContainer extends StatefulWidget {
@@ -14,8 +14,6 @@ class FavoriteProductContainer extends StatefulWidget {
 }
 
 class _FavoriteProductContainerState extends State<FavoriteProductContainer> {
-  
-
   @override
   Widget build(BuildContext context) {
     return Container(

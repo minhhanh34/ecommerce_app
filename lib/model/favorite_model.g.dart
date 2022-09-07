@@ -1,17 +1,19 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'cart_model.dart';
+part of 'favorite_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-CartModel _$CartModelFromJson(Map<String, dynamic> json) => CartModel(
+FavoriteModel _$FavoriteModelFromJson(Map<String, dynamic> json) =>
+    FavoriteModel(
       uid: json['uid'] as String,
-      cart: json['cart'] as Map<String, dynamic>,
+      favorite: json['favorite'] as Map<String, dynamic>,
     );
 
-Map<String, dynamic> _$CartModelToJson(CartModel instance) => <String, dynamic>{
+Map<String, dynamic> _$FavoriteModelToJson(FavoriteModel instance) =>
+    <String, dynamic>{
       'uid': instance.uid,
-      'cart': instance.cart,
+      'favorite': instance.favorite,
     };

@@ -1,12 +1,12 @@
-import 'package:ecommerce_app/components/banner.dart';
-import 'package:ecommerce_app/components/products_catalog.dart';
-import 'package:ecommerce_app/components/product_widget.dart';
+
 import 'package:ecommerce_app/model/banner_model.dart';
 import 'package:flutter/material.dart';
 
+import '../widgets/products_catalog.dart';
 import '../model/product_model.dart';
 import 'banner.dart';
 import 'header_row.dart';
+import 'product_widget.dart';
 
 class HomeContainer extends StatefulWidget {
   const HomeContainer({Key? key, required this.banners, required this.products})

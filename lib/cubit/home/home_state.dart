@@ -1,4 +1,5 @@
 import 'package:ecommerce_app/model/banner_model.dart';
+
 import 'package:ecommerce_app/model/product_model.dart';
 
 abstract class HomeState {}

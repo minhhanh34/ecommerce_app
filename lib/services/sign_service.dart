@@ -5,7 +5,7 @@ import 'package:ecommerce_app/services/firebase_service.dart';
 
 abstract class SignService extends Service {
   Future<String?> signIn({required String phone, required String password});
-  Future<String?> signUp({required String phone, required String password});
+  Future<String?> signUp({required String phone, required String password, required String name, required String address});
 }
 
 class SignServiceIml implements SignService {
@@ -24,7 +24,7 @@ class SignServiceIml implements SignService {
 
   @override
   Future<String?> signUp(
-      {required String phone, required String password}) async {
+      {required String phone, required String password, required String name, required String address}) async {
     try {
       String uid = password.substring(password.length - 10);
       await FirebaseFirestore.instance.collection('user').add(
@@ -32,6 +32,8 @@ class SignServiceIml implements SignService {
           'uid': uid,
           'phone': phone,
           'password': password,
+          'name': name,
+          'address': address,
         },
       );
       return uid;

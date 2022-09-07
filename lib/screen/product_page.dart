@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:ecommerce_app/components/cart_icon.dart';
-import 'package:ecommerce_app/components/header_row.dart';
+
 import 'package:ecommerce_app/model/product_model.dart';
 import 'package:flutter/material.dart';
+
+import '../widgets/cart_icon.dart';
+import '../widgets/header_row.dart';
 
 class ProductPage extends StatefulWidget {
   const ProductPage({Key? key, required this.product}) : super(key: key);

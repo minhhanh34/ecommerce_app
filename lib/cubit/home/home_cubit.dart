@@ -22,8 +22,8 @@ class HomeCubit extends Cubit<HomeState> {
     emit(LoadingState());
     final spref = await SharedPreferences.getInstance();
     final uid = spref.getString('uid');
-    final favorited = await productService.getFavoritedProduct(userID: uid!);
-    emit(FavoriteState(favoritedProducts: favorited));
+    final products = await productService.getFavorite(uid: uid!);
+    emit(FavoriteState(favoritedProducts: products));
   }
 
   void mainTab() async {

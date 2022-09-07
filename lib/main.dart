@@ -5,6 +5,10 @@ import 'package:ecommerce_app/cubit/home/home_cubit.dart';
 import 'package:ecommerce_app/cubit/signin/signin_cubit.dart';
 import 'package:ecommerce_app/cubit/signup/signup_cubit.dart';
 import 'package:ecommerce_app/firebase_options.dart';
+import 'package:ecommerce_app/repository/cart_repository.dart';
+import 'package:ecommerce_app/repository/favorite_repository.dart';
+import 'package:ecommerce_app/repository/product_repository.dart';
+
 import 'package:ecommerce_app/screen/home_page.dart';
 import 'package:ecommerce_app/screen/sign_in_page.dart';
 import 'package:ecommerce_app/services/banner_service.dart';
@@ -24,6 +28,20 @@ void main() async {
   final spref = await SharedPreferences.getInstance();
   String? uid = spref.getString('uid');
 
+  // final prodRepo = ProductRepository();
+  // final products = await prodRepo.list();
+  // products.forEach((element) => print(element.name));
+
+  // print('++cart++');
+
+  // final cartRepo = CartRepository();
+  // final cart = await cartRepo.list();
+  // cart.forEach((element) => print(element.uid));
+  // print('++fav++');
+  // final favRepo = FavoriteRepository();
+  // final fav = await favRepo.list();
+  // fav.forEach((element) => print(element.uid));
+
   runApp(EcommerceApp(uid: uid));
 }
 
@@ -40,8 +58,10 @@ class EcommerceApp extends StatelessWidget {
           create: (_) => HomeCubit(
             bannerService:
                 BannerServiceIml(database: FirebaseFirestore.instance),
-            productService:
-                ProductServiceIml(database: FirebaseFirestore.instance),
+            productService: ProductServiceIml(
+              productRepo: ProductRepository(),
+              favotireRepo: FavoriteRepository(),
+            ),
           ),
         ),
         BlocProvider(create: (_) => SignInCubit(service: service)),
@@ -50,7 +70,7 @@ class EcommerceApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) => CartCubit(
-            service: CartServiceIml(),
+            service: CartServiceIml(repository: CartRepository()),
           ),
         ),
         BlocProvider(

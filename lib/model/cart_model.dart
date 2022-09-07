@@ -1,13 +1,11 @@
-import 'package:ecommerce_app/model/product_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'cart_model.g.dart';
 
 @JsonSerializable()
 class CartModel {
-  List<ProductModel> products;
-  CartModel({
-    required this.products
-  });
+  String uid;
+  Map<String, dynamic> cart;
+  CartModel({required this.uid, required this.cart});
 
   factory CartModel.fromJson(Map<String, dynamic> json) =>
       _$CartModelFromJson(json);

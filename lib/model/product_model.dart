@@ -6,11 +6,29 @@ part 'product_model.g.dart';
 
 @JsonSerializable()
 class ProductModel {
-  final String name;
-  final Map<String, dynamic> imageURL;
-  final int price;
-  final int grade;
-  final int sold;
+  String name;
+  Map<String, dynamic> imageURL;
+  int price;
+  int grade;
+  int sold;
+  String? screenSize;
+  String? resolution;
+  String? brand;
+  String? batteryCapacity;
+  String? fontCamera;
+  String? rearCamera;
+  String? gpu;
+  String? cpu;
+  String? cpuSpeed;
+  String? size;
+  String? displayType;
+  String? model;
+  String? sims;
+  String? batteryType;
+  String? weight;
+  String? ram;
+  String? rom;
+  String? wifi;
   final images = <String, CachedNetworkImage>{};
   ProductModel({
     required this.name,

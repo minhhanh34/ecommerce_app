@@ -17,7 +17,7 @@ class _CartIconState extends State<CartIcon> {
       onTap: () async {
         Navigator.of(context).push(
           CupertinoPageRoute(
-            builder: (context) => const CartPage(),
+            builder: (context) => const CartPage(products: [],),
           ),
         );
       },

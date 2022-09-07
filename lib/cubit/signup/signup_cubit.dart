@@ -56,7 +56,8 @@ class SignUpCubit extends Cubit<SignUpState> {
     return null;
   };
 
-  Future<void> onSignUp(String phone, String pass, String confirm) async {
+  Future<void> onSignUp(String phone, String pass, String confirm, String name,
+      String address) async {
     if (pass == confirm) {
       String suff = phone.substring(phone.length - 5);
       pass += suff;
@@ -64,7 +65,8 @@ class SignUpCubit extends Cubit<SignUpState> {
         pass += pepper[suff[i]];
       }
       pass = md5.convert(utf8.encode(pass)).toString();
-      String? uid = await service.signUp(phone: phone, password: pass);
+      String? uid = await service.signUp(
+          phone: phone, password: pass, name: name, address: address);
       if (uid != null) {
         emit(SignUpSuccess());
       } else {

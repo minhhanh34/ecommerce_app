@@ -1,19 +1,22 @@
 import 'package:ecommerce_app/cubit/home/home_cubit.dart';
 import 'package:ecommerce_app/cubit/home/home_state.dart';
-import 'package:ecommerce_app/components/account_container.dart';
-import 'package:ecommerce_app/components/bottom_navigation_bar.dart';
-import 'package:ecommerce_app/components/cart_icon.dart';
-import 'package:ecommerce_app/components/favorite_container.dart';
-import 'package:ecommerce_app/components/history_container.dart';
-import 'package:ecommerce_app/components/home_container.dart';
-import 'package:ecommerce_app/components/order_container.dart';
+
 import 'package:ecommerce_app/screen/cart_page.dart';
 import 'package:ecommerce_app/screen/sign_in_page.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../components/notify_icon.dart';
+import '../widgets/account_container.dart';
+import '../widgets/bottom_navigation_bar.dart';
+import '../widgets/cart_icon.dart';
+import '../widgets/favorite_container.dart';
+import '../widgets/history_container.dart';
+import '../widgets/home_container.dart';
+import '../widgets/notify_icon.dart';
+import '../widgets/order_container.dart';
+
+
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -102,7 +105,7 @@ class MyDrawer extends StatelessWidget {
         }
         if (state is CheckCartState) {
           Navigator.of(context).push(
-            MaterialPageRoute(builder: (_) => const CartPage()),
+            MaterialPageRoute(builder: (_) => const CartPage(products: [],)),
           );
         }
       },
