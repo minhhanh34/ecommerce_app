@@ -8,11 +8,13 @@ class UserModel {
   final String phone;
   final String name;
   final String address;
+  final String password;
   UserModel({
     required this.uid,
     required this.phone,
     required this.name,
     required this.address,
+    required this.password,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) =>

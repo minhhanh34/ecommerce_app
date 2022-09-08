@@ -34,19 +34,13 @@ class SignInCubit extends Cubit<SignInState> {
   }
 
   void onSignIn(String phone, String password) async {
-    String suff = phone.substring(phone.length - 5);
-    password += suff;
-    for (int i = 0; i < suff.length; i++) {
-      password += pepper[suff[i]];
-    }
-
-    password = md5.convert(utf8.encode(password)).toString();
+    
     String? uid = await service.signIn(phone: phone, password: password);
 
     if (uid != null) {
-      emit(SignIned());
       final spref = await SharedPreferences.getInstance();
       spref.setString('uid', uid);
+      emit(SignIned());
     } else {
       emit(SignInMessage('Sai tài khoản hoặc mật khẩu'));
     }
