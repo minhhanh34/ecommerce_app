@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce_app/model/banner_model.dart';
-import 'package:ecommerce_app/services/firebase_service.dart';
+import 'package:ecommerce_app/services/product_service.dart';
 
 abstract class BannerService extends Service {
   Future<BannerModel> getAllBanners();

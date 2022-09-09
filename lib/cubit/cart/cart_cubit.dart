@@ -9,8 +9,7 @@ part 'cart_state.dart';
 class CartCubit extends Cubit<CartState> {
   CartCubit({required this.service}) : super(CartInitial());
   final CartService service;
-
-  final collection = 'cart';
+  final products = <ProductModel>[];
 
   void getCart() async {
     emit(CartLoading());
@@ -22,5 +21,19 @@ class CartCubit extends Cubit<CartState> {
 
   void onItemTap(ProductModel product) {
     emit(CartDetail(product));
+  }
+
+  void addItem(ProductModel item) async {
+    products.add(item);
+    final spref = await SharedPreferences.getInstance();
+    final uid = spref.getString('uid');
+    await service.update(uid!, products);
+  }
+
+  void removeItem(ProductModel item) async {
+    products.remove(item);
+    final spref = await SharedPreferences.getInstance();
+    final uid = spref.getString('uid');
+    await service.update(uid!, products);
   }
 }

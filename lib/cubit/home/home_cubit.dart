@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:ecommerce_app/model/product_model.dart';
 import 'package:ecommerce_app/services/banner_service.dart';
-import 'package:ecommerce_app/services/firebase_service.dart';
+import 'package:ecommerce_app/services/product_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

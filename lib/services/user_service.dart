@@ -1,29 +1,25 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 import '../model/user_model.dart';
+import '../repository/repository_interface.dart';
 
 abstract class UserService {
   Future<UserModel> getUser(String uid);
-  Future<void> setAddressAndName(String uid, String address, String name);
+  Future<bool> updateUserInfo(UserModel user);
 }
 
 class UserServiceIml implements UserService {
-  static const String collection = 'user';
+  Repository<UserModel> repository;
+  UserServiceIml({required this.repository});
 
   @override
   Future<UserModel> getUser(String uid) async {
-    final snapshot =
-        await FirebaseFirestore.instance.collection(collection).doc(uid).get();
-    final data = snapshot.data()!;
-    return UserModel.fromJson(data);
+    final users = await repository.list();
+    final user = users.firstWhere((user) => user.uid == uid);
+    return user;
   }
 
   @override
-  Future<void> setAddressAndName(String uid, String address, String name) async {
-    final data = <String, dynamic>{
-      'address': address,
-      'name': name,
-    };
-    await FirebaseFirestore.instance.collection(collection).doc(uid).set(data);
+  Future<bool> updateUserInfo(UserModel userModel) async {
+    final docID = await repository.getDocumentID(userModel.uid);
+    return await repository.update(docID, userModel);
   }
 }

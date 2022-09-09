@@ -17,7 +17,7 @@ import 'screen/home_page.dart';
 import 'screen/sign_in_page.dart';
 import 'services/banner_service.dart';
 import 'services/cart_service.dart';
-import 'services/firebase_service.dart';
+import 'services/product_service.dart';
 import 'services/sign_service.dart';
 
 void main() async {
@@ -26,8 +26,6 @@ void main() async {
   // await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
   final spref = await SharedPreferences.getInstance();
   String? uid = spref.getString('uid');
-
-
 
   runApp(EcommerceApp(uid: uid));
 }
@@ -47,7 +45,7 @@ class EcommerceApp extends StatelessWidget {
                 BannerServiceIml(database: FirebaseFirestore.instance),
             productService: ProductServiceIml(
               productRepo: ProductRepository(),
-              favotireRepo: FavoriteRepository(),
+              favoriteRepo: FavoriteRepository(),
             ),
           ),
         ),

@@ -1,20 +1,20 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto/crypto.dart';
 import 'package:ecommerce_app/model/user_model.dart';
-import 'package:ecommerce_app/repository/product_repository.dart';
-import 'package:ecommerce_app/services/firebase_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ecommerce_app/services/product_service.dart';
+
+import '../repository/repository_interface.dart';
 
 abstract class SignService extends Service {
   Future<String?> signIn({required String phone, required String password});
-  Future<String?> signUp(
-      {required String phone,
-      required String password,
-      required String name,
-      required String address});
+  Future<String?> signUp({
+    required String phone,
+    required String password,
+    required String name,
+    required String address,
+  });
 }
 
 class SignServiceIml implements SignService {
@@ -60,14 +60,15 @@ class SignServiceIml implements SignService {
   }
 
   @override
-  Future<String?> signUp(
-      {required String phone,
-      required String password,
-      required String name,
-      required String address}) async {
+  Future<String?> signUp({
+    required String phone,
+    required String password,
+    required String name,
+    required String address,
+  }) async {
     try {
       String uid = password.substring(password.length - 10);
-      await FirebaseFirestore.instance.collection('user').add(
+      final userModel = UserModel.fromJson(
         <String, dynamic>{
           'uid': uid,
           'phone': phone,
@@ -76,6 +77,7 @@ class SignServiceIml implements SignService {
           'address': address,
         },
       );
+      repository.create(userModel);
       return uid;
     } catch (e) {
       log('error', error: e);
