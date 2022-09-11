@@ -5,8 +5,8 @@ part 'history_model.g.dart';
 @JsonSerializable()
 class HistoryModel {
   String uid;
-  Map<String, dynamic>? cart;
-  HistoryModel({required this.uid, this.cart});
+  Map<String, dynamic>? history;
+  HistoryModel({required this.uid, this.history});
 
   factory HistoryModel.fromJson(Map<String, dynamic> json) =>
       _$HistoryModelFromJson(json);

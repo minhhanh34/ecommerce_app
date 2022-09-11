@@ -1,5 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ecommerce_app/repository/cart_repository.dart';
+import 'package:ecommerce_app/repository/favorite_repository.dart';
 import 'package:ecommerce_app/repository/user_repository.dart';
+import 'package:ecommerce_app/services/cart_service.dart';
+import 'package:ecommerce_app/services/home_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,14 +13,10 @@ import 'cubit/home/home_cubit.dart';
 import 'cubit/signin/signin_cubit.dart';
 import 'cubit/signup/signup_cubit.dart';
 import 'firebase_options.dart';
-import 'repository/cart_repository.dart';
-import 'repository/favorite_repository.dart';
-import 'repository/product_repository.dart';
+import 'repository/history_repository.dart';
+import 'repository/order_repository.dart';
 import 'screen/home_page.dart';
 import 'screen/sign_in_page.dart';
-import 'services/banner_service.dart';
-import 'services/cart_service.dart';
-import 'services/product_service.dart';
 import 'services/sign_service.dart';
 
 void main() async {
@@ -31,36 +30,28 @@ void main() async {
 }
 
 class EcommerceApp extends StatelessWidget {
-  const EcommerceApp({Key? key, this.uid}) : super(key: key);
+  EcommerceApp({Key? key, this.uid}) : super(key: key);
   final String? uid;
+
+  final SignService service = SignServiceIml(
+    userRepo: UserRepository(),
+    cartRepo: CartRepository(),
+    favoriteRepo: FavoriteRepository(),
+    historyRepo: HistoryRepository(),
+    orderRepo: OrderRepository(),
+  );
 
   @override
   Widget build(BuildContext context) {
-    final SignService service = SignServiceIml(repository: UserRepository());
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (_) => HomeCubit(
-            bannerService:
-                BannerServiceIml(database: FirebaseFirestore.instance),
-            productService: ProductServiceIml(
-              productRepo: ProductRepository(),
-              favoriteRepo: FavoriteRepository(),
-            ),
-          ),
-        ),
+        BlocProvider(create: (_) => HomeCubit(homeService: HomeServiceIml())),
         BlocProvider(create: (_) => SignInCubit(service: service)),
+        BlocProvider(create: (_) => SignUpCubit(service: service)),
         BlocProvider(
-          create: (context) => SignUpCubit(service: service),
+          create: (_) => CartCubit(service: CartServiceIml(CartRepository())),
         ),
-        BlocProvider(
-          create: (_) => CartCubit(
-            service: CartServiceIml(repository: CartRepository()),
-          ),
-        ),
-        BlocProvider(
-          create: (context) => ForgetPasswordCubit(),
-        )
+        BlocProvider(create: (_) => ForgetPasswordCubit())
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

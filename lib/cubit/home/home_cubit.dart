@@ -1,53 +1,92 @@
 import 'dart:developer';
 
+import 'package:ecommerce_app/model/banner_model.dart';
 import 'package:ecommerce_app/model/product_model.dart';
-import 'package:ecommerce_app/services/banner_service.dart';
-import 'package:ecommerce_app/services/product_service.dart';
+import 'package:ecommerce_app/model/user_model.dart';
+import 'package:ecommerce_app/services/home_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../cubit/home/home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
-  HomeCubit({
-    required this.bannerService,
-    required this.productService,
-  }) : super(InitialState());
-  final BannerService bannerService;
-  final ProductService productService;
+  HomeCubit({required this.homeService}) : super(InitialState());
+  HomeService homeService;
 
   int navIndex = 0;
 
+  List<ProductModel>? products;
+  List<ProductModel>? favoriteProducts;
+  List<ProductModel>? orderProducts;
+  List<ProductModel>? historyProducts;
+  UserModel? user;
+  BannerModel? bannersData;
+
   void favoriteTab() async {
-    emit(LoadingState());
-    final spref = await SharedPreferences.getInstance();
-    final uid = spref.getString('uid');
-    final products = await productService.getFavorite(uid: uid!);
-    emit(FavoriteState(favoritedProducts: products));
+    if (favoriteProducts == null) {
+      emit(LoadingState());
+      final spref = await SharedPreferences.getInstance();
+      final uid = spref.getString('uid');
+      favoriteProducts = await homeService.getFavoriteProducts(uid!);
+      emit(FavoriteState(favoritedProducts: favoriteProducts!));
+    } else {
+      emit(FavoriteState(favoritedProducts: favoriteProducts!));
+    }
   }
 
   void mainTab() async {
-    emit(LoadingState());
-    final banners = await bannerService.getAllBanners();
-    final products = await productService.getAllProducts();
-    emit(
-      MainState(
-        banners: banners,
+    if (products == null || bannersData == null) {
+      emit(LoadingState());
+      bannersData = await homeService.getBanners();
+      products = await homeService.getAllProducts();
+      emit(
+        MainState(
+          banners: bannersData!,
+          products: products!,
+        ),
+      );
+    } else {
+      emit(MainState(
+        banners: bannersData!,
         products: products!,
-      ),
-    );
+      ));
+    }
   }
 
-  void orderTab() {
-    emit(OrderState());
+  void orderTab() async {
+    if (orderProducts == null) {
+      emit(OrderState());
+      final spref = await SharedPreferences.getInstance();
+      final uid = spref.getString('uid');
+      orderProducts = await homeService.getOrderProducts(uid!);
+      print('order');
+    } else {
+      emit(OrderState());
+    }
   }
 
-  void historyTab() {
-    emit(HistoryState());
+  void historyTab() async {
+    if (historyProducts == null) {
+      emit(HistoryState());
+      final spref = await SharedPreferences.getInstance();
+      final uid = spref.getString('uid');
+      historyProducts = await homeService.getHistoryProducts(uid!);
+      print('history');
+    } else {
+      emit(HistoryState());
+    }
   }
 
-  void accountTab() {
-    emit(AccountState());
+  void accountTab() async {
+    if (user == null) {
+      emit(AccountState());
+      final spref = await SharedPreferences.getInstance();
+      final uid = spref.getString('uid');
+      user = await homeService.getUserInfo(uid!);
+      print('account');
+    } else {
+      emit(AccountState());
+    }
   }
 
   void logout() async {
@@ -71,19 +110,19 @@ class HomeCubit extends Cubit<HomeState> {
 
   void onNavTap(int index) async {
     if (index == 0) {
-      navIndex = 0;
+      navIndex == 0 ? products = null : navIndex = 0;
       mainTab();
     } else if (index == 1) {
-      navIndex = 1;
+      navIndex == 1 ? favoriteProducts = null : navIndex = 1;
       favoriteTab();
     } else if (index == 2) {
-      navIndex = 2;
+      navIndex == 2 ? orderProducts = null : navIndex = 2;
       orderTab();
     } else if (index == 3) {
-      navIndex = 3;
+      navIndex == 3 ? historyProducts = null : navIndex = 3;
       historyTab();
-    } else {
-      navIndex = 4;
+    } else if (index == 4) {
+      navIndex == 4 ? user = null : navIndex = 4;
       accountTab();
     }
   }

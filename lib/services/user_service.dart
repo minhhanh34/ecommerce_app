@@ -8,7 +8,7 @@ abstract class UserService {
 
 class UserServiceIml implements UserService {
   Repository<UserModel> repository;
-  UserServiceIml({required this.repository});
+  UserServiceIml(this.repository);
 
   @override
   Future<UserModel> getUser(String uid) async {

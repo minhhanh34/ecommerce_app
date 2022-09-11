@@ -1,14 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce_app/model/banner_model.dart';
-import 'package:ecommerce_app/services/product_service.dart';
+import 'package:ecommerce_app/services/home_service.dart';
 
 abstract class BannerService extends Service {
   Future<BannerModel> getAllBanners();
 }
 
 class BannerServiceIml implements BannerService {
-  final FirebaseFirestore database;
-  const BannerServiceIml({required this.database});
+  BannerServiceIml();
+  final database = FirebaseFirestore.instance;
 
   @override
   Future<BannerModel> getAllBanners() async {

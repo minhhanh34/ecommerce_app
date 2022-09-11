@@ -8,11 +8,11 @@ part of 'history_model.dart';
 
 HistoryModel _$HistoryModelFromJson(Map<String, dynamic> json) => HistoryModel(
       uid: json['uid'] as String,
-      cart: json['cart'] as Map<String, dynamic>?,
+      history: json['history'] as Map<String, dynamic>?,
     );
 
 Map<String, dynamic> _$HistoryModelToJson(HistoryModel instance) =>
     <String, dynamic>{
       'uid': instance.uid,
-      'cart': instance.cart,
+      'history': instance.history,
     };

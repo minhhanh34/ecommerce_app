@@ -4,7 +4,7 @@ part 'cart_model.g.dart';
 @JsonSerializable()
 class CartModel {
   String uid;
-  Map<String, dynamic> cart;
+  Map<String, dynamic>? cart;
   CartModel({required this.uid, required this.cart});
 
   factory CartModel.fromJson(Map<String, dynamic> json) =>

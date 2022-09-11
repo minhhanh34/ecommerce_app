@@ -9,7 +9,7 @@ part of 'favorite_model.dart';
 FavoriteModel _$FavoriteModelFromJson(Map<String, dynamic> json) =>
     FavoriteModel(
       uid: json['uid'] as String,
-      favorite: json['favorite'] as Map<String, dynamic>,
+      favorite: json['favorite'] as Map<String, dynamic>?,
     );
 
 Map<String, dynamic> _$FavoriteModelToJson(FavoriteModel instance) =>

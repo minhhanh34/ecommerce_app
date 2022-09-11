@@ -1,4 +1,3 @@
-
 import 'package:ecommerce_app/services/sign_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,7 +7,7 @@ part 'signin_state.dart';
 
 class SignInCubit extends Cubit<SignInState> {
   SignInCubit({required this.service}) : super(SignInInitial());
-  final SignService service;
+  SignService service;
 
   Map<String, dynamic> pepper = const <String, dynamic>{
     '0': ')',
@@ -32,7 +31,6 @@ class SignInCubit extends Cubit<SignInState> {
   }
 
   void onSignIn(String phone, String password) async {
-    
     String? uid = await service.signIn(phone: phone, password: password);
 
     if (uid != null) {

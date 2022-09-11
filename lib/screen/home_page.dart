@@ -16,8 +16,6 @@ import '../widgets/home_container.dart';
 import '../widgets/notify_icon.dart';
 import '../widgets/order_container.dart';
 
-
-
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -105,7 +103,7 @@ class MyDrawer extends StatelessWidget {
         }
         if (state is CheckCartState) {
           Navigator.of(context).push(
-            MaterialPageRoute(builder: (_) => const CartPage(products: [],)),
+            MaterialPageRoute(builder: (_) => const CartPage(products: [])),
           );
         }
       },
@@ -154,7 +152,13 @@ class MyDrawer extends StatelessWidget {
             ),
             DrawerListTile(
               leading: Icons.shopping_cart_outlined,
-              ontap: homeCubit.onCartTab,
+              ontap: () async {
+                Navigator.of(context).pop();
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const CartPage(products: [])),
+                );
+                // homeCubit.onCartTab();
+              },
               title: 'Giỏ hàng',
             ),
             // const Divider(color: Colors.black),
@@ -181,7 +185,10 @@ class MyDrawer extends StatelessWidget {
             const Spacer(),
             const Divider(color: Colors.black, height: 2),
             DrawerListTile(
-              ontap: homeCubit.logout,
+              ontap: () {
+                Navigator.of(context).pop();
+                homeCubit.logout();
+              },
               title: 'Đăng xuất',
               trailing: Icons.logout_rounded,
             ),

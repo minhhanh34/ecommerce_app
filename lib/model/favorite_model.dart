@@ -4,7 +4,7 @@ part 'favorite_model.g.dart';
 @JsonSerializable()
 class FavoriteModel {
   String uid;
-  Map<String, dynamic> favorite;
+  Map<String, dynamic>? favorite;
   FavoriteModel({required this.uid, required this.favorite});
 
   factory FavoriteModel.fromJson(Map<String, dynamic> json) =>

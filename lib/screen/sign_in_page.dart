@@ -142,6 +142,7 @@ class _SignInPageState extends State<SignInPage> {
               BlocListener<SignInCubit, SignInState>(
                 listener: (context, state) {
                   if (state is SignUp) {
+                    FocusScope.of(context).unfocus();
                     Navigator.of(context).push(
                       CupertinoPageRoute(builder: (_) => const SignUpPage()),
                     );

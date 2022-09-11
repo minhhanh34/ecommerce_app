@@ -1,9 +1,14 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto/crypto.dart';
+import 'package:ecommerce_app/model/cart_model.dart';
+import 'package:ecommerce_app/model/favorite_model.dart';
+import 'package:ecommerce_app/model/history_model.dart';
+import 'package:ecommerce_app/model/order_model.dart';
 import 'package:ecommerce_app/model/user_model.dart';
-import 'package:ecommerce_app/services/product_service.dart';
+import 'package:ecommerce_app/services/home_service.dart';
 
 import '../repository/repository_interface.dart';
 
@@ -18,8 +23,18 @@ abstract class SignService extends Service {
 }
 
 class SignServiceIml implements SignService {
-  Repository<UserModel> repository;
-  SignServiceIml({required this.repository});
+  Repository<UserModel> userRepo;
+  Repository<CartModel> cartRepo;
+  Repository<FavoriteModel> favoriteRepo;
+  Repository<HistoryModel> historyRepo;
+  Repository<OrderModel> orderRepo;
+  SignServiceIml({
+    required this.userRepo,
+    required this.cartRepo,
+    required this.favoriteRepo,
+    required this.historyRepo,
+    required this.orderRepo,
+  });
 
   Map<String, dynamic> pepper = const <String, dynamic>{
     '0': ')',
@@ -44,7 +59,7 @@ class SignServiceIml implements SignService {
     }
 
     password = md5.convert(utf8.encode(password)).toString();
-    final users = await repository.list();
+    final users = await userRepo.list();
     final user = users.firstWhere((element) => element.phone == phone);
     if (user.password == password) {
       return user.uid;
@@ -77,7 +92,17 @@ class SignServiceIml implements SignService {
           'address': address,
         },
       );
-      repository.create(userModel);
+      userRepo.create(userModel);
+      cartRepo.create(CartModel(uid: uid, cart: <String, DocumentReference>{}));
+      favoriteRepo.create(
+        FavoriteModel(uid: uid, favorite: <String, DocumentReference>{}),
+      );
+      historyRepo.create(
+        HistoryModel(uid: uid, history: <String, DocumentReference>{}),
+      );
+      orderRepo.create(
+        OrderModel(uid: uid, order: <String, DocumentReference>{}),
+      );
       return uid;
     } catch (e) {
       log('error', error: e);

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce_app/model/cart_model.dart';
 import 'package:ecommerce_app/model/product_model.dart';
-import 'package:ecommerce_app/services/product_service.dart';
+import 'package:ecommerce_app/services/home_service.dart';
 
 import '../repository/repository_interface.dart';
 
@@ -12,7 +12,7 @@ abstract class CartService extends Service {
 
 class CartServiceIml implements CartService {
   Repository<CartModel> repository;
-  CartServiceIml({required this.repository});
+  CartServiceIml(this.repository);
 
   @override
   Future<List<ProductModel>> getCart({required String userId}) async {
@@ -20,7 +20,7 @@ class CartServiceIml implements CartService {
     final carts = await repository.list();
     final model = carts.firstWhere((cart) => cart.uid == userId);
     final cartData = model.cart;
-    for (var prodRef in cartData.values) {
+    for (var prodRef in cartData!.values) {
       final prodData =
           await (prodRef as DocumentReference<Map<String, dynamic>>).get();
       products.add(ProductModel.fromJson(prodData.data()!));

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../model/history_model.dart';
+import '../utils/custom_exception.dart';
 import 'repository_interface.dart';
 
 class HistoryRepository implements Repository<HistoryModel> {
@@ -44,5 +45,82 @@ class HistoryRepository implements Repository<HistoryModel> {
   Future<String> getDocumentID(String uid) async {
     final docs = await collection.get();
     return docs.docs.firstWhere((doc) => doc.data()['uid'] == uid).id;
+  }
+}
+
+class UserHistoryRepository implements Repository<HistoryModel> {
+  late HistoryRepository repo;
+
+  UserHistoryRepository() {
+    repo = HistoryRepository();
+  }
+
+  @override
+  Future<HistoryModel> create(HistoryModel item) async {
+    return await repo.create(item);
+  }
+
+  @override
+  Future<bool> delete(String id) {
+    throw IllegalAccessExeption('can not access!');
+  }
+
+  @override
+  Future<String> getDocumentID(String key) async {
+    return await repo.getDocumentID(key);
+  }
+
+  @override
+  Future<HistoryModel> getOne(String id) async {
+    return repo.getOne(id);
+  }
+
+  @override
+  Future<List<HistoryModel>> list() {
+    throw IllegalAccessExeption('can not access!');
+  }
+
+  @override
+  Future<bool> update(String id, HistoryModel item) async {
+    return await repo.update(id, item);
+  }
+}
+
+
+class AdminHistoryRepository implements Repository<HistoryModel> {
+  late HistoryRepository repo;
+
+  AdminHistoryRepository() {
+    repo = HistoryRepository();
+  }
+
+  @override
+  Future<HistoryModel> create(HistoryModel item) async {
+    throw IllegalAccessExeption('can not access!');
+  }
+
+  @override
+  Future<bool> delete(String id) {
+    throw IllegalAccessExeption('can not access!');
+  }
+
+  @override
+  Future<String> getDocumentID(String key) async {
+    return await repo.getDocumentID(key);
+  }
+
+  @override
+  Future<HistoryModel> getOne(String id) async {
+    return repo.getOne(id);
+  }
+
+  @override
+  Future<List<HistoryModel>> list() async {
+    return await repo.list();
+  }
+
+  @override
+  Future<bool> update(String id, HistoryModel item) async {
+    throw IllegalAccessExeption('can not access!');
   }
 }
