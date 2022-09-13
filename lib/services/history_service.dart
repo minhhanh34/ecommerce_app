@@ -6,17 +6,18 @@ import '../repository/repository_interface.dart';
 
 abstract class HistoryService {
   Future<List<ProductModel>> getHistoryProducts(String uid);
-  Future<bool> updateHistoryProducts(String uid, HistoryModel historyModel);
+  Future<bool> updateHistoryProducts(String uid, List<ProductModel> products);
 }
 
 class HistoryServiceIml implements HistoryService {
-  Repository<HistoryModel> repository;
-  HistoryServiceIml(this.repository);
+  Repository<HistoryModel> historyRepository;
+  Repository<ProductModel> productRepository;
+  HistoryServiceIml(this.historyRepository, this.productRepository);
   @override
   Future<List<ProductModel>> getHistoryProducts(String uid) async {
     final products = <ProductModel>[];
-    final docID = await repository.getDocumentID(uid);
-    final historyModel = await repository.getOne(docID);
+    final docSnap = await historyRepository.getQueryDocumentSnapshot(uid);
+    final historyModel = await historyRepository.getOne(docSnap.id);
     final prodsRef = historyModel.history;
     for (var ref in prodsRef!.values) {
       final prodData =
@@ -30,8 +31,16 @@ class HistoryServiceIml implements HistoryService {
   @override
   Future<bool> updateHistoryProducts(
     String uid,
-    HistoryModel historyModel,
+    List<ProductModel> products,
   ) async {
-    return await repository.update(uid, historyModel);
+    final map = <String, DocumentReference>{};
+    for (int i = 0; i < products.length; i++) {
+      final docQuery =
+          await productRepository.getQueryDocumentSnapshot(products[i].name);
+      map.addAll({'product${i + 1}': docQuery.reference});
+    }
+    final favoriteModel = HistoryModel(uid: uid, history: map);
+    final cartQuery = await historyRepository.getQueryDocumentSnapshot(uid);
+    return await historyRepository.update(cartQuery.id, favoriteModel);
   }
 }

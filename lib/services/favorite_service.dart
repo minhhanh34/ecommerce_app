@@ -5,18 +5,20 @@ import 'package:ecommerce_app/repository/repository_interface.dart';
 
 abstract class FavoriteService {
   Future<List<ProductModel>> getFavoriteProducts(String uid);
-  Future<bool> updateFavoriteProducts(String uid, FavoriteModel favoriteModel);
+  Future<bool> updateFavoriteProducts(
+      String uid, List<ProductModel> favoriteModel);
 }
 
 class FavoriteServiceIml implements FavoriteService {
-  Repository<FavoriteModel> repository;
-  FavoriteServiceIml(this.repository);
+  Repository<FavoriteModel> favoriteRepository;
+  Repository<ProductModel> productRepository;
+  FavoriteServiceIml(this.favoriteRepository, this.productRepository);
 
   @override
   Future<List<ProductModel>> getFavoriteProducts(String uid) async {
     final products = <ProductModel>[];
-    final docID = await repository.getDocumentID(uid);
-    final favoriteModel = await repository.getOne(docID);
+    final docSnap = await favoriteRepository.getQueryDocumentSnapshot(uid);
+    final favoriteModel = await favoriteRepository.getOne(docSnap.id);
     final prodsRef = favoriteModel.favorite;
     for (var ref in prodsRef!.values) {
       final prodData =
@@ -30,8 +32,16 @@ class FavoriteServiceIml implements FavoriteService {
   @override
   Future<bool> updateFavoriteProducts(
     String uid,
-    FavoriteModel favoriteModel,
+    List<ProductModel> products,
   ) async {
-    return await repository.update(uid, favoriteModel);
+    final map = <String, DocumentReference>{};
+    for (int i = 0; i < products.length; i++) {
+      final docQuery =
+          await productRepository.getQueryDocumentSnapshot(products[i].name);
+      map.addAll({'product${i + 1}': docQuery.reference});
+    }
+    final favoriteModel = FavoriteModel(uid: uid, favorite: map);
+    final cartQuery = await favoriteRepository.getQueryDocumentSnapshot(uid);
+    return await favoriteRepository.update(cartQuery.id, favoriteModel);
   }
 }

@@ -16,3 +16,7 @@ class CartDetail extends CartState {
   final ProductModel product;
   CartDetail(this.product);
 }
+
+class CartChange extends CartState {
+  
+} 

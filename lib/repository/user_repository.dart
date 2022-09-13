@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce_app/model/user_model.dart';
 
-import '../utils/custom_exception.dart';
 import 'repository_interface.dart';
 
 class UserRepository implements Repository<UserModel> {
@@ -41,84 +40,84 @@ class UserRepository implements Repository<UserModel> {
   }
 
   @override
-  Future<String> getDocumentID(String uid) async {
+  Future<QueryDocumentSnapshot> getQueryDocumentSnapshot(String uid) async {
     final docs = await collection.get();
-    return docs.docs.firstWhere((doc) => doc.data()['uid']).id;
+    return docs.docs.firstWhere((doc) => doc.data()['uid'] == uid);
   }
 }
 
-class UserUserRepository implements Repository<UserModel> {
-  late UserRepository repo;
+// class UserUserRepository implements Repository<UserModel> {
+//   late UserRepository repo;
 
-  UserUserRepository() {
-    repo = UserRepository();
-  }
+//   UserUserRepository() {
+//     repo = UserRepository();
+//   }
 
-  @override
-  Future<UserModel> create(UserModel item) async {
-    return await repo.create(item);
-  }
+//   @override
+//   Future<UserModel> create(UserModel item) async {
+//     return await repo.create(item);
+//   }
 
-  @override
-  Future<bool> delete(String id) {
-    throw IllegalAccessExeption('can not access!');
-  }
+//   @override
+//   Future<bool> delete(String id) {
+//     throw IllegalAccessExeption('can not access!');
+//   }
 
-  @override
-  Future<String> getDocumentID(String key) async {
-    return await repo.getDocumentID(key);
-  }
+//   @override
+//   Future<String> getDocumentID(String key) async {
+//     return await repo.getDocumentID(key);
+//   }
 
-  @override
-  Future<UserModel> getOne(String id) async {
-    return repo.getOne(id);
-  }
+//   @override
+//   Future<UserModel> getOne(String id) async {
+//     return repo.getOne(id);
+//   }
 
-  @override
-  Future<List<UserModel>> list() {
-    throw IllegalAccessExeption('can not access!');
-  }
+//   @override
+//   Future<List<UserModel>> list() {
+//     throw IllegalAccessExeption('can not access!');
+//   }
 
-  @override
-  Future<bool> update(String id, UserModel item) async {
-    return await repo.update(id, item);
-  }
-}
+//   @override
+//   Future<bool> update(String id, UserModel item) async {
+//     return await repo.update(id, item);
+//   }
+// }
 
-class AdminUserRepository implements Repository<UserModel> {
-  late UserRepository repo;
+// class AdminUserRepository implements Repository<UserModel> {
+//   late UserRepository repo;
 
-  AdminUserRepository() {
-    repo = UserRepository();
-  }
+//   AdminUserRepository() {
+//     repo = UserRepository();
+//   }
 
-  @override
-  Future<UserModel> create(UserModel item) async {
-    throw IllegalAccessExeption('can not access!');
-  }
+//   @override
+//   Future<UserModel> create(UserModel item) async {
+//     throw IllegalAccessExeption('can not access!');
+//   }
 
-  @override
-  Future<bool> delete(String id) {
-    throw IllegalAccessExeption('can not access!');
-  }
+//   @override
+//   Future<bool> delete(String id) {
+//     throw IllegalAccessExeption('can not access!');
+//   }
 
-  @override
-  Future<String> getDocumentID(String key) async {
-    return await repo.getDocumentID(key);
-  }
+//   @override
+//   Future<String> getDocumentID(String key) async {
+//     return await repo.getDocumentID(key);
+//   }
 
-  @override
-  Future<UserModel> getOne(String id) async {
-    return repo.getOne(id);
-  }
+//   @override
+//   Future<UserModel> getOne(String id) async {
+//     return repo.getOne(id);
+//   }
 
-  @override
-  Future<List<UserModel>> list() async {
-    return await repo.list();
-  }
+//   @override
+//   Future<List<UserModel>> list() async {
+//     return await repo.list();
+//   }
 
-  @override
-  Future<bool> update(String id, UserModel item) async {
-    throw IllegalAccessExeption('can not access!');
-  }
-}
+//   @override
+//   Future<bool> update(String id, UserModel item) async {
+//     throw IllegalAccessExeption('can not access!');
+//   }
+// }

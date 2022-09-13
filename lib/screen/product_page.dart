@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ecommerce_app/cubit/cart/cart_cubit.dart';
 
 import 'package:ecommerce_app/model/product_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../widgets/cart_icon.dart';
-import '../widgets/header_row.dart';
 
 class ProductPage extends StatefulWidget {
   const ProductPage({Key? key, required this.product}) : super(key: key);
@@ -42,18 +43,22 @@ class _ProductPageState extends State<ProductPage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Expanded(
-                child: ElevatedButton(
-                  style: ButtonStyle(
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(0),
+                child: BlocBuilder<CartCubit, CartState>(
+                  builder: (_, state) => ElevatedButton(
+                    style: ButtonStyle(
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(0),
+                        ),
                       ),
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Colors.blue),
                     ),
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.blue),
+                    onPressed: () {
+                      context.read<CartCubit>().addItem(widget.product);
+                    },
+                    child: const Text('Thêm vào giỏ hàng'),
                   ),
-                  onPressed: () {},
-                  child: const Text('Thêm vào giỏ hàng'),
                 ),
               ),
               Expanded(
@@ -210,10 +215,7 @@ class _ProductPageState extends State<ProductPage> {
               ),
             ],
           ),
-          const HeaderRow(
-            title: 'Sản phẩm tương tự',
-            hasMore: true,
-          ),
+
           // SizedBox(
           //   height: 200,
           //   child: FutureBuilder<List<ProductModel>>(

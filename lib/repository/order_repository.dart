@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce_app/model/order_model.dart';
 
-import '../utils/custom_exception.dart';
 import 'repository_interface.dart';
 
 class OrderRepository implements Repository<OrderModel> {
@@ -38,86 +37,86 @@ class OrderRepository implements Repository<OrderModel> {
     return true;
   }
 
-  @override
-  Future<String> getDocumentID(String uid) async {
+ @override
+  Future<QueryDocumentSnapshot> getQueryDocumentSnapshot(String uid) async {
     final docs = await collection.get();
-    return docs.docs.firstWhere((doc) => doc.data()['uid'] == uid).id;
+    return docs.docs.firstWhere((doc) => doc.data()['uid'] == uid);
   }
 }
 
 
-class UserOrderRepository implements Repository<OrderModel> {
-  late OrderRepository repo;
+// class UserOrderRepository implements Repository<OrderModel> {
+//   late OrderRepository repo;
 
-  UserOrderRepository() {
-    repo = OrderRepository();
-  }
+//   UserOrderRepository() {
+//     repo = OrderRepository();
+//   }
 
-  @override
-  Future<OrderModel> create(OrderModel item) async {
-    return await repo.create(item);
-  }
+//   @override
+//   Future<OrderModel> create(OrderModel item) async {
+//     return await repo.create(item);
+//   }
 
-  @override
-  Future<bool> delete(String id) {
-    throw IllegalAccessExeption('can not access!');
-  }
+//   @override
+//   Future<bool> delete(String id) {
+//     throw IllegalAccessExeption('can not access!');
+//   }
 
-  @override
-  Future<String> getDocumentID(String key) async {
-    return await repo.getDocumentID(key);
-  }
+//   @override
+//   Future<String> getDocumentID(String key) async {
+//     return await repo.getDocumentID(key);
+//   }
 
-  @override
-  Future<OrderModel> getOne(String id) async {
-    return repo.getOne(id);
-  }
+//   @override
+//   Future<OrderModel> getOne(String id) async {
+//     return repo.getOne(id);
+//   }
 
-  @override
-  Future<List<OrderModel>> list() {
-    throw IllegalAccessExeption('can not access!');
-  }
+//   @override
+//   Future<List<OrderModel>> list() {
+//     throw IllegalAccessExeption('can not access!');
+//   }
 
-  @override
-  Future<bool> update(String id, OrderModel item) async {
-    return await repo.update(id, item);
-  }
-}
+//   @override
+//   Future<bool> update(String id, OrderModel item) async {
+//     return await repo.update(id, item);
+//   }
+// }
 
-class AdminOrderRepository implements Repository<OrderModel> {
-  late OrderRepository repo;
+// class AdminOrderRepository implements Repository<OrderModel> {
+//   late OrderRepository repo;
 
-  AdminOrderRepository() {
-    repo = OrderRepository();
-  }
+//   AdminOrderRepository() {
+//     repo = OrderRepository();
+//   }
 
-  @override
-  Future<OrderModel> create(OrderModel item) async {
-    throw IllegalAccessExeption('can not access!');
-  }
+//   @override
+//   Future<OrderModel> create(OrderModel item) async {
+//     throw IllegalAccessExeption('can not access!');
+//   }
 
-  @override
-  Future<bool> delete(String id) {
-    throw IllegalAccessExeption('can not access!');
-  }
+//   @override
+//   Future<bool> delete(String id) {
+//     throw IllegalAccessExeption('can not access!');
+//   }
 
-  @override
-  Future<String> getDocumentID(String key) async {
-    return await repo.getDocumentID(key);
-  }
+//   @override
+//   Future<String> getDocumentID(String key) async {
+//     return await repo.getDocumentID(key);
+//   }
 
-  @override
-  Future<OrderModel> getOne(String id) async {
-    return repo.getOne(id);
-  }
+//   @override
+//   Future<OrderModel> getOne(String id) async {
+//     return repo.getOne(id);
+//   }
 
-  @override
-  Future<List<OrderModel>> list() async {
-    return await repo.list();
-  }
+//   @override
+//   Future<List<OrderModel>> list() async {
+//     return await repo.list();
+//   }
 
-  @override
-  Future<bool> update(String id, OrderModel item) async {
-    throw IllegalAccessExeption('can not access!');
-  }
-}
+//   @override
+//   Future<bool> update(String id, OrderModel item) async {
+//     throw IllegalAccessExeption('can not access!');
+//   }
+// }

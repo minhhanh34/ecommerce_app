@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:ecommerce_app/utils/custom_exception.dart';
 
 import '../model/favorite_model.dart';
 import 'repository_interface.dart';
@@ -40,85 +39,85 @@ class FavoriteRepository implements Repository<FavoriteModel> {
     return true;
   }
 
-  @override
-  Future<String> getDocumentID(String uid) async {
+ @override
+  Future<QueryDocumentSnapshot> getQueryDocumentSnapshot(String uid) async {
     final docs = await collection.get();
-    return docs.docs.firstWhere((doc) => doc.data()['uid'] == uid).id;
+    return docs.docs.firstWhere((doc) => doc.data()['uid'] == uid);
   }
 }
 
-class UserFavoriteRepository implements Repository<FavoriteModel> {
-  late FavoriteRepository repo;
+// class UserFavoriteRepository implements Repository<FavoriteModel> {
+//   late FavoriteRepository repo;
 
-  UserFavoriteRepository() {
-    repo = FavoriteRepository();
-  }
+//   UserFavoriteRepository() {
+//     repo = FavoriteRepository();
+//   }
 
-  @override
-  Future<FavoriteModel> create(FavoriteModel item) async {
-    return await repo.create(item);
-  }
+//   @override
+//   Future<FavoriteModel> create(FavoriteModel item) async {
+//     return await repo.create(item);
+//   }
 
-  @override
-  Future<bool> delete(String id) {
-    throw IllegalAccessExeption('can not access!');
-  }
+//   @override
+//   Future<bool> delete(String id) {
+//     throw IllegalAccessExeption('can not access!');
+//   }
 
-  @override
-  Future<String> getDocumentID(String key) async {
-    return await repo.getDocumentID(key);
-  }
+//   @override
+//   Future<String> getDocumentID(String key) async {
+//     return await repo.getDocumentID(key);
+//   }
 
-  @override
-  Future<FavoriteModel> getOne(String id) async {
-    return repo.getOne(id);
-  }
+//   @override
+//   Future<FavoriteModel> getOne(String id) async {
+//     return repo.getOne(id);
+//   }
 
-  @override
-  Future<List<FavoriteModel>> list() {
-    throw IllegalAccessExeption('can not access!');
-  }
+//   @override
+//   Future<List<FavoriteModel>> list() {
+//     throw IllegalAccessExeption('can not access!');
+//   }
 
-  @override
-  Future<bool> update(String id, FavoriteModel item) async {
-    return await repo.update(id, item);
-  }
-}
+//   @override
+//   Future<bool> update(String id, FavoriteModel item) async {
+//     return await repo.update(id, item);
+//   }
+// }
 
-class AdminFavoriteRepository implements Repository<FavoriteModel> {
-  late FavoriteRepository repo;
+// class AdminFavoriteRepository implements Repository<FavoriteModel> {
+//   late FavoriteRepository repo;
 
-  AdminFavoriteRepository() {
-    repo = FavoriteRepository();
-  }
+//   AdminFavoriteRepository() {
+//     repo = FavoriteRepository();
+//   }
 
-  @override
-  Future<FavoriteModel> create(FavoriteModel item) async {
-    throw IllegalAccessExeption('can not access!');
-  }
+//   @override
+//   Future<FavoriteModel> create(FavoriteModel item) async {
+//     throw IllegalAccessExeption('can not access!');
+//   }
 
-  @override
-  Future<bool> delete(String id) {
-    throw IllegalAccessExeption('can not access!');
-  }
+//   @override
+//   Future<bool> delete(String id) {
+//     throw IllegalAccessExeption('can not access!');
+//   }
 
-  @override
-  Future<String> getDocumentID(String key) async {
-    return await repo.getDocumentID(key);
-  }
+//   @override
+//   Future<String> getDocumentID(String key) async {
+//     return await repo.getDocumentID(key);
+//   }
 
-  @override
-  Future<FavoriteModel> getOne(String id) async {
-    return repo.getOne(id);
-  }
+//   @override
+//   Future<FavoriteModel> getOne(String id) async {
+//     return repo.getOne(id);
+//   }
 
-  @override
-  Future<List<FavoriteModel>> list() async {
-    return await repo.list();
-  }
+//   @override
+//   Future<List<FavoriteModel>> list() async {
+//     return await repo.list();
+//   }
 
-  @override
-  Future<bool> update(String id, FavoriteModel item) async {
-    throw IllegalAccessExeption('can not access!');
-  }
-}
+//   @override
+//   Future<bool> update(String id, FavoriteModel item) async {
+//     throw IllegalAccessExeption('can not access!');
+//   }
+// }

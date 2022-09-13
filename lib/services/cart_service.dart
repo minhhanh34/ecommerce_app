@@ -7,17 +7,18 @@ import '../repository/repository_interface.dart';
 
 abstract class CartService extends Service {
   Future<List<ProductModel>> getCart({required String userId});
-  Future<void> update(String id, List<ProductModel> products);
+  Future<bool> update(String id, List<ProductModel> products);
 }
 
 class CartServiceIml implements CartService {
-  Repository<CartModel> repository;
-  CartServiceIml(this.repository);
+  Repository<CartModel> cartRepository;
+  Repository<ProductModel> prodRepository;
+  CartServiceIml(this.cartRepository, this.prodRepository);
 
   @override
   Future<List<ProductModel>> getCart({required String userId}) async {
     final products = <ProductModel>[];
-    final carts = await repository.list();
+    final carts = await cartRepository.list();
     final model = carts.firstWhere((cart) => cart.uid == userId);
     final cartData = model.cart;
     for (var prodRef in cartData!.values) {
@@ -29,16 +30,18 @@ class CartServiceIml implements CartService {
   }
 
   @override
-  Future<void> update(String uid, List<ProductModel> products) async {
-    final map = <String, dynamic>{};
+  Future<bool> update(String uid, List<ProductModel> products) async {
+    final map = <String, DocumentReference>{};
     for (int i = 0; i < products.length; i++) {
-      map.addAll({'product${i + 1}': products[i].name});
+      final docSnap =
+          await prodRepository.getQueryDocumentSnapshot(products[i].name);
+      map.addAll({'product${i + 1}': docSnap.reference});
     }
     final cart = CartModel(
       uid: uid,
       cart: map,
     );
-    final docID = await repository.getDocumentID(uid);
-    repository.update(docID, cart);
+    final cartSnap = await cartRepository.getQueryDocumentSnapshot(uid);
+    return await cartRepository.update(cartSnap.id, cart);
   }
 }

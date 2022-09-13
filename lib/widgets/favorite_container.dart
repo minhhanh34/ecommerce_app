@@ -20,7 +20,7 @@ class _FavoriteProductContainerState extends State<FavoriteProductContainer> {
       color: Colors.blue.shade100,
       child: Column(
         children: [
-          const HeaderRow(title: 'Sản phẩm yêu thích'),
+          HeaderRow(title: 'Sản phẩm yêu thích'),
           Expanded(
             child: ListView.builder(
               itemCount: widget.favoritedProducts.length,

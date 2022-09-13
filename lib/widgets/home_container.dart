@@ -1,7 +1,7 @@
-
 import 'package:ecommerce_app/model/banner_model.dart';
 import 'package:flutter/material.dart';
 
+import '../screen/all_products_page.dart';
 import '../widgets/products_catalog.dart';
 import '../model/product_model.dart';
 import 'banner.dart';
@@ -25,14 +25,20 @@ class _HomeContainerState extends State<HomeContainer> {
       // mainAxisSize: MainAxisSize.min,
       children: [
         HeaderBanner(model: widget.banners),
-        const HeaderRow(
+        HeaderRow(
           title: 'Danh mục',
           hasMore: true,
         ),
         const ProductsCatalog(),
-        const HeaderRow(
+        HeaderRow(
           title: 'Sản phẩm gợi ý',
           hasMore: true,
+          onPress: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                  builder: (_) => AllProductsPage(products: widget.products)),
+            );
+          },
         ),
         // Expanded(
         //   child: ProductsWidget(products: widget.products),
@@ -46,9 +52,8 @@ class _HomeContainerState extends State<HomeContainer> {
         ),
         SliverGrid(
           delegate: SliverChildBuilderDelegate(
-            childCount: widget.products.length,
-            (context, index) =>
-                ProductWidget(product: widget.products[index]),
+            childCount: widget.products.length ~/ 2,
+            (context, index) => ProductWidget(product: widget.products[index]),
           ),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,

@@ -19,7 +19,7 @@ class UserServiceIml implements UserService {
 
   @override
   Future<bool> updateUserInfo(UserModel userModel) async {
-    final docID = await repository.getDocumentID(userModel.uid);
-    return await repository.update(docID, userModel);
+    final docSnap = await repository.getQueryDocumentSnapshot(userModel.uid);
+    return await repository.update(docSnap.id, userModel);
   }
 }

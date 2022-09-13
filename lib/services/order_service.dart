@@ -5,17 +5,18 @@ import 'package:ecommerce_app/repository/repository_interface.dart';
 
 abstract class OrderService {
   Future<List<ProductModel>> getOrderProducts(String uid);
-  Future<bool> updateOrderProducts(String uid, OrderModel orderModel);
+  Future<bool> updateOrderProducts(String uid, List<ProductModel> products);
 }
 
 class OrderServiceIml implements OrderService {
-  Repository<OrderModel> repository;
-  OrderServiceIml(this.repository);
+  Repository<OrderModel> orderRepository;
+  Repository<ProductModel> productRepository;
+  OrderServiceIml(this.orderRepository, this.productRepository);
   @override
   Future<List<ProductModel>> getOrderProducts(String uid) async {
     final products = <ProductModel>[];
-    final docID = await repository.getDocumentID(uid);
-    final orderModel = await repository.getOne(docID);
+    final docSnap = await orderRepository.getQueryDocumentSnapshot(uid);
+    final orderModel = await orderRepository.getOne(docSnap.id);
     final prodsRef = orderModel.order;
     for (var ref in prodsRef!.values) {
       final prodData =
@@ -27,7 +28,16 @@ class OrderServiceIml implements OrderService {
   }
 
   @override
-  Future<bool> updateOrderProducts(String uid, OrderModel orderModel) async {
-    return await repository.update(uid, orderModel);
+  Future<bool> updateOrderProducts(
+      String uid, List<ProductModel> products) async {
+    final map = <String, DocumentReference>{};
+    for (int i = 0; i < products.length; i++) {
+      final docQuery =
+          await productRepository.getQueryDocumentSnapshot(products[i].name);
+      map.addAll({'product${i + 1}': docQuery.reference});
+    }
+    final favoriteModel = OrderModel(uid: uid, order: map);
+    final cartQuery = await orderRepository.getQueryDocumentSnapshot(uid);
+    return await orderRepository.update(cartQuery.id, favoriteModel);
   }
 }

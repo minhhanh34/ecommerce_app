@@ -1,5 +1,6 @@
 import 'package:ecommerce_app/repository/cart_repository.dart';
 import 'package:ecommerce_app/repository/favorite_repository.dart';
+import 'package:ecommerce_app/repository/product_repository.dart';
 import 'package:ecommerce_app/repository/user_repository.dart';
 import 'package:ecommerce_app/services/cart_service.dart';
 import 'package:ecommerce_app/services/home_service.dart';
@@ -26,6 +27,17 @@ void main() async {
   final spref = await SharedPreferences.getInstance();
   String? uid = spref.getString('uid');
 
+  // final cartService = CartServiceIml(CartRepository(), ProductRepository());
+  // final products = <ProductModel>[];
+  // products.addAll([
+  //   ProductModel(name: 'Iphone 13', imageURL: {}, price: 100),
+  //   ProductModel(name: 'Oppo Reno 7z', imageURL: {}, price: 100),
+  //   ProductModel(name: 'Samsung S22 Ultra', imageURL: {}, price: 100),
+  // ]);
+  // cartService.update(
+  //   'a181ccdd18', products,
+  // );
+
   runApp(EcommerceApp(uid: uid));
 }
 
@@ -49,7 +61,8 @@ class EcommerceApp extends StatelessWidget {
         BlocProvider(create: (_) => SignInCubit(service: service)),
         BlocProvider(create: (_) => SignUpCubit(service: service)),
         BlocProvider(
-          create: (_) => CartCubit(service: CartServiceIml(CartRepository())),
+          create: (_) => CartCubit(
+              service: CartServiceIml(CartRepository(), ProductRepository())),
         ),
         BlocProvider(create: (_) => ForgetPasswordCubit())
       ],

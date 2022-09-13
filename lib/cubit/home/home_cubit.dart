@@ -14,6 +14,7 @@ class HomeCubit extends Cubit<HomeState> {
   HomeService homeService;
 
   int navIndex = 0;
+  int cartItemCount = 4;
 
   List<ProductModel>? products;
   List<ProductModel>? favoriteProducts;
@@ -94,6 +95,12 @@ class HomeCubit extends Cubit<HomeState> {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.remove('uid');
+      bannersData = null;
+      products = null;
+      favoriteProducts = null;
+      orderProducts = null;
+      historyProducts = null;
+      user = null;
     } catch (e) {
       log('error', error: e);
     }

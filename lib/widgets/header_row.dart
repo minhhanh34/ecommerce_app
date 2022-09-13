@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class HeaderRow extends StatelessWidget {
-  const HeaderRow({Key? key, required this.title, this.hasMore = false})
+  HeaderRow({Key? key, required this.title, this.hasMore = false, this.onPress})
       : super(key: key);
   final String title;
   final bool hasMore;
+  VoidCallback? onPress;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -24,7 +26,7 @@ class HeaderRow extends StatelessWidget {
           ),
           hasMore
               ? IconButton(
-                  onPressed: () {},
+                  onPressed: onPress,
                   icon: const Icon(CupertinoIcons.forward),
                 )
               : const SizedBox(),

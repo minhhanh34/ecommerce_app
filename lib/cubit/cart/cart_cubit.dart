@@ -14,13 +14,13 @@ class CartCubit extends Cubit<CartState> {
 
   List<ProductModel>? products;
 
-  void getCart() async {
+  Future<void> getCart() async {
     if (products == null) {
       emit(CartLoading());
       final pfres = await SharedPreferences.getInstance();
       final uid = pfres.getString('uid');
-      final products = await service.getCart(userId: uid!);
-      emit(CartLoaded(products: products));
+      products = await service.getCart(userId: uid!);
+      emit(CartLoaded(products: products!));
     } else {
       emit(CartLoaded(products: products!));
     }
@@ -31,7 +31,12 @@ class CartCubit extends Cubit<CartState> {
   }
 
   void addItem(ProductModel item) async {
-    products?.add(item);
+    if (products == null) {
+      final pfres = await SharedPreferences.getInstance();
+      final uid = pfres.getString('uid');
+      products = await service.getCart(userId: uid!);
+    }
+    products!.add(item);
     final spref = await SharedPreferences.getInstance();
     final uid = spref.getString('uid');
     await service.update(uid!, products!);
@@ -42,5 +47,6 @@ class CartCubit extends Cubit<CartState> {
     final spref = await SharedPreferences.getInstance();
     final uid = spref.getString('uid');
     await service.update(uid!, products!);
+    emit(CartLoaded(products: products!));
   }
 }

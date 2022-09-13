@@ -1,7 +1,4 @@
 import 'package:ecommerce_app/model/banner_model.dart';
-import 'package:ecommerce_app/model/favorite_model.dart';
-import 'package:ecommerce_app/model/history_model.dart';
-import 'package:ecommerce_app/model/order_model.dart';
 import 'package:ecommerce_app/model/product_model.dart';
 import 'package:ecommerce_app/model/user_model.dart';
 import 'package:ecommerce_app/repository/history_repository.dart';
@@ -23,22 +20,22 @@ abstract class HomeService extends Service {
   Future<BannerModel> getBanners();
   Future<List<ProductModel>?> getAllProducts();
   Future<List<ProductModel>> getFavoriteProducts(String uid);
-  Future<bool> updateFavoriteProducts(String uid, FavoriteModel favoriteModel);
+  Future<bool> updateFavoriteProducts(String uid, List<ProductModel> products);
   Future<List<ProductModel>> getOrderProducts(String uid);
-  Future<bool> updateOrderProducts(String uid, OrderModel orderModel);
-
+  Future<bool> updateOrderProducts(String uid, List<ProductModel> products);
   Future<List<ProductModel>> getHistoryProducts(String uid);
-  Future<bool> updateHistoryProducts(String uid, HistoryModel historyModel);
-
+  Future<bool> updateHistoryProducts(String uid, List<ProductModel> products);
   Future<UserModel> getUserInfo(String uid);
   Future<bool> updateUserInfo(UserModel userModel);
 }
 
 class HomeServiceIml implements HomeService {
   final productService = ProductServiceIml(ProductRepository());
-  final favoriteService = FavoriteServiceIml(FavoriteRepository());
-  final orderService = OrderServiceIml(OrderRepository());
-  final historyService = HistoryServiceIml(HistoryRepository());
+  final favoriteService =
+      FavoriteServiceIml(FavoriteRepository(), ProductRepository());
+  final orderService = OrderServiceIml(OrderRepository(), ProductRepository());
+  final historyService =
+      HistoryServiceIml(HistoryRepository(), ProductRepository());
   final userService = UserServiceIml(UserRepository());
   final bannerService = BannerServiceIml();
 
@@ -74,19 +71,20 @@ class HomeServiceIml implements HomeService {
 
   @override
   Future<bool> updateFavoriteProducts(
-      String uid, FavoriteModel favoriteModel) async {
-    return await favoriteService.updateFavoriteProducts(uid, favoriteModel);
+      String uid, List<ProductModel> products) async {
+    return await favoriteService.updateFavoriteProducts(uid, products);
   }
 
   @override
   Future<bool> updateHistoryProducts(
-      String uid, HistoryModel historyModel) async {
-    return await historyService.updateHistoryProducts(uid, historyModel);
+      String uid, List<ProductModel> products) async {
+    return await historyService.updateHistoryProducts(uid, products);
   }
 
   @override
-  Future<bool> updateOrderProducts(String uid, OrderModel orderModel) async {
-    return await orderService.updateOrderProducts(uid, orderModel);
+  Future<bool> updateOrderProducts(
+      String uid, List<ProductModel> products) async {
+    return await orderService.updateOrderProducts(uid, products);
   }
 
   @override
