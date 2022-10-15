@@ -1,6 +1,8 @@
+import 'package:ecommerce_app/cubit/cart/cart_cubit.dart';
 import 'package:ecommerce_app/model/product_model.dart';
 import 'package:ecommerce_app/screen/product_page.dart';
 import 'package:ecommerce_app/utils/price_format.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../widgets/header_row.dart';
 import 'package:flutter/material.dart';
 
@@ -47,7 +49,10 @@ class _FavoriteProductContainerState extends State<FavoriteProductContainer> {
                         child: ListTile(
                           leading: Hero(
                             tag: product.name,
-                            child: product.images['image1']!,
+                            child: AspectRatio(
+                              aspectRatio: 4 / 3,
+                              child: product.images['image1']!,
+                            ),
                           ),
                           isThreeLine: true,
                           title: Text(
@@ -86,7 +91,10 @@ class _FavoriteProductContainerState extends State<FavoriteProductContainer> {
                           ),
                           trailing: IconButton(
                             color: Colors.pink.shade900,
-                            onPressed: () {},
+                            onPressed: () {
+                              BlocProvider.of<CartCubit>(context)
+                                  .addItem(product);
+                            },
                             icon: const Icon(
                               Icons.add_shopping_cart_outlined,
                             ),

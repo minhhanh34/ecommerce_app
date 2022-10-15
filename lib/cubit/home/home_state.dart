@@ -15,7 +15,10 @@ class FavoriteState extends HomeState {
   FavoriteState({required this.favoritedProducts});
 }
 
-class OrderState extends HomeState {}
+class OrderState extends HomeState {
+  List<ProductModel> products;
+  OrderState(this.products);
+}
 
 class HistoryState extends HomeState {}
 

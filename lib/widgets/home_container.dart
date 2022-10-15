@@ -24,7 +24,7 @@ class _HomeContainerState extends State<HomeContainer> {
     var column = Column(
       // mainAxisSize: MainAxisSize.min,
       children: [
-        HeaderBanner(model: widget.banners),
+       HeaderBanner(model: widget.banners),
         HeaderRow(
           title: 'Danh mục',
           hasMore: true,

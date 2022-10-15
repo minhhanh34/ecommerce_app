@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce_app/cubit/cart/cart_cubit.dart';
 
 import 'package:ecommerce_app/model/product_model.dart';
@@ -215,82 +214,8 @@ class _ProductPageState extends State<ProductPage> {
               ),
             ],
           ),
-
-          // SizedBox(
-          //   height: 200,
-          //   child: FutureBuilder<List<ProductModel>>(
-          //     future: getAllProducts(),
-          //     builder: (_, snapshot) {
-          //       if (snapshot.hasData &&
-          //           snapshot.connectionState == ConnectionState.done) {
-          //         return ListView.builder(
-          //           scrollDirection: Axis.horizontal,
-          //           itemCount: snapshot.data!.length,
-          //           itemBuilder: (context, index) {
-          //             return Card(
-          //               elevation: 4,
-          //               margin: const EdgeInsets.all(8),
-          //               child: Column(
-          //                 crossAxisAlignment: CrossAxisAlignment.start,
-          //                 children: [
-          //                   CachedNetworkImage(
-          //                     height: 150,
-          //                     imageUrl:
-          //                         snapshot.data![index].imageURL['image1'],
-          //                     fit: BoxFit.cover,
-          //                   ),
-          //                   Padding(
-          //                     padding: const EdgeInsets.only(
-          //                       top: 8,
-          //                       left: 12,
-          //                     ),
-          //                     child: Text(snapshot.data![index].name,
-          //                         style: Theme.of(context).textTheme.headline6),
-          //                   ),
-          //                 ],
-          //               ),
-          //             );
-          //           },
-          //         );
-          //       }
-          //       return const SizedBox();
-          //     },
-          //   ),
-          // ),
         ],
       ),
     );
   }
-
-  Future<List<ProductModel>> getAllProducts() async {
-    // if (sameProducts.isNotEmpty) return Future.value(sameProducts);
-    final docs = await FirebaseFirestore.instance.collection('products').get();
-    sameProducts =
-        docs.docs.map((QueryDocumentSnapshot<Map<String, dynamic>> doc) {
-      final data = doc.data();
-      return ProductModel(
-        name: data['name'],
-        imageURL: data['imageURL'],
-        price: data['price'],
-        grade: data['grade'],
-        //isFavorite: data['isFavorite'],
-        sold: data['sold'],
-      );
-    }).toList();
-    return sameProducts;
-  }
-
-  // Widget buildColorOptions(List<Color> colors) {
-  //   return ListView.builder(
-  //     scrollDirection: Axis.horizontal,
-  //     itemCount: colors.length,
-  //     itemBuilder: (context, index) => Container(
-  //       padding: isSelected == index ? const EdgeInsets.all(4.0) : null,
-  //       color: isSelected == index ? Colors.black : Colors.transparent,
-  //       width: 20,
-  //       height: 20,
-  //       child: Container(color: colors[index]),
-  //     ),
-  //   );
-  // }
 }

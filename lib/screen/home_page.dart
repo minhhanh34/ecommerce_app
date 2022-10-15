@@ -36,7 +36,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    HomeCubit homeCubit = context.read<HomeCubit>();
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Shop'),
@@ -47,7 +46,7 @@ class _HomePageState extends State<HomePage> {
           const CartIcon(),
         ],
       ),
-      drawer: MyDrawer(homeCubit: homeCubit),
+      drawer: const MyDrawer(),
       body: BlocBuilder<HomeCubit, HomeState>(
         builder: (context, state) {
           if (state is InitialState) {
@@ -65,7 +64,9 @@ class _HomePageState extends State<HomePage> {
               favoritedProducts: state.favoritedProducts,
             );
           }
-          if (state is OrderState) return const OrderContainer();
+          if (state is OrderState) {
+            return OrderContainer(products: state.products);
+          }
           if (state is HistoryState) return const HistoryContainer();
           if (state is AccountState) return const AccountContainer();
           if (state is LoadingState) return buildLoading();
@@ -86,10 +87,7 @@ class _HomePageState extends State<HomePage> {
 class MyDrawer extends StatelessWidget {
   const MyDrawer({
     Key? key,
-    required this.homeCubit,
   }) : super(key: key);
-
-  final HomeCubit homeCubit;
 
   @override
   Widget build(BuildContext context) {
@@ -155,7 +153,8 @@ class MyDrawer extends StatelessWidget {
               ontap: () async {
                 Navigator.of(context).pop();
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) =>  CartPage(products: const [])),
+                  MaterialPageRoute(
+                      builder: (_) => CartPage(products: const [])),
                 );
                 // homeCubit.onCartTab();
               },
@@ -185,9 +184,9 @@ class MyDrawer extends StatelessWidget {
             const Spacer(),
             const Divider(color: Colors.black, height: 2),
             DrawerListTile(
-              ontap: () {
+              ontap: () async {
                 Navigator.of(context).pop();
-                homeCubit.logout();
+                await BlocProvider.of<HomeCubit>(context).logout();
               },
               title: 'Đăng xuất',
               trailing: Icons.logout_rounded,

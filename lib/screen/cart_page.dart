@@ -55,6 +55,28 @@ class _CartPageState extends State<CartPage> {
             context.read<CartCubit>().getCart();
             return buildLoading();
           } else if (state is CartLoaded) {
+            
+            if (state.products.isEmpty) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(
+                      Icons.add_shopping_cart_rounded,
+                      color: Colors.red,
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      'Bạn chưa có sản phẩm nào trong vỏ hàng',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }
             return RefreshIndicator(
               onRefresh: () => _onRefresh(context),
               child: ListView.builder(
@@ -63,7 +85,9 @@ class _CartPageState extends State<CartPage> {
                 itemBuilder: (context, index) {
                   return Dismissible(
                     key: Key(state.products[index].name),
-                    onDismissed: (_) => context.read<CartCubit>().removeItem(state.products[index]),
+                    onDismissed: (_) => context
+                        .read<CartCubit>()
+                        .removeItem(state.products[index]),
                     child: Row(
                       children: [
                         Radio(

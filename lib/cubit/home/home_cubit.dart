@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:ecommerce_app/cubit/cart/cart_cubit.dart';
 import 'package:ecommerce_app/model/banner_model.dart';
 import 'package:ecommerce_app/model/product_model.dart';
 import 'package:ecommerce_app/model/user_model.dart';
@@ -10,11 +11,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../cubit/home/home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
-  HomeCubit({required this.homeService}) : super(InitialState());
+  HomeCubit({required this.homeService, required this.cartCubit})
+      : super(InitialState());
   HomeService homeService;
 
+  CartCubit cartCubit;
+
   int navIndex = 0;
-  int cartItemCount = 4;
 
   List<ProductModel>? products;
   List<ProductModel>? favoriteProducts;
@@ -40,6 +43,7 @@ class HomeCubit extends Cubit<HomeState> {
       emit(LoadingState());
       bannersData = await homeService.getBanners();
       products = await homeService.getAllProducts();
+      await cartCubit.getCart();
       emit(
         MainState(
           banners: bannersData!,
@@ -56,13 +60,14 @@ class HomeCubit extends Cubit<HomeState> {
 
   void orderTab() async {
     if (orderProducts == null) {
-      emit(OrderState());
+      emit(LoadingState());
       final spref = await SharedPreferences.getInstance();
       final uid = spref.getString('uid');
       orderProducts = await homeService.getOrderProducts(uid!);
+      emit(OrderState(orderProducts!));
       print('order');
     } else {
-      emit(OrderState());
+      emit(OrderState(orderProducts!));
     }
   }
 
@@ -90,7 +95,7 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 
-  void logout() async {
+  Future<void> logout() async {
     emit(LoadingState());
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -101,6 +106,7 @@ class HomeCubit extends Cubit<HomeState> {
       orderProducts = null;
       historyProducts = null;
       user = null;
+      cartCubit.products = null;
     } catch (e) {
       log('error', error: e);
     }

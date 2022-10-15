@@ -1,44 +1,13 @@
-import 'package:ecommerce_app/repository/cart_repository.dart';
-import 'package:ecommerce_app/repository/favorite_repository.dart';
-import 'package:ecommerce_app/repository/product_repository.dart';
-import 'package:ecommerce_app/repository/user_repository.dart';
-import 'package:ecommerce_app/services/cart_service.dart';
-import 'package:ecommerce_app/services/home_service.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'cubit/cart/cart_cubit.dart';
-import 'cubit/forget_password.dart/forget_password_cubit.dart';
-import 'cubit/home/home_cubit.dart';
-import 'cubit/signin/signin_cubit.dart';
-import 'cubit/signup/signup_cubit.dart';
-import 'firebase_options.dart';
-import 'repository/history_repository.dart';
-import 'repository/order_repository.dart';
-import 'screen/home_page.dart';
-import 'screen/sign_in_page.dart';
-import 'services/sign_service.dart';
+import './utils/libs.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  // await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   final spref = await SharedPreferences.getInstance();
   String? uid = spref.getString('uid');
-
-  // final cartService = CartServiceIml(CartRepository(), ProductRepository());
-  // final products = <ProductModel>[];
-  // products.addAll([
-  //   ProductModel(name: 'Iphone 13', imageURL: {}, price: 100),
-  //   ProductModel(name: 'Oppo Reno 7z', imageURL: {}, price: 100),
-  //   ProductModel(name: 'Samsung S22 Ultra', imageURL: {}, price: 100),
-  // ]);
-  // cartService.update(
-  //   'a181ccdd18', products,
-  // );
-
   runApp(EcommerceApp(uid: uid));
+  FlutterNativeSplash.remove();
 }
 
 class EcommerceApp extends StatelessWidget {
@@ -53,17 +22,19 @@ class EcommerceApp extends StatelessWidget {
     orderRepo: OrderRepository(),
   );
 
+  final cartCubit = CartCubit(
+    service: CartServiceIml(CartRepository(), ProductRepository()),
+  );
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => HomeCubit(homeService: HomeServiceIml())),
+        BlocProvider(create: (_) => HomeCubit(homeService: HomeServiceIml(), cartCubit: cartCubit)),
         BlocProvider(create: (_) => SignInCubit(service: service)),
         BlocProvider(create: (_) => SignUpCubit(service: service)),
         BlocProvider(
-          create: (_) => CartCubit(
-              service: CartServiceIml(CartRepository(), ProductRepository())),
-        ),
+          create: (_) => cartCubit),
         BlocProvider(create: (_) => ForgetPasswordCubit())
       ],
       child: MaterialApp(

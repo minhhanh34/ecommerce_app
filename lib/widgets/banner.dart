@@ -16,19 +16,6 @@ class HeaderBanner extends StatefulWidget {
 class _HeaderBannerState extends State<HeaderBanner> {
   late Timer _timer;
   final _controller = PageController();
-
-  // Future<List<String>> getBanners() async {
-  //   List<String> urls = [];
-  //   ListResult results =
-  //       await FirebaseStorage.instance.ref().child('banner').listAll();
-  //   for (int i = 0; i < results.items.length; i++) {
-  //     String url = await results.items[i].getDownloadURL();
-  //     urls.add(url);
-  //   }
-  //   bannerCounts = results.items.length;
-  //   return urls;
-  // }
-
   int bannerCounts = 0;
 
   @override

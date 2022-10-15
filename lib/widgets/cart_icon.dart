@@ -1,6 +1,8 @@
+import 'package:ecommerce_app/cubit/cart/cart_cubit.dart';
 import 'package:ecommerce_app/screen/cart_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CartIcon extends StatefulWidget {
   const CartIcon({Key? key}) : super(key: key);
@@ -13,6 +15,7 @@ class _CartIconState extends State<CartIcon> {
 
   @override
   Widget build(BuildContext context) {
+    // int? cartCount = BlocProvider.of<CartCubit>(context).products?.length;
     return InkWell(
       onTap: () async {
         Navigator.of(context).push(
@@ -43,20 +46,27 @@ class _CartIconState extends State<CartIcon> {
               ),
             ),
           ),
-          Positioned(
-            top: 5,
-            right: 0,
-            child: Container(
-              width: 20,
-              height: 20,
-              decoration: const BoxDecoration(
-                color: Colors.red,
-                shape: BoxShape.circle,
-              ),
-              child: const Center(
-                child: Text('4'),
-              ),
-            ),
+          BlocBuilder<CartCubit, CartState>(
+            builder: (context, state) {
+              if (state is CartLoaded && state.products.isNotEmpty) {
+                return Positioned(
+                  top: 5,
+                  right: 0,
+                  child: Container(
+                    width: 20,
+                    height: 20,
+                    decoration: const BoxDecoration(
+                      color: Colors.red,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Center(
+                      child: Text(state.products.length.toString()),
+                    ),
+                  ),
+                );
+              }
+              return const SizedBox();
+            },
           ),
         ],
       ),

@@ -36,10 +36,12 @@ class CartCubit extends Cubit<CartState> {
       final uid = pfres.getString('uid');
       products = await service.getCart(userId: uid!);
     }
+    if (products!.contains(item)) return;
     products!.add(item);
     final spref = await SharedPreferences.getInstance();
     final uid = spref.getString('uid');
     await service.update(uid!, products!);
+    emit(CartLoaded(products: products!));
   }
 
   void removeItem(ProductModel item) async {
