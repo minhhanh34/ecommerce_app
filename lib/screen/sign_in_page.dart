@@ -52,7 +52,7 @@ class _SignInPageState extends State<SignInPage> {
           padding: const EdgeInsets.symmetric(horizontal: 32.0),
           child: ListView(
             children: [
-              const SizedBox(height: 50),
+              const SizedBox(height: 80),
               Text(
                 'Đăng nhập',
                 textAlign: TextAlign.center,
@@ -68,6 +68,8 @@ class _SignInPageState extends State<SignInPage> {
                 keyboardType: TextInputType.number,
                 controller: phoneController,
                 decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white,
                   prefixIcon: const Icon(Icons.phone_rounded),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(16),
@@ -214,6 +216,8 @@ class _SignInPageState extends State<SignInPage> {
       obscureText: obscure,
       keyboardType: TextInputType.text,
       decoration: InputDecoration(
+        filled: true,
+        fillColor: Colors.white,
         label: const Text('Mật khẩu'),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16.0),

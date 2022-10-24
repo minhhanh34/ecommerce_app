@@ -22,21 +22,16 @@ class _CartPageState extends State<CartPage> {
     );
   }
 
-  Future<void> _onRefresh(BuildContext context) async {
-    // final spref = await SharedPreferences.getInstance();
-    // final uid = spref.getString('uid');
-    // ignore: use_build_context_synchronously
-    final cartCubit = context.read<CartCubit>();
-    //final products = await cartCubit.service.getCart(userId: uid!);
-    //widget.refresh(products);
-    cartCubit.products = null;
-    await cartCubit.getCart();
-  }
+  // Future<void> _onRefresh(BuildContext context) async {
+  //   final cartCubit = context.read<CartCubit>();
+
+  //   cartCubit.products = null;
+  //   await cartCubit.getCart();
+  // }
 
   Future<void> dismiss(ProductModel item) async {
     final cartCubit = context.read<CartCubit>();
     cartCubit.products!.remove(item);
-    cartCubit.emit(CartLoaded(products: cartCubit.products!));
   }
 
   @override
@@ -55,7 +50,6 @@ class _CartPageState extends State<CartPage> {
             context.read<CartCubit>().getCart();
             return buildLoading();
           } else if (state is CartLoaded) {
-            
             if (state.products.isEmpty) {
               return Center(
                 child: Column(
@@ -78,7 +72,7 @@ class _CartPageState extends State<CartPage> {
               );
             }
             return RefreshIndicator(
-              onRefresh: () => _onRefresh(context),
+              onRefresh: () async => context.read<CartCubit>().refresh(),
               child: ListView.builder(
                 padding: const EdgeInsets.symmetric(horizontal: 4),
                 itemCount: state.products.length,

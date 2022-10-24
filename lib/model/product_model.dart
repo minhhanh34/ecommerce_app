@@ -12,6 +12,8 @@ class ProductModel {
   int price;
   int grade;
   int sold;
+  List<String>? colorOption;
+  List<String>? memoryOption;
   String? screenSize;
   String? resolution;
   String? brand;
@@ -37,6 +39,26 @@ class ProductModel {
     required this.price,
     this.grade = 0,
     this.sold = 0,
+    this.colorOption,
+    this.memoryOption,
+    this.screenSize,
+    this.resolution,
+    this.brand,
+    this.batteryCapacity,
+    this.fontCamera,
+    this.rearCamera,
+    this.gpu,
+    this.cpu,
+    this.cpuSpeed,
+    this.size,
+    this.displayType,
+    this.model,
+    this.sims,
+    this.batteryType,
+    this.weight,
+    this.ram,
+    this.rom,
+    this.wifi,
   });
   factory ProductModel.fromJson(Map<String, dynamic> json) =>
       _$ProductModelFromJson(json)..buildImage();
@@ -67,6 +89,8 @@ class ProductModel {
     }
   }
 
+  
+
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
@@ -77,6 +101,8 @@ class ProductModel {
       other.price == price &&
       other.grade == grade &&
       other.sold == sold &&
+      listEquals(other.colorOption, colorOption) &&
+      listEquals(other.memoryOption, memoryOption) &&
       other.screenSize == screenSize &&
       other.resolution == resolution &&
       other.brand == brand &&
@@ -104,6 +130,8 @@ class ProductModel {
       price.hashCode ^
       grade.hashCode ^
       sold.hashCode ^
+      colorOption.hashCode ^
+      memoryOption.hashCode ^
       screenSize.hashCode ^
       resolution.hashCode ^
       brand.hashCode ^
@@ -122,5 +150,61 @@ class ProductModel {
       ram.hashCode ^
       rom.hashCode ^
       wifi.hashCode;
+  }
+
+  ProductModel copyWith({
+    String? name,
+    Map<String, dynamic>? imageURL,
+    int? price,
+    int? grade,
+    int? sold,
+    List<String>? colorOption,
+    List<String>? memoryOption,
+    String? screenSize,
+    String? resolution,
+    String? brand,
+    String? batteryCapacity,
+    String? fontCamera,
+    String? rearCamera,
+    String? gpu,
+    String? cpu,
+    String? cpuSpeed,
+    String? size,
+    String? displayType,
+    String? model,
+    String? sims,
+    String? batteryType,
+    String? weight,
+    String? ram,
+    String? rom,
+    String? wifi,
+  }) {
+    return ProductModel(
+      name: name ?? this.name,
+      imageURL: imageURL ?? this.imageURL,
+      price: price ?? this.price,
+      grade: grade ?? this.grade,
+      sold: sold ?? this.sold,
+      colorOption: colorOption ?? this.colorOption,
+      memoryOption: memoryOption ?? this.memoryOption,
+      screenSize: screenSize ?? this.screenSize,
+      resolution: resolution ?? this.resolution,
+      brand: brand ?? this.brand,
+      batteryCapacity: batteryCapacity ?? this.batteryCapacity,
+      fontCamera: fontCamera ?? this.fontCamera,
+      rearCamera: rearCamera ?? this.rearCamera,
+      gpu: gpu ?? this.gpu,
+      cpu: cpu ?? this.cpu,
+      cpuSpeed: cpuSpeed ?? this.cpuSpeed,
+      size: size ?? this.size,
+      displayType: displayType ?? this.displayType,
+      model: model ?? this.model,
+      sims: sims ?? this.sims,
+      batteryType: batteryType ?? this.batteryType,
+      weight: weight ?? this.weight,
+      ram: ram ?? this.ram,
+      rom: rom ?? this.rom,
+      wifi: wifi ?? this.wifi,
+    );
   }
 }

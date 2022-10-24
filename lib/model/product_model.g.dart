@@ -30,7 +30,15 @@ ProductModel _$ProductModelFromJson(Map<String, dynamic> json) => ProductModel(
       ..weight = json['weight'] as String?
       ..ram = json['ram'] as String?
       ..rom = json['rom'] as String?
-      ..wifi = json['wifi'] as String?;
+      ..wifi = json['wifi'] as String?
+      ..colorOption = ((json['colorOption'] as List?)
+          ?.map((color) => color)
+          .cast<String>()
+          .toList())
+      ..memoryOption = (json['memoryOption'] as List?)
+          ?.map((memory) => memory)
+          .cast<String>()
+          .toList();
 
 Map<String, dynamic> _$ProductModelToJson(ProductModel instance) =>
     <String, dynamic>{

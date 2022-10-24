@@ -30,7 +30,7 @@ class CartCubit extends Cubit<CartState> {
     emit(CartDetail(product));
   }
 
-  void addItem(ProductModel item) async {
+  Future<void> addItem(ProductModel item) async {
     if (products == null) {
       final pfres = await SharedPreferences.getInstance();
       final uid = pfres.getString('uid');
@@ -50,5 +50,14 @@ class CartCubit extends Cubit<CartState> {
     final uid = spref.getString('uid');
     await service.update(uid!, products!);
     emit(CartLoaded(products: products!));
+  }
+
+  void dispose() {
+    products = null;
+  }
+
+  Future<void> refresh() async {
+    dispose();
+    getCart();
   }
 }

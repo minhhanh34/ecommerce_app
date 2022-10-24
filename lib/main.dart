@@ -1,3 +1,6 @@
+import 'package:ecommerce_app/services/favorite_service.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
+
 import './utils/libs.dart';
 
 void main() async {
@@ -7,7 +10,6 @@ void main() async {
   final spref = await SharedPreferences.getInstance();
   String? uid = spref.getString('uid');
   runApp(EcommerceApp(uid: uid));
-  FlutterNativeSplash.remove();
 }
 
 class EcommerceApp extends StatelessWidget {
@@ -28,13 +30,22 @@ class EcommerceApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    FlutterNativeSplash.remove();
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => HomeCubit(homeService: HomeServiceIml(), cartCubit: cartCubit)),
+        BlocProvider(
+          create: (_) => HomeCubit(
+            homeService: HomeServiceIml(),
+            cartCubit: cartCubit,
+            favoriteService: FavoriteServiceIml(
+              FavoriteRepository(),
+              ProductRepository(),
+            ),
+          ),
+        ),
         BlocProvider(create: (_) => SignInCubit(service: service)),
         BlocProvider(create: (_) => SignUpCubit(service: service)),
-        BlocProvider(
-          create: (_) => cartCubit),
+        BlocProvider(create: (_) => cartCubit),
         BlocProvider(create: (_) => ForgetPasswordCubit())
       ],
       child: MaterialApp(

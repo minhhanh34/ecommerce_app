@@ -191,6 +191,8 @@ class _SignUpPageState extends State<SignUpPage> {
       validator: validator,
       controller: controller,
       decoration: InputDecoration(
+        filled: true,
+        fillColor: Colors.white,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(16.0)),
         label: Text(label),
         prefixIcon: Icon(prefixIconData),

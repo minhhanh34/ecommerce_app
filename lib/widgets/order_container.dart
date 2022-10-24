@@ -28,7 +28,7 @@ class _OrderContainerState extends State<OrderContainer> {
           }
           if (state is OrderState) {
             return RefreshIndicator(
-              onRefresh: () async {},
+              onRefresh: () async => context.read<HomeCubit>().orderRefresh(),
               child: ListView.separated(
                 separatorBuilder: (_, index) => const SizedBox(height: 15),
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
