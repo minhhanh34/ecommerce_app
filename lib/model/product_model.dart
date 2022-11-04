@@ -77,10 +77,11 @@ class ProductModel {
               color: Colors.grey,
               borderRadius: BorderRadius.circular(12),
             ),
-            width: MediaQuery.of(context).size.width * 0.5,
-            height: MediaQuery.of(context).size.width * 0.3,
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
             child: const Icon(Icons.image),
           );
+          
         },
       );
       images.addAll(
@@ -89,67 +90,65 @@ class ProductModel {
     }
   }
 
-  
-
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-  
+
     return other is ProductModel &&
-      other.name == name &&
-      mapEquals(other.imageURL, imageURL) &&
-      other.price == price &&
-      other.grade == grade &&
-      other.sold == sold &&
-      listEquals(other.colorOption, colorOption) &&
-      listEquals(other.memoryOption, memoryOption) &&
-      other.screenSize == screenSize &&
-      other.resolution == resolution &&
-      other.brand == brand &&
-      other.batteryCapacity == batteryCapacity &&
-      other.fontCamera == fontCamera &&
-      other.rearCamera == rearCamera &&
-      other.gpu == gpu &&
-      other.cpu == cpu &&
-      other.cpuSpeed == cpuSpeed &&
-      other.size == size &&
-      other.displayType == displayType &&
-      other.model == model &&
-      other.sims == sims &&
-      other.batteryType == batteryType &&
-      other.weight == weight &&
-      other.ram == ram &&
-      other.rom == rom &&
-      other.wifi == wifi;
+        other.name == name &&
+        mapEquals(other.imageURL, imageURL) &&
+        other.price == price &&
+        other.grade == grade &&
+        other.sold == sold &&
+        listEquals(other.colorOption, colorOption) &&
+        listEquals(other.memoryOption, memoryOption) &&
+        other.screenSize == screenSize &&
+        other.resolution == resolution &&
+        other.brand == brand &&
+        other.batteryCapacity == batteryCapacity &&
+        other.fontCamera == fontCamera &&
+        other.rearCamera == rearCamera &&
+        other.gpu == gpu &&
+        other.cpu == cpu &&
+        other.cpuSpeed == cpuSpeed &&
+        other.size == size &&
+        other.displayType == displayType &&
+        other.model == model &&
+        other.sims == sims &&
+        other.batteryType == batteryType &&
+        other.weight == weight &&
+        other.ram == ram &&
+        other.rom == rom &&
+        other.wifi == wifi;
   }
 
   @override
   int get hashCode {
     return name.hashCode ^
-      imageURL.hashCode ^
-      price.hashCode ^
-      grade.hashCode ^
-      sold.hashCode ^
-      colorOption.hashCode ^
-      memoryOption.hashCode ^
-      screenSize.hashCode ^
-      resolution.hashCode ^
-      brand.hashCode ^
-      batteryCapacity.hashCode ^
-      fontCamera.hashCode ^
-      rearCamera.hashCode ^
-      gpu.hashCode ^
-      cpu.hashCode ^
-      cpuSpeed.hashCode ^
-      size.hashCode ^
-      displayType.hashCode ^
-      model.hashCode ^
-      sims.hashCode ^
-      batteryType.hashCode ^
-      weight.hashCode ^
-      ram.hashCode ^
-      rom.hashCode ^
-      wifi.hashCode;
+        imageURL.hashCode ^
+        price.hashCode ^
+        grade.hashCode ^
+        sold.hashCode ^
+        colorOption.hashCode ^
+        memoryOption.hashCode ^
+        screenSize.hashCode ^
+        resolution.hashCode ^
+        brand.hashCode ^
+        batteryCapacity.hashCode ^
+        fontCamera.hashCode ^
+        rearCamera.hashCode ^
+        gpu.hashCode ^
+        cpu.hashCode ^
+        cpuSpeed.hashCode ^
+        size.hashCode ^
+        displayType.hashCode ^
+        model.hashCode ^
+        sims.hashCode ^
+        batteryType.hashCode ^
+        weight.hashCode ^
+        ram.hashCode ^
+        rom.hashCode ^
+        wifi.hashCode;
   }
 
   ProductModel copyWith({

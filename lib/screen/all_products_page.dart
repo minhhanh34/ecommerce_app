@@ -23,7 +23,12 @@ class AllProductsPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                products[index].images['image1']!,
+                ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxHeight: 120,
+                      maxWidth: MediaQuery.of(context).size.width * 0.5,
+                    ),
+                    child: products[index].images['image1']!),
                 Text(
                   PriceFormat.format(products[index].price),
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(

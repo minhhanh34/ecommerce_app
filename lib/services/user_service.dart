@@ -12,9 +12,7 @@ class UserServiceIml implements UserService {
 
   @override
   Future<UserModel> getUser(String uid) async {
-    final users = await repository.list();
-    final user = users.firstWhere((user) => user.uid == uid);
-    return user;
+    return repository.getOne(uid);
   }
 
   @override

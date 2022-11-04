@@ -107,8 +107,14 @@ class _CartPageState extends State<CartPage> {
                                 isThreeLine: true,
                                 leading: Hero(
                                   tag: state.products[index].name,
-                                  child:
-                                      state.products[index].images['image1']!,
+                                  child: ConstrainedBox(
+                                    constraints: const BoxConstraints(
+                                      maxWidth: 60,
+                                      maxHeight: 60,
+                                    ),
+                                    child:
+                                        state.products[index].images['image1']!,
+                                  ),
                                 ),
                                 title: Text(
                                   state.products[index].name,

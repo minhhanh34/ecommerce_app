@@ -8,7 +8,8 @@ part of 'history_model.dart';
 
 HistoryModel _$HistoryModelFromJson(Map<String, dynamic> json) => HistoryModel(
       uid: json['uid'] as String,
-      history: json['history'] as Map<String, dynamic>?,
+      historyRef:
+          json['history'] as List<DocumentReference<Map<String, dynamic>>>,
     );
 
 Map<String, dynamic> _$HistoryModelToJson(HistoryModel instance) =>

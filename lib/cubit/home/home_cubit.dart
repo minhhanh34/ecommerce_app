@@ -2,10 +2,13 @@ import 'dart:developer';
 
 import 'package:ecommerce_app/cubit/cart/cart_cubit.dart';
 import 'package:ecommerce_app/model/banner_model.dart';
+import 'package:ecommerce_app/model/order_model.dart';
 import 'package:ecommerce_app/model/product_model.dart';
 import 'package:ecommerce_app/model/user_model.dart';
 import 'package:ecommerce_app/services/favorite_service.dart';
 import 'package:ecommerce_app/services/home_service.dart';
+import 'package:ecommerce_app/services/order_service.dart';
+import 'package:ecommerce_app/services/user_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -16,17 +19,21 @@ class HomeCubit extends Cubit<HomeState> {
     required this.homeService,
     required this.favoriteService,
     required this.cartCubit,
+    required this.orderService,
+    required this.userService,
   }) : super(InitialState());
   HomeService homeService;
   FavoriteService favoriteService;
   CartCubit cartCubit;
+  OrderService orderService;
+  UserService userService;
 
   int navIndex = 0;
 
   List<ProductModel>? products;
   List<ProductModel>? favoriteProducts;
-  List<ProductModel>? orderProducts;
-  List<ProductModel>? historyProducts;
+  List<OrderModel>? orderProducts;
+  List<OrderModel>? historyOrders;
   UserModel? user;
   BannerModel? bannersData;
 
@@ -34,10 +41,21 @@ class HomeCubit extends Cubit<HomeState> {
     if (favoriteProducts == null) {
       emit(LoadingState());
       final favoriteProducts = await getFavoriteProduct();
-      emit(FavoriteState(favoritedProducts: favoriteProducts));
+      if (navIndex == 1) {
+        emit(FavoriteState(favoritedProducts: favoriteProducts));
+      }
     } else {
       emit(FavoriteState(favoritedProducts: favoriteProducts!));
     }
+  }
+
+  Future<void> favoriteRefresh() async {
+    favoriteProducts = null;
+    favoriteTab();
+  }
+
+  void goToTopScreen() async {
+    emit(GoToTopScreen());
   }
 
   Future<List<ProductModel>> getFavoriteProduct() async {
@@ -67,12 +85,14 @@ class HomeCubit extends Cubit<HomeState> {
       bannersData = await homeService.getBanners();
       products = await homeService.getAllProducts();
       await cartCubit.getCart();
-      emit(
-        MainState(
-          banners: bannersData!,
-          products: products!,
-        ),
-      );
+      if (navIndex == 0) {
+        emit(
+          MainState(
+            banners: bannersData!,
+            products: products!,
+          ),
+        );
+      }
     } else {
       emit(MainState(
         banners: bannersData!,
@@ -81,42 +101,62 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 
+  Future<void> mainRefresh() async {
+    products = null;
+    bannersData = null;
+    mainTab();
+  }
+
   Future<void> orderTab() async {
     if (orderProducts == null) {
       emit(LoadingState());
       final spref = await SharedPreferences.getInstance();
       final uid = spref.getString('uid');
       orderProducts = await homeService.getOrderProducts(uid!);
-      emit(OrderState(orderProducts!));
+      if (navIndex == 2) {
+        emit(OrderState(orderProducts!));
+      }
     } else {
       emit(OrderState(orderProducts!));
     }
   }
 
   Future<void> historyTab() async {
-    if (historyProducts == null) {
-      emit(HistoryState());
+    if (historyOrders == null) {
+      emit(LoadingState());
       final spref = await SharedPreferences.getInstance();
       final uid = spref.getString('uid');
-      historyProducts = await homeService.getHistoryProducts(uid!);
+      historyOrders = await homeService.getHistoryOrders(uid!);
+      if (navIndex == 3) {
+        emit(HistoryState(historyOrders!));
+      }
     } else {
-      emit(HistoryState());
+      emit(HistoryState(historyOrders!));
     }
   }
 
   Future<void> accountTab() async {
     if (user == null) {
-      emit(AccountState());
+      emit(LoadingState());
       final spref = await SharedPreferences.getInstance();
       final uid = spref.getString('uid');
       user = await homeService.getUserInfo(uid!);
+      if (navIndex == 4) {
+        emit(AccountState(user!));
+      }
     } else {
-      emit(AccountState());
+      emit(AccountState(user!));
     }
   }
 
+  Future<void> cancelOrder(OrderModel order) async {
+    orderProducts?.remove(order);
+    emit(OrderState(orderProducts!));
+    await orderService.remove(order);
+  }
+
   Future<void> logout() async {
-    emit(LoadingState());
+    // emit(LoadingState());
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.remove('uid');
@@ -124,7 +164,7 @@ class HomeCubit extends Cubit<HomeState> {
       products = null;
       favoriteProducts = null;
       orderProducts = null;
-      historyProducts = null;
+      historyOrders = null;
       user = null;
       cartCubit.products = null;
       navIndex = 0;
@@ -149,20 +189,32 @@ class HomeCubit extends Cubit<HomeState> {
 
   void onNavTap(int index) async {
     if (index == 0) {
-      navIndex == 0 ? products = null : navIndex = 0;
+      if (navIndex == 0) {
+        emit(GoToTopScreen());
+      }
+      navIndex = 0;
       await mainTab();
     } else if (index == 1) {
-      navIndex == 1 ? favoriteProducts = null : navIndex = 1;
+      navIndex = 1;
       await favoriteTab();
     } else if (index == 2) {
-      navIndex == 2 ? orderProducts = null : navIndex = 2;
+      navIndex = 2;
       await orderTab();
     } else if (index == 3) {
-      navIndex == 3 ? historyProducts = null : navIndex = 3;
+      navIndex = 3;
       await historyTab();
     } else if (index == 4) {
-      navIndex == 4 ? user = null : navIndex = 4;
+      navIndex = 4;
       await accountTab();
     }
+  }
+
+  Future<void> historyRefresh() async {
+    historyOrders = null;
+    historyTab();
+  }
+
+  Future<UserModel> getUserInfo(String uid) async {
+    return await userService.getUser(uid);
   }
 }

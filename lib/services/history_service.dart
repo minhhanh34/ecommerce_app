@@ -1,11 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce_app/model/history_model.dart';
+import 'package:ecommerce_app/model/order_model.dart';
 import 'package:ecommerce_app/model/product_model.dart';
+import 'package:ecommerce_app/repository/order_repository.dart';
+import 'package:ecommerce_app/repository/product_repository.dart';
+import 'package:ecommerce_app/services/order_service.dart';
 
 import '../repository/repository_interface.dart';
 
 abstract class HistoryService {
-  Future<List<ProductModel>> getHistoryProducts(String uid);
+  Future<List<OrderModel>> getHistoryOrders(String uid);
   Future<bool> updateHistoryProducts(String uid, List<ProductModel> products);
 }
 
@@ -14,18 +18,13 @@ class HistoryServiceIml implements HistoryService {
   Repository<ProductModel> productRepository;
   HistoryServiceIml(this.historyRepository, this.productRepository);
   @override
-  Future<List<ProductModel>> getHistoryProducts(String uid) async {
-    final products = <ProductModel>[];
-    final docSnap = await historyRepository.getQueryDocumentSnapshot(uid);
-    final historyModel = await historyRepository.getOne(docSnap.id);
-    final prodsRef = historyModel.history;
-    for (var ref in prodsRef!.values) {
-      final prodData =
-          await (ref as DocumentReference<Map<String, dynamic>>).get();
-      final product = ProductModel.fromJson(prodData.data()!);
-      products.add(product);
-    }
-    return products;
+  Future<List<OrderModel>> getHistoryOrders(String uid) async {
+    final orderService =
+        OrderServiceIml(OrderRepository(), ProductRepository());
+    final orders = await orderService.getUserOrder(uid);
+    return orders
+        .where((order) => order.status.toLowerCase() == 'đã giao')
+        .toList();
   }
 
   @override
@@ -39,7 +38,7 @@ class HistoryServiceIml implements HistoryService {
           await productRepository.getQueryDocumentSnapshot(products[i].name);
       map.addAll({'product${i + 1}': docQuery.reference});
     }
-    final favoriteModel = HistoryModel(uid: uid, history: map);
+    final favoriteModel = HistoryModel(uid: uid, historyRef: []);
     final cartQuery = await historyRepository.getQueryDocumentSnapshot(uid);
     return await historyRepository.update(cartQuery.id, favoriteModel);
   }

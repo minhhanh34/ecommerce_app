@@ -27,7 +27,10 @@ class _HomePageState extends State<HomePage> {
   Widget _buildSearchIconButton() {
     return IconButton(
       alignment: Alignment.centerRight,
-      onPressed: () {},
+      onPressed: () {
+        //TODO 
+        //show search
+      },
       icon: const Icon(
         Icons.search_rounded,
       ),
@@ -66,9 +69,13 @@ class _HomePageState extends State<HomePage> {
             );
           }
           if (state is OrderState) {
-            return OrderContainer(products: state.products);
+            return OrderContainer(orders: state.orders);
           }
-          if (state is HistoryState) return const HistoryContainer();
+          if (state is HistoryState) {
+            return HistoryContainer(
+              historyOrders: state.historyOrders,
+            );
+          }
           if (state is AccountState) return const AccountContainer();
           if (state is LoadingState) return buildLoading();
           return buildLoading();

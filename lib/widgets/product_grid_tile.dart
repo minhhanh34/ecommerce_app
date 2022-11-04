@@ -18,7 +18,12 @@ class ProductWidget extends StatelessWidget {
           children: [
             Hero(
               tag: product.name,
-              child: product.images['image1']!,
+              child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxHeight: 120.0,
+                    maxWidth: MediaQuery.of(context).size.width * 0.45,
+                  ),
+                  child: product.images['image1']!),
             ),
             Padding(
               padding: const EdgeInsets.only(
@@ -30,6 +35,18 @@ class ProductWidget extends StatelessWidget {
                 style: Theme.of(context).textTheme.titleLarge,
               ),
             ),
+            Row(
+              children: [
+                const SizedBox(width: 12.0),
+                for (int i = 0; i < product.grade; i++)
+                  const Icon(Icons.star, color: Colors.yellow),
+                // Text(product.grade.toString()),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 16.0),
+              child: Text('Đã bán ${product.sold}'),
+            ),
             Padding(
               padding: const EdgeInsets.only(
                 top: 4,
@@ -38,9 +55,9 @@ class ProductWidget extends StatelessWidget {
               child: Text(
                 PriceFormat.format(product.price),
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Colors.red,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    color: Colors.red,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20.0),
               ),
             ),
           ],

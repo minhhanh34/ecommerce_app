@@ -16,9 +16,9 @@ class UserRepository implements Repository<UserModel> {
   }
 
   @override
-  Future<UserModel> getOne(String id) async {
-    final snapshot = await collection.doc(id).get();
-    return UserModel.fromJson(snapshot.data()!);
+  Future<UserModel> getOne(String uid) async {
+    final doc = await collection.where('uid', isEqualTo: uid).get();
+    return UserModel.fromJson(doc.docs.first.data());
   }
 
   @override

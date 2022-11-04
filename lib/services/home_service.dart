@@ -1,4 +1,5 @@
 import 'package:ecommerce_app/model/banner_model.dart';
+import 'package:ecommerce_app/model/order_model.dart';
 import 'package:ecommerce_app/model/product_model.dart';
 import 'package:ecommerce_app/model/user_model.dart';
 import 'package:ecommerce_app/repository/history_repository.dart';
@@ -21,9 +22,9 @@ abstract class HomeService extends Service {
   Future<List<ProductModel>?> getAllProducts();
   Future<List<ProductModel>> getFavoriteProducts(String uid);
   Future<bool> updateFavoriteProducts(String uid, List<ProductModel> products);
-  Future<List<ProductModel>> getOrderProducts(String uid);
-  Future<bool> updateOrderProducts(String uid, List<ProductModel> products);
-  Future<List<ProductModel>> getHistoryProducts(String uid);
+  Future<List<OrderModel>> getOrderProducts(String uid);
+  Future<bool> updateOrderProducts(OrderModel order);
+  Future<List<OrderModel>> getHistoryOrders(String uid);
   Future<bool> updateHistoryProducts(String uid, List<ProductModel> products);
   Future<UserModel> getUserInfo(String uid);
   Future<bool> updateUserInfo(UserModel userModel);
@@ -55,13 +56,13 @@ class HomeServiceIml implements HomeService {
   }
 
   @override
-  Future<List<ProductModel>> getHistoryProducts(String uid) async {
-    return await historyService.getHistoryProducts(uid);
+  Future<List<OrderModel>> getHistoryOrders(String uid) async {
+    return await historyService.getHistoryOrders(uid);
   }
 
   @override
-  Future<List<ProductModel>> getOrderProducts(String uid) async {
-    return await orderService.getOrderProducts(uid);
+  Future<List<OrderModel>> getOrderProducts(String uid) async {
+    return await orderService.getUserOrder(uid);
   }
 
   @override
@@ -82,9 +83,8 @@ class HomeServiceIml implements HomeService {
   }
 
   @override
-  Future<bool> updateOrderProducts(
-      String uid, List<ProductModel> products) async {
-    return await orderService.updateOrderProducts(uid, products);
+  Future<bool> updateOrderProducts(OrderModel order) async {
+    return await orderService.updateOrderProducts(order.id, order);
   }
 
   @override

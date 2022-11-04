@@ -36,7 +36,7 @@ ProductModel _$ProductModelFromJson(Map<String, dynamic> json) => ProductModel(
           .cast<String>()
           .toList())
       ..memoryOption = (json['memoryOption'] as List?)
-          ?.map((memory) => memory)
+          ?.map((memory) => memory['memory'])
           .cast<String>()
           .toList();
 

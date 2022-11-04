@@ -8,11 +8,17 @@ part of 'order_model.dart';
 
 OrderModel _$OrderModelFromJson(Map<String, dynamic> json) => OrderModel(
       uid: json['uid'] as String,
-      order: json['order'] as Map<String, dynamic>?,
+      date: (json['date'] as Timestamp).toDate(),
+      order: (json['order'] as List).map((e) => Map<String,dynamic>.from(e)).toList(),
+      id: json['id'] as String,
+      status: json['status'],
     );
 
 Map<String, dynamic> _$OrderModelToJson(OrderModel instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'uid': instance.uid,
       'order': instance.order,
+      'date': DateTime.now(),
+      'status': instance.status,
     };

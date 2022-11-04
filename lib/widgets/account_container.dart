@@ -1,4 +1,9 @@
+import 'package:ecommerce_app/cubit/home/home_cubit.dart';
+import 'package:ecommerce_app/cubit/home/home_state.dart';
+import 'package:ecommerce_app/screen/sign_in_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 class AccountContainer extends StatefulWidget {
   const AccountContainer({Key? key}) : super(key: key);
@@ -10,6 +15,129 @@ class AccountContainer extends StatefulWidget {
 class _AccountContainerState extends State<AccountContainer> {
   @override
   Widget build(BuildContext context) {
-    return const Center(child: Text('Account'));
+    return BlocConsumer<HomeCubit, HomeState>(
+      listener: (context, state) {
+        if (state is LogoutState) {
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (_) => const SignInPage()),
+            (route) => false,
+          );
+        }
+      },
+      builder: (context, state) {
+        if (state is LoadingState) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (state is AccountState) {
+          return Container(
+            decoration: BoxDecoration(
+              color: Colors.blue.shade100,
+            ),
+            width: double.infinity,
+            height: double.infinity,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 8.0),
+                Text(
+                  '  Tài khoản',
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleMedium
+                      ?.copyWith(fontSize: 24.0),
+                ),
+                Card(
+                  margin: const EdgeInsets.symmetric(
+                    vertical: 8.0,
+                    horizontal: 8.0,
+                  ),
+                  child: SizedBox(
+                    height: 100.0,
+                    width: double.infinity,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        const SizedBox(width: 16.0),
+                        const CircleAvatar(
+                          radius: 32.0,
+                          child: FlutterLogo(),
+                        ),
+                        const SizedBox(width: 40.0),
+                        Text(state.user.name,
+                            style: const TextStyle(fontSize: 20.0)),
+                        const Spacer(),
+                        const Icon(
+                          Icons.edit,
+                          size: 28.0,
+                        ),
+                        const SizedBox(width: 16.0),
+                      ],
+                    ),
+                  ),
+                ),
+                Card(
+                  margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Column(
+                    children: [
+                      InfoRow(label: 'Địa chỉ:', value: state.user.address),
+                      const Divider(thickness: 1.5),
+                      InfoRow(label: 'Số điện thoại:', value: state.user.phone),
+                      const Divider(thickness: 1.5),
+                      InfoRow(label: 'Email:', value: state.user.email ?? ''),
+                      const Divider(thickness: 1.5),
+                      InfoRow(
+                          label: 'Giới tính:', value: state.user.gender ?? ''),
+                      const Divider(thickness: 1.5),
+                      InfoRow(
+                        label: 'Ngày sinh:',
+                        value: state.user.birthDay != null
+                            ? DateFormat('dd/MM/yyyy')
+                                .format(state.user.birthDay!)
+                            : '',
+                      ),
+                    ],
+                  ),
+                ),
+                Card(
+                  margin: const EdgeInsets.symmetric(
+                      horizontal: 8.0, vertical: 8.0),
+                  child: ListTile(
+                    onTap: context.read<HomeCubit>().logout,
+                    leading: const Icon(Icons.logout, color: Colors.red),
+                    title: const Text('Đăng xuất'),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+        return const SizedBox();
+      },
+    );
+  }
+}
+
+class InfoRow extends StatelessWidget {
+  const InfoRow({
+    Key? key,
+    required this.label,
+    required this.value,
+  }) : super(key: key);
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      height: 50.0,
+      child: Row(
+        children: [
+          const SizedBox(width: 8.0),
+          Expanded(flex: 2, child: Text(label)),
+          Expanded(flex: 5, child: Text(value)),
+        ],
+      ),
+    );
   }
 }

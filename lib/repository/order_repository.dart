@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce_app/model/order_model.dart';
 
@@ -5,9 +7,24 @@ import 'repository_interface.dart';
 
 class OrderRepository implements Repository<OrderModel> {
   final collection = FirebaseFirestore.instance.collection('order');
+
+  final alphabet = 'ABCDEFGHIJKLMNOPQRSTUVXAYabcdefghijklmnopqrstuvxay';
+
+  String generateString() {
+    final random = Random();
+    StringBuffer buffer = StringBuffer();
+    for (int i = 0; i < 20; i++) {
+      int randInt = random.nextInt(50);
+      buffer.write(alphabet[randInt]);
+    }
+    return buffer.toString();
+  }
+
   @override
   Future<OrderModel> create(OrderModel item) async {
-    await collection.add(item.toJson());
+    String id = generateString();
+    item.id = id;
+    await collection.doc(id).set(item.toJson());
     return item;
   }
 
@@ -21,6 +38,11 @@ class OrderRepository implements Repository<OrderModel> {
   Future<OrderModel> getOne(String id) async {
     final doc = await collection.doc(id).get();
     return OrderModel.fromJson(doc.data()!);
+  }
+
+  Future<List<OrderModel>> getUserOrder(String uid) async {
+    final docs = await collection.where('uid', isEqualTo: 'uid').get();
+    return docs.docs.map((doc) => OrderModel.fromJson(doc.data())).toList();
   }
 
   @override
@@ -37,10 +59,11 @@ class OrderRepository implements Repository<OrderModel> {
     return true;
   }
 
- @override
+  @override
   Future<QueryDocumentSnapshot> getQueryDocumentSnapshot(String uid) async {
     final docs = await collection.get();
     return docs.docs.firstWhere((doc) => doc.data()['uid'] == uid);
+    // await collection.where('uid', isEqualTo: uid).get();
   }
 }
 

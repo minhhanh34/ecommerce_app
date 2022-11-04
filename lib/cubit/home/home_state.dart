@@ -1,6 +1,7 @@
 import 'package:ecommerce_app/model/banner_model.dart';
-
+import 'package:ecommerce_app/model/order_model.dart';
 import 'package:ecommerce_app/model/product_model.dart';
+import 'package:ecommerce_app/model/user_model.dart';
 
 abstract class HomeState {}
 
@@ -16,13 +17,27 @@ class FavoriteState extends HomeState {
 }
 
 class OrderState extends HomeState {
-  List<ProductModel> products;
-  OrderState(this.products);
+  List<OrderModel> orders;
+  OrderState(this.orders);
+
+  OrderState copyWith({
+    List<OrderModel>? orders,
+  }) {
+    return OrderState(
+      orders ?? this.orders,
+    );
+  }
 }
 
-class HistoryState extends HomeState {}
+class HistoryState extends HomeState {
+  List<OrderModel> historyOrders;
+  HistoryState(this.historyOrders);
+}
 
-class AccountState extends HomeState {}
+class AccountState extends HomeState {
+  final UserModel user;
+  AccountState(this.user);
+}
 
 class LogoutState extends HomeState {}
 
@@ -41,3 +56,5 @@ class Nav extends HomeState {
   final int index;
   Nav([this.index = 0]);
 }
+
+class GoToTopScreen extends HomeState {}

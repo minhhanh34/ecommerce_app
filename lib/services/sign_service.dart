@@ -98,11 +98,11 @@ class SignServiceIml implements SignService {
         FavoriteModel(uid: uid, favorite: <String, DocumentReference>{}),
       );
       historyRepo.create(
-        HistoryModel(uid: uid, history: <String, DocumentReference>{}),
+        HistoryModel(uid: uid, historyRef: []),
       );
-      orderRepo.create(
-        OrderModel(uid: uid, order: <String, DocumentReference>{}),
-      );
+      // orderRepo.create(
+      //   OrderModel(uid: uid, order: <String, DocumentReference>{}),
+      // );
       return uid;
     } catch (e) {
       log('error', error: e);

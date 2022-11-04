@@ -231,7 +231,8 @@ class _ProductPageState extends State<ProductPage> {
                       if (typeClick == TypeClick.addToCart) {
                         context.read<CartCubit>().addItem(widget.product);
                       } else {
-                        print('buy');
+                        //TODO 
+                        // by feature
                       }
                       _controller.close();
                       await Future.delayed(const Duration(milliseconds: 175));
@@ -392,6 +393,15 @@ class _ProductPageState extends State<ProductPage> {
                 fontSize: 24,
               ),
             ),
+          ),
+          Row(
+            children: [
+              const SizedBox(width: 16.0),
+              for(int i = 0; i < widget.product.grade; i++)
+                const Icon(Icons.star, color: Colors.yellow),
+              const SizedBox(width: 16.0),
+              Text('Đã bán ${widget.product.sold}'),
+            ],
           ),
           ListTile(
             title: Text(

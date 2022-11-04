@@ -1,5 +1,5 @@
 export '../cubit/cart/cart_cubit.dart';
-export '../cubit/forget_password.dart/forget_password_cubit.dart';
+export '../cubit/forget_password/forget_password_cubit.dart';
 export '../cubit/home/home_cubit.dart';
 export '../cubit/signin/signin_cubit.dart';
 export '../cubit/signup/signup_cubit.dart';

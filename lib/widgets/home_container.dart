@@ -1,12 +1,15 @@
+import 'package:ecommerce_app/cubit/home/home_cubit.dart';
+import 'package:ecommerce_app/cubit/home/home_state.dart';
 import 'package:ecommerce_app/model/banner_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../screen/all_products_page.dart';
 import '../widgets/products_catalog.dart';
 import '../model/product_model.dart';
 import 'banner.dart';
 import 'header_row.dart';
-import 'product_widget.dart';
+import 'product_grid_tile.dart';
 
 class HomeContainer extends StatefulWidget {
   const HomeContainer({Key? key, required this.banners, required this.products})
@@ -19,12 +22,26 @@ class HomeContainer extends StatefulWidget {
 }
 
 class _HomeContainerState extends State<HomeContainer> {
+  late ScrollController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = ScrollController();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     var column = Column(
       // mainAxisSize: MainAxisSize.min,
       children: [
-       HeaderBanner(model: widget.banners),
+        HeaderBanner(model: widget.banners),
         HeaderRow(
           title: 'Danh mục',
           hasMore: true,
@@ -45,21 +62,38 @@ class _HomeContainerState extends State<HomeContainer> {
         // ),
       ],
     );
-    return CustomScrollView(
-      slivers: [
-        SliverList(
-          delegate: SliverChildListDelegate([column]),
+    return BlocListener<HomeCubit, HomeState>(
+      listener: (context, state) {
+        if (state is GoToTopScreen) {
+          controller.animateTo(
+            controller.position.minScrollExtent,
+            duration: const Duration(milliseconds: 250),
+            curve: Curves.easeInQuad,
+          );
+        }
+      },
+      child: RefreshIndicator(
+        onRefresh: () => context.read<HomeCubit>().mainRefresh(),
+        child: CustomScrollView(
+          controller: controller,
+          slivers: [
+            SliverList(
+              delegate: SliverChildListDelegate([column]),
+            ),
+            SliverGrid(
+              delegate: SliverChildBuilderDelegate(
+                childCount: widget.products.length,
+                (context, index) =>
+                    ProductWidget(product: widget.products[index]),
+              ),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisExtent: 240.0
+              ),
+            ),
+          ],
         ),
-        SliverGrid(
-          delegate: SliverChildBuilderDelegate(
-            childCount: widget.products.length ~/ 2,
-            (context, index) => ProductWidget(product: widget.products[index]),
-          ),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-          ),
-        ),
-      ],
+      ),
     );
   }
 }
