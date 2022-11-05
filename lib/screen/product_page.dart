@@ -22,10 +22,10 @@ class ProductPage extends StatefulWidget {
 }
 
 class _ProductPageState extends State<ProductPage> {
-  late PageController controller;
-  int currentPage = 1;
-  late bool isFavorite;
-  late List<ProductModel> sameProducts;
+  // late PageController controller;
+  // int currentPage = 1;
+  // late bool isFavorite;
+  // late List<ProductModel> sameProducts;
   int selectColor = 0;
   int selectMemory = 0;
   int quantity = 1;
@@ -36,16 +36,16 @@ class _ProductPageState extends State<ProductPage> {
   @override
   void initState() {
     super.initState();
-    controller = PageController(initialPage: 0);
-    isFavorite =
-        context.read<HomeCubit>().favoriteProducts?.contains(widget.product) ??
-            false;
+    // controller = PageController(initialPage: 0);
+    // isFavorite =
+    //     context.read<HomeCubit>().favoriteProducts?.contains(widget.product) ??
+    //         false;
     _scaffoldKey = GlobalKey<ScaffoldState>();
   }
 
   @override
   void dispose() {
-    controller.dispose();
+    // controller.dispose();
     _scaffoldKey.currentState?.dispose();
     super.dispose();
   }
@@ -67,16 +67,6 @@ class _ProductPageState extends State<ProductPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // const SizedBox(height: 4),
-              // Divider(
-              //   indent: MediaQuery.of(context).size.width *
-              //       0.35,
-              //   endIndent:
-              //       MediaQuery.of(context).size.width *
-              //           0.35,
-              //   color: Colors.black,
-              //   thickness: 3.0,
-              // ),
               ListTile(
                 onTap: () async {
                   _controller.close();
@@ -231,7 +221,7 @@ class _ProductPageState extends State<ProductPage> {
                       if (typeClick == TypeClick.addToCart) {
                         context.read<CartCubit>().addItem(widget.product);
                       } else {
-                        //TODO 
+                        //TODO
                         // by feature
                       }
                       _controller.close();
@@ -325,67 +315,68 @@ class _ProductPageState extends State<ProductPage> {
       ),
       body: ListView(
         children: [
-          AspectRatio(
-            aspectRatio: 1.5,
-            child: Stack(
-              children: [
-                Hero(
-                  tag: widget.product.name,
-                  child: PageView(
-                      scrollDirection: Axis.horizontal,
-                      controller: controller,
-                      onPageChanged: (page) {
-                        setState(() {
-                          currentPage = page + 1;
-                        });
-                      },
-                      children: [
-                        for (int i = 0;
-                            i < widget.product.images.keys.length;
-                            i++)
-                          widget.product.images['image${i + 1}']!,
-                      ]),
-                ),
-                Positioned(
-                  right: 4,
-                  bottom: 8,
-                  child: Text(
-                    '$currentPage/${widget.product.imageURL.keys.length}',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      backgroundColor: Colors.black,
-                    ),
-                  ),
-                ),
-                Positioned(
-                  right: 0,
-                  top: 0,
-                  child: IconButton(
-                    icon: isFavorite
-                        ? const Icon(
-                            Icons.favorite_rounded,
-                            color: Colors.red,
-                          )
-                        : const Icon(Icons.favorite_outline),
-                    onPressed: () async {
-                      if (isFavorite) {
-                        context
-                            .read<HomeCubit>()
-                            .removeFavoriteProduct(widget.product);
-                      } else {
-                        context.read<HomeCubit>().addFavoriteProduct(
-                              widget.product,
-                            );
-                      }
-                      setState(() {
-                        isFavorite = !isFavorite;
-                      });
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
+          ImageSlidable(widget.product),
+          // AspectRatio(
+          //   aspectRatio: 1.5,
+          //   child: Stack(
+          //     children: [
+          //       Hero(
+          //         tag: widget.product.name,
+          //         child: PageView(
+          //             scrollDirection: Axis.horizontal,
+          //             controller: controller,
+          //             onPageChanged: (page) {
+          //               setState(() {
+          //                 currentPage = page + 1;
+          //               });
+          //             },
+          //             children: [
+          //               for (int i = 0;
+          //                   i < widget.product.images.keys.length;
+          //                   i++)
+          //                 widget.product.images['image${i + 1}']!,
+          //             ]),
+          //       ),
+          //       Positioned(
+          //         right: 4,
+          //         bottom: 8,
+          //         child: Text(
+          //           '$currentPage/${widget.product.imageURL.keys.length}',
+          //           style: const TextStyle(
+          //             color: Colors.white,
+          //             backgroundColor: Colors.black,
+          //           ),
+          //         ),
+          //       ),
+          //       Positioned(
+          //         right: 0,
+          //         top: 0,
+          //         child: IconButton(
+          //           icon: isFavorite
+          //               ? const Icon(
+          //                   Icons.favorite_rounded,
+          //                   color: Colors.red,
+          //                 )
+          //               : const Icon(Icons.favorite_outline),
+          //           onPressed: () async {
+          //             if (isFavorite) {
+          //               context
+          //                   .read<HomeCubit>()
+          //                   .removeFavoriteProduct(widget.product);
+          //             } else {
+          //               context.read<HomeCubit>().addFavoriteProduct(
+          //                     widget.product,
+          //                   );
+          //             }
+          //             setState(() {
+          //               isFavorite = !isFavorite;
+          //             });
+          //           },
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
           ListTile(
             title: Text(
               widget.product.name,
@@ -397,7 +388,7 @@ class _ProductPageState extends State<ProductPage> {
           Row(
             children: [
               const SizedBox(width: 16.0),
-              for(int i = 0; i < widget.product.grade; i++)
+              for (int i = 0; i < widget.product.grade; i++)
                 const Icon(Icons.star, color: Colors.yellow),
               const SizedBox(width: 16.0),
               Text('Đã bán ${widget.product.sold}'),
@@ -579,6 +570,97 @@ class _ProductPageState extends State<ProductPage> {
           buildRowInfo(
             'Wifi',
             widget.product.wifi ?? 'Đang cập nhật',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class ImageSlidable extends StatefulWidget {
+  const ImageSlidable(this.product, {super.key});
+  final ProductModel product;
+  @override
+  State<ImageSlidable> createState() => _ImageSlidableState();
+}
+
+class _ImageSlidableState extends State<ImageSlidable> {
+  late PageController controller;
+  int currentPage = 1;
+  late bool isFavorite;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = PageController(initialPage: 0);
+    isFavorite =
+        context.read<HomeCubit>().favoriteProducts?.contains(widget.product) ??
+            false;
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AspectRatio(
+      aspectRatio: 1.5,
+      child: Stack(
+        children: [
+          Hero(
+            tag: widget.product.name,
+            child: PageView(
+                scrollDirection: Axis.horizontal,
+                controller: controller,
+                onPageChanged: (page) {
+                  setState(() {
+                    currentPage = page + 1;
+                  });
+                },
+                children: [
+                  for (int i = 0; i < widget.product.images.keys.length; i++)
+                    widget.product.images['image${i + 1}']!,
+                ]),
+          ),
+          Positioned(
+            right: 4,
+            bottom: 8,
+            child: Text(
+              '$currentPage/${widget.product.imageURL.keys.length}',
+              style: const TextStyle(
+                color: Colors.white,
+                backgroundColor: Colors.black,
+              ),
+            ),
+          ),
+          Positioned(
+            right: 0,
+            top: 0,
+            child: IconButton(
+              icon: isFavorite
+                  ? const Icon(
+                      Icons.favorite_rounded,
+                      color: Colors.red,
+                    )
+                  : const Icon(Icons.favorite_outline),
+              onPressed: () async {
+                if (isFavorite) {
+                  context
+                      .read<HomeCubit>()
+                      .removeFavoriteProduct(widget.product);
+                } else {
+                  context.read<HomeCubit>().addFavoriteProduct(
+                        widget.product,
+                      );
+                }
+                setState(() {
+                  isFavorite = !isFavorite;
+                });
+              },
+            ),
           ),
         ],
       ),

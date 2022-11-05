@@ -22,17 +22,12 @@ class _CartPageState extends State<CartPage> {
     );
   }
 
-  // Future<void> _onRefresh(BuildContext context) async {
-  //   final cartCubit = context.read<CartCubit>();
-
-  //   cartCubit.products = null;
-  //   await cartCubit.getCart();
-  // }
-
   Future<void> dismiss(ProductModel item) async {
     final cartCubit = context.read<CartCubit>();
     cartCubit.products!.remove(item);
   }
+
+  // bool checkBoxValue = false;
 
   @override
   Widget build(BuildContext context) {
@@ -84,10 +79,16 @@ class _CartPageState extends State<CartPage> {
                         .removeItem(state.products[index]),
                     child: Row(
                       children: [
-                        Radio(
-                            value: false,
-                            groupValue: const [],
-                            onChanged: (value) => value),
+                        // Radio<bool>(
+                        //   toggleable: true,
+                        //   value: checkBoxValue,
+                        //   groupValue: false,
+                        //   onChanged: (value) {
+                        //     setState(() {
+                        //       checkBoxValue = !checkBoxValue;
+                        //     });
+                        //   },
+                        // ),
                         Expanded(
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
