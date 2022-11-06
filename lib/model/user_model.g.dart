@@ -13,7 +13,7 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
       address: json['address'] as String,
       password: json['password'] as String,
       email: json['email'] as String?,
-      birthDay: (json['birthDay'] as Timestamp).toDate(),
+      birthDay: (json['birthDay'] as Timestamp?)?.toDate(),
       gender: json['gender'] as String?,
     );
 
