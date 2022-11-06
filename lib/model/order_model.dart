@@ -13,12 +13,14 @@ class OrderModel {
   DateTime date;
   String status;
   List<Map<String, dynamic>> order;
+  String address;
   OrderModel({
     required this.uid,
     required this.order,
     required this.date,
     required this.id,
     required this.status,
+    required this.address,
   });
 
   factory OrderModel.fromJson(Map<String, dynamic> json) =>
@@ -43,8 +45,10 @@ class OrderModel {
     DateTime? date,
     String? status,
     List<Map<String, dynamic>>? order,
+    String? address,
   }) {
     return OrderModel(
+      address: address ?? this.address,
       id: id ?? this.id,
       uid: uid ?? this.uid,
       date: date ?? this.date,
@@ -56,21 +60,22 @@ class OrderModel {
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-  
+
     return other is OrderModel &&
-      other.id == id &&
-      other.uid == uid &&
-      other.date == date &&
-      other.status == status &&
-      listEquals(other.order, order);
+        other.id == id &&
+        other.uid == uid &&
+        other.date == date &&
+        other.status == status &&
+        listEquals(other.order, order);
   }
 
   @override
   int get hashCode {
     return id.hashCode ^
-      uid.hashCode ^
-      date.hashCode ^
-      status.hashCode ^
-      order.hashCode;
+        uid.hashCode ^
+        date.hashCode ^
+        status.hashCode ^
+        order.hashCode ^
+        address.hashCode;
   }
 }

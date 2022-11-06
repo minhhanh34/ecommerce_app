@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ecommerce_app/cubit/cart/cart_cubit.dart';
 import 'package:ecommerce_app/cubit/home/home_cubit.dart';
 
@@ -32,6 +33,7 @@ class _ProductPageState extends State<ProductPage> {
   bool navVisible = true;
   late PersistentBottomSheetController _controller;
   late GlobalKey<ScaffoldState> _scaffoldKey;
+  late CachedNetworkImage imageOption;
 
   @override
   void initState() {
@@ -41,6 +43,7 @@ class _ProductPageState extends State<ProductPage> {
     //     context.read<HomeCubit>().favoriteProducts?.contains(widget.product) ??
     //         false;
     _scaffoldKey = GlobalKey<ScaffoldState>();
+    imageOption = widget.product.images['image1']!;
   }
 
   @override
@@ -53,190 +56,227 @@ class _ProductPageState extends State<ProductPage> {
   void changeColor(int i) {
     _controller.setState!(() {
       selectColor = i;
+      imageOption = CachedNetworkImage(
+        fit: BoxFit.cover,
+        imageUrl: widget.product.colorOption![i]['imageURL'],
+        placeholder: (context, url) {
+          return Container(
+            decoration: BoxDecoration(
+              color: Colors.grey,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            child: const Icon(Icons.image),
+          );
+        },
+      );
     });
   }
 
   void displayBottomSheet(BuildContext context, TypeClick typeClick) {
     final textTheme = Theme.of(context).textTheme;
     _controller = _scaffoldKey.currentState!.showBottomSheet(
+      backgroundColor: Colors.white,
+      constraints: BoxConstraints(
+        maxHeight: MediaQuery.of(context).size.height * 0.65,
+      ),
       enableDrag: false,
       (context) {
-        return Container(
-          height: MediaQuery.of(context).size.height * 0.6,
-          color: Colors.white,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ListTile(
-                onTap: () async {
-                  _controller.close();
-                  await Future.delayed(
-                    const Duration(milliseconds: 175),
-                    _controller.close,
-                  );
-                  setState(() {
-                    navVisible = true;
-                  });
-                },
-                trailing: const Icon(Icons.close),
-              ),
-              ListTile(
-                leading: widget.product.images['image1']!,
-                title: Text(widget.product.name),
-                subtitle: Text(
-                  PriceFormat.format(
-                    widget.product.price + selectMemory * 3000000,
-                  ),
-                  style: textTheme.titleMedium?.copyWith(color: Colors.red),
-                ),
-              ),
-              Visibility(
-                visible: widget.product.colorOption != null &&
-                    widget.product.colorOption!.isNotEmpty,
-                child: ListTile(
-                  leading: const Padding(
-                    padding: EdgeInsets.only(top: 4.0),
-                    child: Text('Màu:'),
-                  ),
-                  title: Row(
-                    children: [
-                      for (int i = 0;
-                          i < (widget.product.colorOption?.length ?? 0);
-                          i++)
-                        InkWell(
-                          onTap: () {
-                            changeColor(i);
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: CircleAvatar(
-                              radius: 16,
-                              backgroundColor: selectColor == i
-                                  ? Colors.black
-                                  : Colors.grey.shade100,
-                              child: CircleAvatar(
-                                radius: 12,
-                                backgroundColor: Color(
-                                  int.parse(
-                                    widget.product.colorOption![i],
+        return Column(
+          children: [
+            ListTile(
+              onTap: () async {
+                _controller.close();
+                await Future.delayed(
+                  const Duration(milliseconds: 175),
+                  _controller.close,
+                );
+                setState(() {
+                  navVisible = true;
+                });
+              },
+              trailing: const Icon(Icons.close),
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ListTile(
+                      leading: ConstrainedBox(
+                        constraints: const BoxConstraints(
+                          maxWidth: 90.0,
+                          maxHeight: 90.0,
+                        ),
+                        child: imageOption,
+                      ),
+                      title: Text(widget.product.name),
+                      subtitle: Text(
+                        PriceFormat.format(
+                          (widget.product.memoryOption != null &&
+                                  widget.product.memoryOption!.isNotEmpty)
+                              ? widget.product.memoryOption![selectMemory]
+                                  ['price']
+                              : widget.product.price,
+                        ),
+                        style:
+                            textTheme.titleMedium?.copyWith(color: Colors.red),
+                      ),
+                    ),
+                    Visibility(
+                      visible: widget.product.colorOption != null &&
+                          widget.product.colorOption!.isNotEmpty,
+                      child: ListTile(
+                        leading: const Padding(
+                          padding: EdgeInsets.only(top: 4.0),
+                          child: Text('Màu:'),
+                        ),
+                        title: Row(
+                          children: [
+                            for (int i = 0;
+                                i < (widget.product.colorOption?.length ?? 0);
+                                i++)
+                              InkWell(
+                                onTap: () {
+                                  changeColor(i);
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: CircleAvatar(
+                                    radius: 16,
+                                    backgroundColor: selectColor == i
+                                        ? Colors.black
+                                        : Colors.grey.shade100,
+                                    child: CircleAvatar(
+                                      radius: 12,
+                                      backgroundColor: Color(
+                                        int.parse(
+                                          widget.product.colorOption![i]
+                                              ['color'],
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ),
+                          ],
                         ),
-                    ],
-                  ),
-                ),
-              ),
-              Visibility(
-                visible: widget.product.memoryOption != null &&
-                    widget.product.memoryOption!.isNotEmpty,
-                child: ListTile(
-                  leading: const Padding(
-                    padding: EdgeInsets.only(top: 12.0),
-                    child: Text('Bộ nhớ:'),
-                  ),
-                  title: Wrap(
-                    children: [
-                      for (int i = 0;
-                          i < (widget.product.memoryOption?.length ?? 0);
-                          i++)
-                        InkWell(
-                          onTap: () {
-                            _controller.setState!(() {
-                              selectMemory = i;
-                            });
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Chip(
-                              backgroundColor: selectMemory == i
-                                  ? Colors.blue.shade100
-                                  : Colors.white,
-                              label: Text(widget.product.memoryOption![i]),
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-              ),
-              ListTile(
-                leading: const Padding(
-                  padding: EdgeInsets.only(top: 4.0),
-                  child: Text('Số lượng:'),
-                ),
-                title: Row(
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        _controller.setState!(() {
-                          if (quantity > 1) {
-                            quantity--;
-                          }
-                        });
-                      },
-                      icon: const Icon(
-                        Icons.remove,
-                        color: Colors.black,
                       ),
                     ),
-                    Text(quantity.toString()),
-                    IconButton(
-                      onPressed: () {
-                        _controller.setState!(() {
-                          quantity++;
-                        });
-                      },
-                      icon: const Icon(
-                        Icons.add,
-                        color: Colors.black,
+                    Visibility(
+                      visible: widget.product.memoryOption != null &&
+                          widget.product.memoryOption!.isNotEmpty,
+                      child: ListTile(
+                        leading: const Padding(
+                          padding: EdgeInsets.only(top: 12.0),
+                          child: Text('Bộ nhớ:'),
+                        ),
+                        title: Wrap(
+                          children: [
+                            for (int i = 0;
+                                i < (widget.product.memoryOption?.length ?? 0);
+                                i++)
+                              InkWell(
+                                onTap: () {
+                                  _controller.setState!(() {
+                                    selectMemory = i;
+                                  });
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Chip(
+                                    backgroundColor: selectMemory == i
+                                        ? Colors.blue.shade100
+                                        : Colors.white,
+                                    label: Text(widget.product.memoryOption![i]
+                                        ['memory']),
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    ListTile(
+                      leading: const Padding(
+                        padding: EdgeInsets.only(top: 4.0),
+                        child: Text('Số lượng:'),
+                      ),
+                      title: Row(
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              _controller.setState!(() {
+                                if (quantity > 1) {
+                                  quantity--;
+                                }
+                              });
+                            },
+                            icon: const Icon(
+                              Icons.remove,
+                              color: Colors.black,
+                            ),
+                          ),
+                          Text(quantity.toString()),
+                          IconButton(
+                            onPressed: () {
+                              _controller.setState!(() {
+                                quantity++;
+                              });
+                            },
+                            icon: const Icon(
+                              Icons.add,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    ListTile(
+                      leading: const Text('Tổng cộng:'),
+                      title: Text(
+                        PriceFormat.format(
+                          (widget.product.memoryOption != null &&
+                                  widget.product.memoryOption!.isNotEmpty)
+                              ? (widget.product.memoryOption![selectMemory]
+                                      ['price'] *
+                                  quantity)
+                              : (widget.product.price * quantity),
+                        ),
+                        style: textTheme.titleLarge?.copyWith(
+                          color: Colors.red,
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
-              ListTile(
-                leading: const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text('Tổng cộng:'),
-                ),
-                title: Text(
-                  PriceFormat.format(
-                    (widget.product.price + selectMemory * 3000000) * quantity,
-                  ),
-                  style: textTheme.titleLarge?.copyWith(
-                    color: Colors.red,
-                  ),
-                ),
-              ),
-              const Spacer(),
-              Align(
-                alignment: Alignment.center,
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      if (typeClick == TypeClick.addToCart) {
-                        context.read<CartCubit>().addItem(widget.product);
-                      } else {
-                        //TODO
-                        // by feature
-                      }
-                      _controller.close();
-                      await Future.delayed(const Duration(milliseconds: 175));
-                      setState(() {
-                        navVisible = true;
-                      });
-                    },
-                    child: const Text('Ok'),
-                  ),
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width * 0.8,
+                child: ElevatedButton(
+                  onPressed: () async {
+                    if (typeClick == TypeClick.addToCart) {
+                      context.read<CartCubit>().addItem(widget.product);
+                    } else {
+                      //TODO
+                      // by feature
+                    }
+                    _controller.close();
+                    await Future.delayed(const Duration(milliseconds: 175));
+                    setState(() {
+                      navVisible = true;
+                    });
+                  },
+                  child: const Text('Ok'),
                 ),
               ),
-              const SizedBox(height: 10),
-            ],
-          ),
+            ),
+            const SizedBox(height: 10),
+          ],
         );
       },
     );
@@ -316,67 +356,6 @@ class _ProductPageState extends State<ProductPage> {
       body: ListView(
         children: [
           ImageSlidable(widget.product),
-          // AspectRatio(
-          //   aspectRatio: 1.5,
-          //   child: Stack(
-          //     children: [
-          //       Hero(
-          //         tag: widget.product.name,
-          //         child: PageView(
-          //             scrollDirection: Axis.horizontal,
-          //             controller: controller,
-          //             onPageChanged: (page) {
-          //               setState(() {
-          //                 currentPage = page + 1;
-          //               });
-          //             },
-          //             children: [
-          //               for (int i = 0;
-          //                   i < widget.product.images.keys.length;
-          //                   i++)
-          //                 widget.product.images['image${i + 1}']!,
-          //             ]),
-          //       ),
-          //       Positioned(
-          //         right: 4,
-          //         bottom: 8,
-          //         child: Text(
-          //           '$currentPage/${widget.product.imageURL.keys.length}',
-          //           style: const TextStyle(
-          //             color: Colors.white,
-          //             backgroundColor: Colors.black,
-          //           ),
-          //         ),
-          //       ),
-          //       Positioned(
-          //         right: 0,
-          //         top: 0,
-          //         child: IconButton(
-          //           icon: isFavorite
-          //               ? const Icon(
-          //                   Icons.favorite_rounded,
-          //                   color: Colors.red,
-          //                 )
-          //               : const Icon(Icons.favorite_outline),
-          //           onPressed: () async {
-          //             if (isFavorite) {
-          //               context
-          //                   .read<HomeCubit>()
-          //                   .removeFavoriteProduct(widget.product);
-          //             } else {
-          //               context.read<HomeCubit>().addFavoriteProduct(
-          //                     widget.product,
-          //                   );
-          //             }
-          //             setState(() {
-          //               isFavorite = !isFavorite;
-          //             });
-          //           },
-          //         ),
-          //       ),
-          //     ],
-          //   ),
-          // ),
           ListTile(
             title: Text(
               widget.product.name,
@@ -413,7 +392,7 @@ class _ProductPageState extends State<ProductPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: widget.product.colorOption?.map(
-                        (color) {
+                        (option) {
                           return Container(
                             margin:
                                 const EdgeInsets.symmetric(horizontal: 12.0),
@@ -421,7 +400,7 @@ class _ProductPageState extends State<ProductPage> {
                             height: 30,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: Color(int.parse(color)),
+                              color: Color(int.parse(option['color'])),
                             ),
                           );
                         },
@@ -444,7 +423,7 @@ class _ProductPageState extends State<ProductPage> {
                           margin: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: Chip(
                             backgroundColor: Colors.white,
-                            label: Text(memory),
+                            label: Text(memory['memory']),
                           ),
                         );
                       }).toList() ??

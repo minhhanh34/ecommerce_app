@@ -31,13 +31,11 @@ ProductModel _$ProductModelFromJson(Map<String, dynamic> json) => ProductModel(
       ..ram = json['ram'] as String?
       ..rom = json['rom'] as String?
       ..wifi = json['wifi'] as String?
-      ..colorOption = ((json['colorOption'] as List?)
-          ?.map((color) => color)
-          .cast<String>()
-          .toList())
+      ..colorOption = (json['colorOption'] as List?)
+          ?.map((option) => option as Map<String, dynamic>)
+          .toList()
       ..memoryOption = (json['memoryOption'] as List?)
-          ?.map((memory) => memory['memory'])
-          .cast<String>()
+          ?.map((option) => option as Map<String, dynamic>)
           .toList();
 
 Map<String, dynamic> _$ProductModelToJson(ProductModel instance) =>

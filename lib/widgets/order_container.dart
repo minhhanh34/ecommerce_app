@@ -64,8 +64,12 @@ class _OrderContainerState extends State<OrderContainer> {
                               ),
                             ),
                             Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16.0),
+                              ),
+                              margin: const EdgeInsets.all(12.0),
                               child: Padding(
-                                padding: const EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.all(16.0),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -75,6 +79,8 @@ class _OrderContainerState extends State<OrderContainer> {
                                     const SizedBox(height: 4),
                                     Text(
                                         'Mã đơn hàng: ${state.orders[index].id}'),
+                                    const SizedBox(height: 8.0),
+                                    Text('Địa chỉ giao hàng: ${state.orders[index].address}'),
                                     const SizedBox(height: 8.0),
                                     for (var prod in state.orders[index].order)
                                       Card(

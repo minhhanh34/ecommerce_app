@@ -12,8 +12,8 @@ class ProductModel {
   int price;
   int grade;
   int sold;
-  List<String>? colorOption;
-  List<String>? memoryOption;
+  List<Map<String, dynamic>>? colorOption;
+  List<Map<String, dynamic>>? memoryOption;
   String? screenSize;
   String? resolution;
   String? brand;
@@ -81,7 +81,6 @@ class ProductModel {
             height: MediaQuery.of(context).size.height,
             child: const Icon(Icons.image),
           );
-          
         },
       );
       images.addAll(
@@ -157,8 +156,8 @@ class ProductModel {
     int? price,
     int? grade,
     int? sold,
-    List<String>? colorOption,
-    List<String>? memoryOption,
+    List<Map<String,dynamic>>? colorOption,
+    List<Map<String,dynamic>>? memoryOption,
     String? screenSize,
     String? resolution,
     String? brand,

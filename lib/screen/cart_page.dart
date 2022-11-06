@@ -74,6 +74,43 @@ class _CartPageState extends State<CartPage> {
                 itemBuilder: (context, index) {
                   return Dismissible(
                     key: Key(state.products[index].name),
+                    background: Container(
+                      margin: const EdgeInsets.all(8.0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12.0),
+                        color: Colors.red,
+                      ),
+                      child: const Center(
+                        child: Icon(
+                          Icons.delete,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    confirmDismiss: (direction) async {
+                      return await showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text('Xác nhận'),
+                            content: const Text(
+                                'Bạn có chắc muốn xóa sản phẩm khỏi giỏ hàng?'),
+                            actions: [
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.of(context).pop(true),
+                                child: const Text('Yes'),
+                              ),
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.of(context).pop(false),
+                                child: const Text('No'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
                     onDismissed: (_) => context
                         .read<CartCubit>()
                         .removeItem(state.products[index]),
