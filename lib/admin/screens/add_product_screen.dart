@@ -1,4 +1,8 @@
+import 'package:ecommerce_app/cubit/admin/admin_cubit.dart';
+import 'package:ecommerce_app/model/product_model.dart';
+import 'package:ecommerce_app/utils/alert_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AddProductScreen extends StatefulWidget {
   const AddProductScreen({super.key});
@@ -8,18 +12,133 @@ class AddProductScreen extends StatefulWidget {
 }
 
 class _AddProductScreenState extends State<AddProductScreen> {
-  bool toggle = false;
-  late TextEditingController controller;
+  late TextEditingController nameController;
+  late TextEditingController priceController;
+  late TextEditingController modelController;
+  late TextEditingController ramController;
+  late TextEditingController frontCameraController;
+  late TextEditingController rearCameraController;
+  late TextEditingController resolutionController;
+  late TextEditingController romController;
+  late TextEditingController displayController;
+  late TextEditingController simsController;
+  late TextEditingController sizeController;
+  late TextEditingController soldController;
+  late TextEditingController weightController;
+  late TextEditingController wifiController;
+  late TextEditingController pinCapacityController;
+  late TextEditingController pinTypeController;
+  late TextEditingController cpuController;
+  late TextEditingController cpuSpeedController;
+  late TextEditingController displayTypeController;
+  late TextEditingController gpuController;
+  late TextEditingController gradeController;
+  late TextEditingController url1Controller;
+  late TextEditingController url2Controller;
+  late TextEditingController url3Controller;
+  late TextEditingController url4Controller;
+  late TextEditingController url5Controller;
+  late TextEditingController colorOption1Controller;
+  late TextEditingController colorOption1UrlController;
+  late TextEditingController colorOption2Controller;
+  late TextEditingController colorOption2UrlController;
+  late TextEditingController colorOption3Controller;
+  late TextEditingController colorOption3UrlController;
+  late TextEditingController memoryOption1Controller;
+  late TextEditingController memoryOption1PriceController;
+  late TextEditingController memoryOption2Controller;
+  late TextEditingController memoryOption2PriceController;
+  late TextEditingController memoryOption3Controller;
+  late TextEditingController memoryOption3PriceController;
+  late TextEditingController brandController;
+
+  final formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
-    controller = TextEditingController();
+    nameController = TextEditingController();
+    priceController = TextEditingController();
+    modelController = TextEditingController();
+    ramController = TextEditingController();
+    frontCameraController = TextEditingController();
+    rearCameraController = TextEditingController();
+    resolutionController = TextEditingController();
+    romController = TextEditingController();
+    displayController = TextEditingController();
+    simsController = TextEditingController();
+    sizeController = TextEditingController();
+    soldController = TextEditingController();
+    weightController = TextEditingController();
+    wifiController = TextEditingController();
+    pinCapacityController = TextEditingController();
+    pinTypeController = TextEditingController();
+    cpuController = TextEditingController();
+    cpuSpeedController = TextEditingController();
+    displayTypeController = TextEditingController();
+    gpuController = TextEditingController();
+    gradeController = TextEditingController();
+    url1Controller = TextEditingController();
+    url2Controller = TextEditingController();
+    url3Controller = TextEditingController();
+    url4Controller = TextEditingController();
+    url5Controller = TextEditingController();
+    colorOption1Controller = TextEditingController();
+    colorOption2Controller = TextEditingController();
+    colorOption3Controller = TextEditingController();
+    memoryOption1Controller = TextEditingController();
+    memoryOption2Controller = TextEditingController();
+    memoryOption3Controller = TextEditingController();
+    brandController = TextEditingController();
+    colorOption1UrlController = TextEditingController();
+    colorOption2UrlController = TextEditingController();
+    colorOption3UrlController = TextEditingController();
+    memoryOption1PriceController = TextEditingController();
+    memoryOption2PriceController = TextEditingController();
+    memoryOption3PriceController = TextEditingController();
   }
 
   @override
   void dispose() {
-    controller.dispose();
+    nameController.dispose();
+    priceController.dispose();
+    modelController.dispose();
+    ramController.dispose();
+    frontCameraController.dispose();
+    rearCameraController.dispose();
+    resolutionController.dispose();
+    romController.dispose();
+    displayController.dispose();
+    simsController.dispose();
+    sizeController.dispose();
+    soldController.dispose();
+    weightController.dispose();
+    wifiController.dispose();
+    pinCapacityController.dispose();
+    pinTypeController.dispose();
+    cpuController.dispose();
+    cpuSpeedController.dispose();
+    displayTypeController.dispose();
+    gpuController.dispose();
+    gradeController.dispose();
+    url1Controller.dispose();
+    url2Controller.dispose();
+    url3Controller.dispose();
+    url4Controller.dispose();
+    url5Controller.dispose();
+    colorOption1Controller.dispose();
+    colorOption2Controller.dispose();
+    colorOption3Controller.dispose();
+    memoryOption1Controller.dispose();
+    memoryOption2Controller.dispose();
+    memoryOption3Controller.dispose();
+    brandController.dispose();
+    colorOption1UrlController.dispose();
+    colorOption2UrlController.dispose();
+    colorOption3UrlController.dispose();
+    memoryOption1PriceController.dispose();
+    memoryOption2PriceController.dispose();
+    memoryOption3PriceController.dispose();
     super.dispose();
   }
 
@@ -29,7 +148,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
       data: ThemeData(
         backgroundColor: Colors.amber[50],
         primarySwatch: Colors.purple,
-        brightness: toggle ? Brightness.dark : Brightness.light,
       ),
       child: Scaffold(
         backgroundColor: Colors.purple.shade100,
@@ -37,119 +155,271 @@ class _AddProductScreenState extends State<AddProductScreen> {
           elevation: 0,
           title: const Text('Thêm sản phẩm'),
         ),
-        body: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          children: [
-            const SizedBox(height: 8.0),
-            TextFieldWithController(label: 'Tên', controller: controller),
-            const SizedBox(height: 8.0),
-            TextFieldWithController(label: 'Giá', controller: controller),
-            const SizedBox(height: 8.0),
-            TextFieldWithController(label: 'Model', controller: controller),
-            const SizedBox(height: 8.0),
-            TextFieldWithController(label: 'Ram', controller: controller),
-            const SizedBox(height: 8.0),
-            TextFieldWithController(
-                label: 'Camera trước', controller: controller),
-            const SizedBox(height: 8.0),
-            TextFieldWithController(
-                label: 'Camera sau', controller: controller),
-            const SizedBox(height: 8.0),
-            TextFieldWithController(
-                label: 'Độ phân giải', controller: controller),
-            const SizedBox(height: 8.0),
-            TextFieldWithController(label: 'Rom', controller: controller),
-            const SizedBox(height: 8.0),
-            TextFieldWithController(label: 'Màn hình', controller: controller),
-            const SizedBox(height: 8.0),
-            TextFieldWithController(label: 'sims', controller: controller),
-            const SizedBox(height: 8.0),
-            TextFieldWithController(
-                label: 'kích thước', controller: controller),
-            const SizedBox(height: 8.0),
-            TextFieldWithController(label: 'Đã bán', controller: controller),
-            const SizedBox(height: 8.0),
-            TextFieldWithController(label: 'Nặng', controller: controller),
-            const SizedBox(height: 8.0),
-            TextFieldWithController(label: 'wifi', controller: controller),
-            const SizedBox(height: 8.0),
-            TextFieldWithController(
-                label: 'dung luong Pin', controller: controller),
-            const SizedBox(height: 8.0),
-            TextFieldWithController(label: 'loại Pin', controller: controller),
-            const SizedBox(height: 8.0),
-            TextFieldWithController(label: 'CPU', controller: controller),
-            const SizedBox(height: 8.0),
-            TextFieldWithController(
-                label: 'tốc độ CPU', controller: controller),
-            const SizedBox(height: 8.0),
-            TextFieldWithController(
-                label: 'Loại màn hình', controller: controller),
-            const SizedBox(height: 8.0),
-            TextFieldWithController(label: 'GPU', controller: controller),
-            const SizedBox(height: 8.0),
-            TextFieldWithController(label: 'Đánh giá', controller: controller),
-            const SizedBox(height: 8.0),
-            buildSingleLabel('Urls'),
-            const SizedBox(height: 8.0),
-            TextFieldWithController(
-              label: 'url1',
-              controller: controller,
+        body: Form(
+          key: formKey,
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Column(
+                children: [
+                  const SizedBox(height: 8.0),
+                  TextFieldWithController(
+                    label: 'Tên*',
+                    controller: nameController,
+                    hasValidate: true,
+                  ),
+                  const SizedBox(height: 8.0),
+                  TextFieldWithController(
+                    label: 'Thương hiệu*',
+                    controller: brandController,
+                    hasValidate: true,
+                  ),
+                  const SizedBox(height: 8.0),
+                  TextFieldWithController(
+                    label: 'Giá*',
+                    controller: priceController,
+                    hasValidate: true,
+                  ),
+                  const SizedBox(height: 8.0),
+                  TextFieldWithController(
+                      label: 'Model', controller: modelController),
+                  const SizedBox(height: 8.0),
+                  TextFieldWithController(
+                      label: 'Ram', controller: ramController),
+                  const SizedBox(height: 8.0),
+                  TextFieldWithController(
+                      label: 'Camera trước', controller: frontCameraController),
+                  const SizedBox(height: 8.0),
+                  TextFieldWithController(
+                      label: 'Camera sau', controller: rearCameraController),
+                  const SizedBox(height: 8.0),
+                  TextFieldWithController(
+                      label: 'Độ phân giải', controller: resolutionController),
+                  const SizedBox(height: 8.0),
+                  TextFieldWithController(
+                      label: 'Rom', controller: romController),
+                  const SizedBox(height: 8.0),
+                  TextFieldWithController(
+                      label: 'Màn hình', controller: displayController),
+                  const SizedBox(height: 8.0),
+                  TextFieldWithController(
+                      label: 'sims', controller: simsController),
+                  const SizedBox(height: 8.0),
+                  TextFieldWithController(
+                      label: 'kích thước', controller: sizeController),
+                  const SizedBox(height: 8.0),
+                  TextFieldWithController(
+                      label: 'Đã bán', controller: soldController),
+                  const SizedBox(height: 8.0),
+                  TextFieldWithController(
+                      label: 'Nặng', controller: weightController),
+                  const SizedBox(height: 8.0),
+                  TextFieldWithController(
+                      label: 'wifi', controller: wifiController),
+                  const SizedBox(height: 8.0),
+                  TextFieldWithController(
+                      label: 'dung luong Pin',
+                      controller: pinCapacityController),
+                  const SizedBox(height: 8.0),
+                  TextFieldWithController(
+                      label: 'loại Pin', controller: pinTypeController),
+                  const SizedBox(height: 8.0),
+                  TextFieldWithController(
+                      label: 'CPU', controller: cpuController),
+                  const SizedBox(height: 8.0),
+                  TextFieldWithController(
+                      label: 'tốc độ CPU', controller: gpuController),
+                  const SizedBox(height: 8.0),
+                  TextFieldWithController(
+                      label: 'Loại màn hình',
+                      controller: displayTypeController),
+                  const SizedBox(height: 8.0),
+                  TextFieldWithController(
+                      label: 'GPU', controller: gpuController),
+                  const SizedBox(height: 8.0),
+                  TextFieldWithController(
+                      label: 'Đánh giá', controller: soldController),
+                  const SizedBox(height: 8.0),
+                  buildSingleLabel('Urls*'),
+                  const SizedBox(height: 8.0),
+                  TextFieldWithController(
+                    label: 'url1',
+                    controller: url1Controller,
+                    hasValidate: true,
+                  ),
+                  const SizedBox(height: 8.0),
+                  TextFieldWithController(
+                    label: 'url2',
+                    controller: url2Controller,
+                    hasValidate: true,
+                  ),
+                  const SizedBox(height: 8.0),
+                  TextFieldWithController(
+                    label: 'url3',
+                    controller: url3Controller,
+                    hasValidate: true,
+                  ),
+                  const SizedBox(height: 8.0),
+                  TextFieldWithController(
+                    label: 'url4',
+                    controller: url4Controller,
+                    hasValidate: true,
+                  ),
+                  const SizedBox(height: 8.0),
+                  TextFieldWithController(
+                    label: 'url5',
+                    controller: url5Controller,
+                    hasValidate: true,
+                  ),
+                  buildSingleLabel('Tùy chọn màu'),
+                  const SizedBox(height: 8.0),
+                  TextFieldWithController(
+                    label: 'Mã màu I',
+                    controller: colorOption1Controller,
+                  ),
+                  const SizedBox(height: 8.0),
+                  TextFieldWithController(
+                    label: 'Url I',
+                    controller: colorOption1UrlController,
+                  ),
+                  const SizedBox(height: 8.0),
+                  TextFieldWithController(
+                    label: 'Mã màu II',
+                    controller: colorOption2Controller,
+                  ),
+                  const SizedBox(height: 8.0),
+                  TextFieldWithController(
+                    label: 'Url II',
+                    controller: colorOption1UrlController,
+                  ),
+                  const SizedBox(height: 8.0),
+                  TextFieldWithController(
+                    label: 'Mã màu III',
+                    controller: colorOption3Controller,
+                  ),
+                  const SizedBox(height: 8.0),
+                  TextFieldWithController(
+                    label: 'Url III',
+                    controller: colorOption1UrlController,
+                  ),
+                  buildSingleLabel('Tùy chọn bộ nhớ'),
+                  const SizedBox(height: 8.0),
+                  TextFieldWithController(
+                    label: 'Tùy chọn I',
+                    controller: memoryOption1Controller,
+                  ),
+                  const SizedBox(height: 8.0),
+                  TextFieldWithController(
+                    label: 'Giá I',
+                    controller: memoryOption1PriceController,
+                  ),
+                  const SizedBox(height: 8.0),
+                  TextFieldWithController(
+                    label: 'Tùy chọn II',
+                    controller: memoryOption2Controller,
+                  ),
+                  const SizedBox(height: 8.0),
+                  TextFieldWithController(
+                    label: 'Giá II',
+                    controller: memoryOption2PriceController,
+                  ),
+                  const SizedBox(height: 8.0),
+                  TextFieldWithController(
+                    label: 'Tùy chọn III',
+                    controller: memoryOption3Controller,
+                  ),
+                  const SizedBox(height: 8.0),
+                  TextFieldWithController(
+                    label: 'Giá III',
+                    controller: memoryOption3PriceController,
+                  ),
+                  const SizedBox(height: 8.0),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        bool isValid =
+                            formKey.currentState?.validate() ?? false;
+                        if (!isValid) return;
+                        FocusScope.of(context).unfocus();
+                        bool confirm = await showDialog(
+                          context: context,
+                          builder: (context) => const CustomAlertDialog(
+                            title: 'Xác nhận',
+                            content: 'Bạn có chắc muốn thêm?',
+                          ),
+                        );
+                        if (!confirm) return;
+                        if (!mounted) return;
+                        context.read<AdminCubit>().addProduct(
+                              ProductModel(
+                                name: nameController.text,
+                                imageURL: {
+                                  'image1': url1Controller.text,
+                                  'image2': url2Controller.text,
+                                  'image3': url3Controller.text,
+                                  'image4': url4Controller.text,
+                                  'image5': url5Controller.text,
+                                },
+                                price: int.tryParse(priceController.text) ?? 0,
+                                batteryCapacity: pinCapacityController.text,
+                                batteryType: pinTypeController.text,
+                                brand: brandController.text,
+                                colorOption: [
+                                  {
+                                    'color': colorOption1Controller.text,
+                                    'imageURL': colorOption1UrlController.text,
+                                  },
+                                  {
+                                    'color': colorOption2Controller.text,
+                                    'imageURL': colorOption2UrlController.text,
+                                  },
+                                  {
+                                    'color': colorOption3Controller.text,
+                                    'imageURL': colorOption3UrlController.text,
+                                  }
+                                ],
+                                cpu: cpuController.text,
+                                cpuSpeed: cpuSpeedController.text,
+                                displayType: displayTypeController.text,
+                                fontCamera: frontCameraController.text,
+                                gpu: gpuController.text,
+                                grade: int.tryParse(gradeController.text) ?? 0,
+                                memoryOption: [
+                                  {
+                                    'memory': memoryOption1Controller.text,
+                                    'price': memoryOption1PriceController.text,
+                                  },
+                                  {
+                                    'memory': memoryOption2Controller.text,
+                                    'price': memoryOption2PriceController.text,
+                                  },
+                                  {
+                                    'memory': memoryOption3Controller.text,
+                                    'price': memoryOption3PriceController.text,
+                                  },
+                                ],
+                                model: modelController.text,
+                                ram: ramController.text,
+                                rearCamera: rearCameraController.text,
+                                resolution: resolutionController.text,
+                                rom: romController.text,
+                                screenSize: displayController.text,
+                                sims: simsController.text,
+                                size: sizeController.text,
+                                sold: int.tryParse(soldController.text) ?? 0,
+                                weight: weightController.text,
+                                wifi: wifiController.text,
+                              ),
+                            );
+                      },
+                      child: const Text('Thêm'),
+                    ),
+                  ),
+                ],
+              ),
             ),
-            const SizedBox(height: 8.0),
-            TextFieldWithController(
-              label: 'url2',
-              controller: controller,
-            ),
-            const SizedBox(height: 8.0),
-            TextFieldWithController(
-              label: 'url3',
-              controller: controller,
-            ),
-            const SizedBox(height: 8.0),
-            TextFieldWithController(
-              label: 'url4',
-              controller: controller,
-            ),
-            const SizedBox(height: 8.0),
-            TextFieldWithController(
-              label: 'url5',
-              controller: controller,
-            ),
-            buildSingleLabel('Tùy chọn màu'),
-            const SizedBox(height: 8.0),
-            TextFieldWithController(
-              label: 'I',
-              controller: controller,
-            ),
-            const SizedBox(height: 8.0),
-            TextFieldWithController(
-              label: 'II',
-              controller: controller,
-            ),
-            const SizedBox(height: 8.0),
-            TextFieldWithController(
-              label: 'III',
-              controller: controller,
-            ),
-            buildSingleLabel('Tùy chọn bộ nhớ'),
-            const SizedBox(height: 8.0),
-            TextFieldWithController(
-              label: 'I',
-              controller: controller,
-            ),
-            const SizedBox(height: 8.0),
-            TextFieldWithController(
-              label: 'II',
-              controller: controller,
-            ),
-            const SizedBox(height: 8.0),
-            TextFieldWithController(
-              label: 'III',
-              controller: controller,
-            ),
-            const SizedBox(height: 8.0),
-          ],
+          ),
         ),
       ),
     );
@@ -174,27 +444,25 @@ class TextFieldWithController extends StatelessWidget {
     Key? key,
     required this.label,
     required this.controller,
+    this.hasValidate = false,
   }) : super(key: key);
   final String label;
   final TextEditingController controller;
+  final bool hasValidate;
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        // Expanded(
-        //   flex: 1,
-        //   child: Text(
-        //     label,
-        //     style: Theme.of(context)
-        //         .textTheme
-        //         .titleMedium
-        //         ?.copyWith(color: Colors.blueGrey.shade500),
-        //     textAlign: TextAlign.center,
-        //   ),
-        // ),
         Expanded(
           flex: 3,
           child: TextFormField(
+            validator: (value) {
+              if (hasValidate && (value == null || value.isEmpty)) {
+                return 'Bắt buộc';
+              }
+              return null;
+              // return null;
+            },
             textInputAction: TextInputAction.next,
             controller: controller,
             decoration: InputDecoration(

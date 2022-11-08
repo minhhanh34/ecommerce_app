@@ -1,6 +1,8 @@
 import 'package:ecommerce_app/admin/screens/add_product_screen.dart';
+import 'package:ecommerce_app/cubit/admin/admin_cubit.dart';
 import 'package:ecommerce_app/services/favorite_service.dart';
 import 'package:ecommerce_app/services/order_service.dart';
+import 'package:ecommerce_app/services/product_service.dart';
 import 'package:ecommerce_app/services/user_service.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
@@ -77,7 +79,12 @@ class EcommerceApp extends StatelessWidget {
         BlocProvider(create: (_) => SignInCubit(service: service)),
         BlocProvider(create: (_) => SignUpCubit(service: service)),
         BlocProvider(create: (_) => cartCubit),
-        BlocProvider(create: (_) => ForgetPasswordCubit())
+        BlocProvider(create: (_) => ForgetPasswordCubit()),
+        BlocProvider(
+          create: (_) => AdminCubit(
+            productService: ProductServiceIml(ProductRepository()),
+          ),
+        )
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

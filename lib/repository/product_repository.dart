@@ -3,8 +3,6 @@ import 'package:ecommerce_app/model/product_model.dart';
 
 import 'repository_interface.dart';
 
-
-
 class ProductRepository implements Repository<ProductModel> {
   final collection = FirebaseFirestore.instance.collection('products');
   @override
@@ -30,7 +28,7 @@ class ProductRepository implements Repository<ProductModel> {
 
   @override
   Future<ProductModel> create(ProductModel product) async {
-    await collection.doc(product.model).set(product.toJson());
+    await collection.add(product.toJson());
     return product;
   }
 
@@ -40,7 +38,7 @@ class ProductRepository implements Repository<ProductModel> {
     return true;
   }
 
-@override
+  @override
   Future<QueryDocumentSnapshot> getQueryDocumentSnapshot(String name) async {
     final docs = await collection.get();
     return docs.docs.firstWhere((doc) => doc.data()['name'] == name);
