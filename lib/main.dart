@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/admin/screens/add_product_screen.dart';
 import 'package:ecommerce_app/services/favorite_service.dart';
 import 'package:ecommerce_app/services/order_service.dart';
 import 'package:ecommerce_app/services/user_service.dart';
@@ -84,8 +85,12 @@ class EcommerceApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: uid == null ? const SignInPage() : const HomePage(),
+        home: const AddProductScreen(),
       ),
     );
   }
 }
+
+
+// home
+// uid == null ? const SignInPage() : const HomePage()

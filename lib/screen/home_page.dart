@@ -7,6 +7,7 @@ import 'package:ecommerce_app/screen/sign_in_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../model/product_model.dart';
 import '../widgets/account_container.dart';
 import '../widgets/bottom_navigation_bar.dart';
 import '../widgets/cart_icon.dart';
@@ -15,6 +16,7 @@ import '../widgets/history_container.dart';
 import '../widgets/home_container.dart';
 import '../widgets/notify_icon.dart';
 import '../widgets/order_container.dart';
+import '../widgets/search_screen.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -24,12 +26,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Widget _buildSearchIconButton() {
+  Widget _buildSearchIconButton(List<ProductModel> products) {
     return IconButton(
       alignment: Alignment.centerRight,
       onPressed: () {
-        //TODO 
-        //show search
+        showSearch(
+          context: context,
+          delegate: SearchScreen(products),
+        );
       },
       icon: const Icon(
         Icons.search_rounded,
@@ -39,12 +43,13 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    List<ProductModel> products = [];
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Shop'),
         elevation: 0,
         actions: [
-          _buildSearchIconButton(),
+          _buildSearchIconButton(products),
           const NotifyIcon(),
           const CartIcon(),
         ],
@@ -58,6 +63,8 @@ class _HomePageState extends State<HomePage> {
             return buildLoading();
           }
           if (state is MainState) {
+            products.clear();
+            products.addAll(state.products);
             return HomeContainer(
               banners: state.banners,
               products: state.products,

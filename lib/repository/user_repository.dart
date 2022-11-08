@@ -41,8 +41,8 @@ class UserRepository implements Repository<UserModel> {
 
   @override
   Future<QueryDocumentSnapshot> getQueryDocumentSnapshot(String uid) async {
-    final docs = await collection.get();
-    return docs.docs.firstWhere((doc) => doc.data()['uid'] == uid);
+    final docs = await collection.where('uid', isEqualTo: uid).get();
+    return docs.docs.first;
   }
 }
 

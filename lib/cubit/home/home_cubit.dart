@@ -1,16 +1,13 @@
 import 'dart:developer';
 
-import 'package:ecommerce_app/cubit/cart/cart_cubit.dart';
 import 'package:ecommerce_app/model/banner_model.dart';
 import 'package:ecommerce_app/model/order_model.dart';
 import 'package:ecommerce_app/model/product_model.dart';
 import 'package:ecommerce_app/model/user_model.dart';
 import 'package:ecommerce_app/services/favorite_service.dart';
-import 'package:ecommerce_app/services/home_service.dart';
 import 'package:ecommerce_app/services/order_service.dart';
 import 'package:ecommerce_app/services/user_service.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ecommerce_app/utils/libs.dart';
 
 import '../../cubit/home/home_state.dart';
 
@@ -37,6 +34,12 @@ class HomeCubit extends Cubit<HomeState> {
   UserModel? user;
   BannerModel? bannersData;
 
+  Brightness _brightness = Brightness.light;
+
+  Brightness get brightness => _brightness;
+
+  set toggleBrightness(Brightness brightness) => _brightness = brightness;
+
   Future<void> favoriteTab() async {
     if (favoriteProducts == null) {
       emit(LoadingState());
@@ -56,6 +59,19 @@ class HomeCubit extends Cubit<HomeState> {
 
   void goToTopScreen() async {
     emit(GoToTopScreen());
+  }
+
+  void editInfo(UserModel user) async {
+    emit(InfoEdition(user));
+    accountTab();
+  }
+
+  Future<void> userRefresh() async {
+    user = null;
+    final spref = await SharedPreferences.getInstance();
+    final uid = spref.getString('uid');
+    user = await getUserInfo(uid!);
+    emit(AccountState(user!));
   }
 
   Future<List<ProductModel>> getFavoriteProduct() async {
@@ -156,7 +172,6 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   Future<void> logout() async {
-    // emit(LoadingState());
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.remove('uid');
@@ -216,5 +231,9 @@ class HomeCubit extends Cubit<HomeState> {
 
   Future<UserModel> getUserInfo(String uid) async {
     return await userService.getUser(uid);
+  }
+
+  Future<bool> updateInfo(UserModel user) async {
+    return await userService.updateUserInfo(user);
   }
 }

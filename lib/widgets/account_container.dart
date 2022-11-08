@@ -1,6 +1,8 @@
 import 'package:ecommerce_app/cubit/home/home_cubit.dart';
 import 'package:ecommerce_app/cubit/home/home_state.dart';
+import 'package:ecommerce_app/screen/info_edition_screen.dart';
 import 'package:ecommerce_app/screen/sign_in_page.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -21,6 +23,11 @@ class _AccountContainerState extends State<AccountContainer> {
           Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (_) => const SignInPage()),
             (route) => false,
+          );
+        }
+        if (state is InfoEdition) {
+          Navigator.of(context).push(
+            CupertinoPageRoute(builder: (context) => InfoEditionScreen(state.user))
           );
         }
       },
@@ -66,9 +73,10 @@ class _AccountContainerState extends State<AccountContainer> {
                         Text(state.user.name,
                             style: const TextStyle(fontSize: 20.0)),
                         const Spacer(),
-                        const Icon(
-                          Icons.edit,
-                          size: 28.0,
+                        IconButton(
+                          onPressed: () =>
+                              context.read<HomeCubit>().editInfo(state.user),
+                          icon: const Icon(Icons.edit, size: 28.0),
                         ),
                         const SizedBox(width: 16.0),
                       ],

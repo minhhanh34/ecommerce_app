@@ -15,6 +15,7 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
       email: json['email'] as String?,
       birthDay: (json['birthDay'] as Timestamp?)?.toDate(),
       gender: json['gender'] as String?,
+      url: json['url'] as String?,
     );
 
 Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
@@ -26,4 +27,5 @@ Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
       'email': instance.email,
       'birthDay': instance.birthDay,
       'gender': instance.gender,
+      'url': instance.url,
     };

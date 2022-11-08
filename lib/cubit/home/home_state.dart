@@ -29,6 +29,11 @@ class OrderState extends HomeState {
   }
 }
 
+class InfoEdition extends HomeState {
+  UserModel user;
+  InfoEdition(this.user);
+}
+
 class HistoryState extends HomeState {
   List<OrderModel> historyOrders;
   HistoryState(this.historyOrders);
