@@ -186,6 +186,7 @@ class _InfoEditionScreenState extends State<InfoEditionScreen> {
                               gender: genderController.text,
                               name: nameController.text,
                               phone: phoneController.text,
+                              password: widget.user.password
                             );
                             bool confirm = await showAlertDialog(
                                     context,

@@ -44,6 +44,11 @@ class UserRepository implements Repository<UserModel> {
     final docs = await collection.where('uid', isEqualTo: uid).get();
     return docs.docs.first;
   }
+
+  Future<UserModel> getKeyUnique(String phone) async {
+    final docs = await collection.where('phone', isEqualTo: phone).get();
+    return UserModel.fromJson(docs.docs.first.data());
+  }
 }
 
 // class UserUserRepository implements Repository<UserModel> {

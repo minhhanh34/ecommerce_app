@@ -1,5 +1,6 @@
 import 'package:ecommerce_app/admin/screens/add_product_screen.dart';
 import 'package:ecommerce_app/cubit/admin/admin_cubit.dart';
+import 'package:ecommerce_app/model/product_model.dart';
 import 'package:ecommerce_app/services/favorite_service.dart';
 import 'package:ecommerce_app/services/order_service.dart';
 import 'package:ecommerce_app/services/product_service.dart';
@@ -87,13 +88,17 @@ class EcommerceApp extends StatelessWidget {
         )
       ],
       child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        home: const AddProductScreen(),
-      ),
+          debugShowCheckedModeBanner: false,
+          title: 'Flutter Demo',
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+          ),
+          home: AddProductScreen(
+              product: ProductModel(
+            name: 'abc',
+            price: 123,
+            imageURL: {},
+          ))),
     );
   }
 }

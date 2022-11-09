@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
 import 'package:ecommerce_app/services/sign_service.dart';
+import 'package:ecommerce_app/utils/generator.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 part 'signup_state.dart';
@@ -59,14 +60,11 @@ class SignUpCubit extends Cubit<SignUpState> {
   Future<void> onSignUp(String phone, String pass, String confirm, String name,
       String address) async {
     if (pass == confirm) {
-      String suff = phone.substring(phone.length - 5);
-      pass += suff;
-      for (int i = 0; i < suff.length; i++) {
-        pass += pepper[suff[i]];
-      }
+      final keyUnique = Generator.generateString();
+      pass += keyUnique;
       pass = md5.convert(utf8.encode(pass)).toString();
       String? uid = await service.signUp(
-          phone: phone, password: pass, name: name, address: address);
+          phone: phone, password: pass, name: name, address: address, keyUnique: keyUnique);
       if (uid != null) {
         emit(SignUpSuccess());
       } else {

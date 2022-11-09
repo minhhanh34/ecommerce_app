@@ -8,6 +8,7 @@ import 'package:ecommerce_app/model/favorite_model.dart';
 import 'package:ecommerce_app/model/history_model.dart';
 import 'package:ecommerce_app/model/order_model.dart';
 import 'package:ecommerce_app/model/user_model.dart';
+import 'package:ecommerce_app/repository/user_repository.dart';
 import 'package:ecommerce_app/services/home_service.dart';
 
 import '../repository/repository_interface.dart';
@@ -19,6 +20,7 @@ abstract class SignService extends Service {
     required String password,
     required String name,
     required String address,
+    required String keyUnique,
   });
 }
 
@@ -52,15 +54,9 @@ class SignServiceIml implements SignService {
   @override
   Future<String?> signIn(
       {required String phone, required String password}) async {
-    String suff = phone.substring(phone.length - 5);
-    password += suff;
-    for (int i = 0; i < suff.length; i++) {
-      password += pepper[suff[i]];
-    }
-
+    final user = await (userRepo as UserRepository).getKeyUnique(phone);
+    password += user.keyUnique;
     password = md5.convert(utf8.encode(password)).toString();
-    final users = await userRepo.list();
-    final user = users.firstWhere((element) => element.phone == phone);
     if (user.password == password) {
       return user.uid;
     }
@@ -80,6 +76,7 @@ class SignServiceIml implements SignService {
     required String password,
     required String name,
     required String address,
+    required String keyUnique,
   }) async {
     try {
       String uid = password.substring(password.length - 10);
@@ -90,6 +87,7 @@ class SignServiceIml implements SignService {
           'password': password,
           'name': name,
           'address': address,
+          'keyUnique': keyUnique,
         },
       );
       userRepo.create(userModel);

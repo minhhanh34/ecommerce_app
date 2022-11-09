@@ -25,39 +25,49 @@ class ProductWidget extends StatelessWidget {
                   ),
                   child: product.images['image1']!),
             ),
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 8,
-                left: 16.0,
-              ),
-              child: Text(
-                product.name,
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-            ),
-            Row(
-              children: [
-                const SizedBox(width: 12.0),
-                for (int i = 0; i < product.grade; i++)
-                  const Icon(Icons.star, color: Colors.yellow),
-                // Text(product.grade.toString()),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 16.0),
-              child: Text('Đã bán ${product.sold}'),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 4,
-                left: 16.0,
-              ),
-              child: Text(
-                PriceFormat.format(product.price),
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: Colors.red,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20.0),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: 8,
+                      left: 16.0,
+                    ),
+                    child: Text(
+                      product.name,
+                      style: Theme.of(context).textTheme.titleLarge,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      const SizedBox(width: 12.0),
+                      for (int i = 0; i < product.grade; i++)
+                        const Icon(Icons.star, color: Colors.yellow),
+                      // Text(product.grade.toString()),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16.0),
+                    child: Text('Đã bán ${product.sold}'),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: 4,
+                      left: 16.0,
+                    ),
+                    child: Text(
+                      PriceFormat.format(product.price),
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20.0),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],

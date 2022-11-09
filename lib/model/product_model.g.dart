@@ -63,4 +63,6 @@ Map<String, dynamic> _$ProductModelToJson(ProductModel instance) =>
       'ram': instance.ram,
       'rom': instance.rom,
       'wifi': instance.wifi,
+      'colorOption': instance.colorOption,
+      'memoryOption': instance.memoryOption,
     };

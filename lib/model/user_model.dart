@@ -10,6 +10,7 @@ class UserModel {
   final String name;
   final String address;
   final String password;
+  final String keyUnique;
   String? email;
   String? gender;
   DateTime? birthDay;
@@ -20,6 +21,7 @@ class UserModel {
     required this.name,
     required this.address,
     required this.password,
+    required this.keyUnique,
     this.email,
     this.gender,
     this.birthDay,
@@ -37,6 +39,7 @@ class UserModel {
     String? name,
     String? address,
     String? password,
+    String? keyUnique,
     String? email,
     String? gender,
     DateTime? birthDay,
@@ -48,6 +51,7 @@ class UserModel {
       name: name ?? this.name,
       address: address ?? this.address,
       password: password ?? this.password,
+      keyUnique: keyUnique ?? this.keyUnique,
       email: email ?? this.email,
       gender: gender ?? this.gender,
       birthDay: birthDay ?? this.birthDay,
@@ -58,29 +62,31 @@ class UserModel {
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-
+  
     return other is UserModel &&
-        other.uid == uid &&
-        other.phone == phone &&
-        other.name == name &&
-        other.address == address &&
-        other.password == password &&
-        other.email == email &&
-        other.gender == gender &&
-        other.birthDay == birthDay &&
-        other.url == url;
+      other.uid == uid &&
+      other.phone == phone &&
+      other.name == name &&
+      other.address == address &&
+      other.password == password &&
+      other.keyUnique == keyUnique &&
+      other.email == email &&
+      other.gender == gender &&
+      other.birthDay == birthDay &&
+      other.url == url;
   }
 
   @override
   int get hashCode {
     return uid.hashCode ^
-        phone.hashCode ^
-        name.hashCode ^
-        address.hashCode ^
-        password.hashCode ^
-        email.hashCode ^
-        gender.hashCode ^
-        birthDay.hashCode ^
-        url.hashCode;
+      phone.hashCode ^
+      name.hashCode ^
+      address.hashCode ^
+      password.hashCode ^
+      keyUnique.hashCode ^
+      email.hashCode ^
+      gender.hashCode ^
+      birthDay.hashCode ^
+      url.hashCode;
   }
 }

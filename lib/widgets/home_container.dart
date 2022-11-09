@@ -88,7 +88,7 @@ class _HomeContainerState extends State<HomeContainer> {
               ),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                mainAxisExtent: 240.0
+                mainAxisExtent: 250.0
               ),
             ),
           ],

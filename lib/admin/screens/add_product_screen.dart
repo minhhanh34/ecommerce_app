@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AddProductScreen extends StatefulWidget {
-  const AddProductScreen({super.key});
+  const AddProductScreen({super.key, this.product});
+  final ProductModel? product;
 
   @override
   State<AddProductScreen> createState() => _AddProductScreenState();
@@ -57,45 +58,114 @@ class _AddProductScreenState extends State<AddProductScreen> {
   @override
   void initState() {
     super.initState();
-    nameController = TextEditingController();
-    priceController = TextEditingController();
-    modelController = TextEditingController();
-    ramController = TextEditingController();
-    frontCameraController = TextEditingController();
-    rearCameraController = TextEditingController();
-    resolutionController = TextEditingController();
-    romController = TextEditingController();
-    displayController = TextEditingController();
-    simsController = TextEditingController();
-    sizeController = TextEditingController();
-    soldController = TextEditingController();
-    weightController = TextEditingController();
-    wifiController = TextEditingController();
-    pinCapacityController = TextEditingController();
-    pinTypeController = TextEditingController();
-    cpuController = TextEditingController();
-    cpuSpeedController = TextEditingController();
-    displayTypeController = TextEditingController();
-    gpuController = TextEditingController();
-    gradeController = TextEditingController();
-    url1Controller = TextEditingController();
-    url2Controller = TextEditingController();
-    url3Controller = TextEditingController();
-    url4Controller = TextEditingController();
-    url5Controller = TextEditingController();
-    colorOption1Controller = TextEditingController();
-    colorOption2Controller = TextEditingController();
-    colorOption3Controller = TextEditingController();
-    memoryOption1Controller = TextEditingController();
-    memoryOption2Controller = TextEditingController();
-    memoryOption3Controller = TextEditingController();
-    brandController = TextEditingController();
-    colorOption1UrlController = TextEditingController();
-    colorOption2UrlController = TextEditingController();
-    colorOption3UrlController = TextEditingController();
-    memoryOption1PriceController = TextEditingController();
-    memoryOption2PriceController = TextEditingController();
-    memoryOption3PriceController = TextEditingController();
+    if (widget.product == null) {
+      nameController = TextEditingController();
+      priceController = TextEditingController();
+      modelController = TextEditingController();
+      ramController = TextEditingController();
+      frontCameraController = TextEditingController();
+      rearCameraController = TextEditingController();
+      resolutionController = TextEditingController();
+      romController = TextEditingController();
+      displayController = TextEditingController();
+      simsController = TextEditingController();
+      sizeController = TextEditingController();
+      soldController = TextEditingController();
+      weightController = TextEditingController();
+      wifiController = TextEditingController();
+      pinCapacityController = TextEditingController();
+      pinTypeController = TextEditingController();
+      cpuController = TextEditingController();
+      cpuSpeedController = TextEditingController();
+      displayTypeController = TextEditingController();
+      gpuController = TextEditingController();
+      gradeController = TextEditingController();
+      url1Controller = TextEditingController();
+      url2Controller = TextEditingController();
+      url3Controller = TextEditingController();
+      url4Controller = TextEditingController();
+      url5Controller = TextEditingController();
+      colorOption1Controller = TextEditingController();
+      colorOption2Controller = TextEditingController();
+      colorOption3Controller = TextEditingController();
+      memoryOption1Controller = TextEditingController();
+      memoryOption2Controller = TextEditingController();
+      memoryOption3Controller = TextEditingController();
+      brandController = TextEditingController();
+      colorOption1UrlController = TextEditingController();
+      colorOption2UrlController = TextEditingController();
+      colorOption3UrlController = TextEditingController();
+      memoryOption1PriceController = TextEditingController();
+      memoryOption2PriceController = TextEditingController();
+      memoryOption3PriceController = TextEditingController();
+    }
+
+    //
+    nameController = TextEditingController(text: widget.product!.name);
+    priceController =
+        TextEditingController(text: widget.product!.price.toString());
+    modelController = TextEditingController(text: widget.product!.model);
+    ramController = TextEditingController(text: widget.product!.ram);
+    frontCameraController =
+        TextEditingController(text: widget.product!.fontCamera);
+    rearCameraController =
+        TextEditingController(text: widget.product!.rearCamera);
+    resolutionController =
+        TextEditingController(text: widget.product!.resolution);
+    romController = TextEditingController(text: widget.product!.rom);
+    displayController = TextEditingController(text: widget.product!.screenSize);
+    simsController = TextEditingController(text: widget.product!.sims);
+    sizeController = TextEditingController(text: widget.product!.size);
+    soldController =
+        TextEditingController(text: widget.product!.sold.toString());
+    weightController = TextEditingController(text: widget.product!.weight);
+    wifiController = TextEditingController(text: widget.product!.wifi);
+    pinCapacityController =
+        TextEditingController(text: widget.product!.batteryCapacity);
+    pinTypeController =
+        TextEditingController(text: widget.product!.batteryType);
+    cpuController = TextEditingController(text: widget.product!.cpu);
+    cpuSpeedController = TextEditingController(text: widget.product!.cpuSpeed);
+    displayTypeController =
+        TextEditingController(text: widget.product!.displayType);
+    gpuController = TextEditingController(text: widget.product!.gpu);
+    gradeController =
+        TextEditingController(text: widget.product!.grade.toString());
+    url1Controller =
+        TextEditingController(text: widget.product!.imageURL['image1']);
+    url2Controller =
+        TextEditingController(text: widget.product!.imageURL['image2']);
+    url3Controller =
+        TextEditingController(text: widget.product!.imageURL['image3']);
+    url4Controller =
+        TextEditingController(text: widget.product!.imageURL['image4']);
+    url5Controller =
+        TextEditingController(text: widget.product!.imageURL['image5']);
+    colorOption1Controller =
+        TextEditingController(text: widget.product!.colorOption?[0]['color']);
+    colorOption2Controller =
+        TextEditingController(text: widget.product!.colorOption?[1]['color']);
+    colorOption3Controller =
+        TextEditingController(text: widget.product!.colorOption?[2]['color']);
+    memoryOption1Controller =
+        TextEditingController(text: widget.product!.memoryOption?[0]['memory']);
+    memoryOption2Controller =
+        TextEditingController(text: widget.product!.memoryOption?[1]['memory']);
+    memoryOption3Controller =
+        TextEditingController(text: widget.product!.memoryOption?[2]['memory']);
+    brandController = TextEditingController(text: widget.product!.brand);
+    colorOption1UrlController = TextEditingController(
+        text: widget.product!.colorOption?[0]['imageURL']);
+    colorOption2UrlController = TextEditingController(
+        text: widget.product!.colorOption?[1]['imageURL']);
+    colorOption3UrlController = TextEditingController(
+        text: widget.product!.colorOption?[2]['imageURL']);
+    memoryOption1PriceController = TextEditingController(
+        text: widget.product!.memoryOption?[0]['price'].toString());
+    memoryOption2PriceController = TextEditingController(
+        text: widget.product!.memoryOption?[1]['price'].toString());
+    memoryOption3PriceController = TextEditingController(
+        text: widget.product!.memoryOption?[2]['price'].toString());
   }
 
   @override
@@ -153,7 +223,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
         backgroundColor: Colors.purple.shade100,
         appBar: AppBar(
           elevation: 0,
-          title: const Text('Thêm sản phẩm'),
+          title: Text(
+              widget.product == null ? 'Thêm sản phẩm' : 'Cập nhật sản phẩm'),
         ),
         body: Form(
           key: formKey,
@@ -228,7 +299,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       label: 'CPU', controller: cpuController),
                   const SizedBox(height: 8.0),
                   TextFieldWithController(
-                      label: 'tốc độ CPU', controller: gpuController),
+                      label: 'tốc độ CPU', controller: cpuSpeedController),
                   const SizedBox(height: 8.0),
                   TextFieldWithController(
                       label: 'Loại màn hình',
@@ -238,7 +309,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       label: 'GPU', controller: gpuController),
                   const SizedBox(height: 8.0),
                   TextFieldWithController(
-                      label: 'Đánh giá', controller: soldController),
+                      label: 'Đánh giá', controller: gradeController),
                   const SizedBox(height: 8.0),
                   buildSingleLabel('Urls*'),
                   const SizedBox(height: 8.0),
@@ -290,7 +361,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   const SizedBox(height: 8.0),
                   TextFieldWithController(
                     label: 'Url II',
-                    controller: colorOption1UrlController,
+                    controller: colorOption2UrlController,
                   ),
                   const SizedBox(height: 8.0),
                   TextFieldWithController(
@@ -300,7 +371,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   const SizedBox(height: 8.0),
                   TextFieldWithController(
                     label: 'Url III',
-                    controller: colorOption1UrlController,
+                    controller: colorOption3UrlController,
                   ),
                   buildSingleLabel('Tùy chọn bộ nhớ'),
                   const SizedBox(height: 8.0),
@@ -351,69 +422,72 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         );
                         if (!confirm) return;
                         if (!mounted) return;
-                        context.read<AdminCubit>().addProduct(
-                              ProductModel(
-                                name: nameController.text,
-                                imageURL: {
-                                  'image1': url1Controller.text,
-                                  'image2': url2Controller.text,
-                                  'image3': url3Controller.text,
-                                  'image4': url4Controller.text,
-                                  'image5': url5Controller.text,
-                                },
-                                price: int.tryParse(priceController.text) ?? 0,
-                                batteryCapacity: pinCapacityController.text,
-                                batteryType: pinTypeController.text,
-                                brand: brandController.text,
-                                colorOption: [
-                                  {
-                                    'color': colorOption1Controller.text,
-                                    'imageURL': colorOption1UrlController.text,
-                                  },
-                                  {
-                                    'color': colorOption2Controller.text,
-                                    'imageURL': colorOption2UrlController.text,
-                                  },
-                                  {
-                                    'color': colorOption3Controller.text,
-                                    'imageURL': colorOption3UrlController.text,
-                                  }
-                                ],
-                                cpu: cpuController.text,
-                                cpuSpeed: cpuSpeedController.text,
-                                displayType: displayTypeController.text,
-                                fontCamera: frontCameraController.text,
-                                gpu: gpuController.text,
-                                grade: int.tryParse(gradeController.text) ?? 0,
-                                memoryOption: [
-                                  {
-                                    'memory': memoryOption1Controller.text,
-                                    'price': memoryOption1PriceController.text,
-                                  },
-                                  {
-                                    'memory': memoryOption2Controller.text,
-                                    'price': memoryOption2PriceController.text,
-                                  },
-                                  {
-                                    'memory': memoryOption3Controller.text,
-                                    'price': memoryOption3PriceController.text,
-                                  },
-                                ],
-                                model: modelController.text,
-                                ram: ramController.text,
-                                rearCamera: rearCameraController.text,
-                                resolution: resolutionController.text,
-                                rom: romController.text,
-                                screenSize: displayController.text,
-                                sims: simsController.text,
-                                size: sizeController.text,
-                                sold: int.tryParse(soldController.text) ?? 0,
-                                weight: weightController.text,
-                                wifi: wifiController.text,
-                              ),
-                            );
+                        final product = ProductModel(
+                          name: nameController.text,
+                          imageURL: {
+                            'image1': url1Controller.text,
+                            'image2': url2Controller.text,
+                            'image3': url3Controller.text,
+                            'image4': url4Controller.text,
+                            'image5': url5Controller.text,
+                          },
+                          price: int.tryParse(priceController.text) ?? 0,
+                          batteryCapacity: pinCapacityController.text,
+                          batteryType: pinTypeController.text,
+                          brand: brandController.text,
+                          colorOption: [
+                            {
+                              'color': colorOption1Controller.text,
+                              'imageURL': colorOption1UrlController.text,
+                            },
+                            {
+                              'color': colorOption2Controller.text,
+                              'imageURL': colorOption2UrlController.text,
+                            },
+                            {
+                              'color': colorOption3Controller.text,
+                              'imageURL': colorOption3UrlController.text,
+                            }
+                          ],
+                          cpu: cpuController.text,
+                          cpuSpeed: cpuSpeedController.text,
+                          displayType: displayTypeController.text,
+                          fontCamera: frontCameraController.text,
+                          gpu: gpuController.text,
+                          grade: int.tryParse(gradeController.text) ?? 0,
+                          memoryOption: [
+                            {
+                              'memory': memoryOption1Controller.text,
+                              'price': memoryOption1PriceController.text,
+                            },
+                            {
+                              'memory': memoryOption2Controller.text,
+                              'price': memoryOption2PriceController.text,
+                            },
+                            {
+                              'memory': memoryOption3Controller.text,
+                              'price': memoryOption3PriceController.text,
+                            },
+                          ],
+                          model: modelController.text,
+                          ram: ramController.text,
+                          rearCamera: rearCameraController.text,
+                          resolution: resolutionController.text,
+                          rom: romController.text,
+                          screenSize: displayController.text,
+                          sims: simsController.text,
+                          size: sizeController.text,
+                          sold: int.tryParse(soldController.text) ?? 0,
+                          weight: weightController.text,
+                          wifi: wifiController.text,
+                        );
+                        if (widget.product == null) {
+                          context.read<AdminCubit>().addProduct(product);
+                          return;
+                        }
+                        context.read<AdminCubit>().updateProduct(product);
                       },
-                      child: const Text('Thêm'),
+                      child: Text(widget.product == null ? 'Thêm' : 'Cập nhật'),
                     ),
                   ),
                 ],

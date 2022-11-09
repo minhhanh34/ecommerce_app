@@ -1,28 +1,15 @@
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce_app/model/order_model.dart';
 
+import '../utils/generator.dart';
 import 'repository_interface.dart';
 
 class OrderRepository implements Repository<OrderModel> {
   final collection = FirebaseFirestore.instance.collection('order');
 
-  final alphabet = 'ABCDEFGHIJKLMNOPQRSTUVXAYabcdefghijklmnopqrstuvxay';
-
-  String generateString() {
-    final random = Random();
-    StringBuffer buffer = StringBuffer();
-    for (int i = 0; i < 20; i++) {
-      int randInt = random.nextInt(50);
-      buffer.write(alphabet[randInt]);
-    }
-    return buffer.toString();
-  }
-
   @override
   Future<OrderModel> create(OrderModel item) async {
-    String id = generateString();
+    String id = Generator.generateString();
     item.id = id;
     await collection.doc(id).set(item.toJson());
     return item;
