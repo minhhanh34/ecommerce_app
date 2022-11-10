@@ -9,10 +9,13 @@ part of 'order_model.dart';
 OrderModel _$OrderModelFromJson(Map<String, dynamic> json) => OrderModel(
       uid: json['uid'] as String,
       date: (json['date'] as Timestamp).toDate(),
-      order: (json['order'] as List).map((e) => Map<String,dynamic>.from(e)).toList(),
+      order: (json['order'] as List)
+          .map((e) => Map<String, dynamic>.from(e))
+          .toList(),
       id: json['id'] as String,
-      status: json['status'],
-      address: json['address'],
+      status: json['status'] as String? ?? 'Chờ xác nhận',
+      address: json['address'] as String,
+      recipient: json['recipient'] as String,
     );
 
 Map<String, dynamic> _$OrderModelToJson(OrderModel instance) =>
@@ -23,4 +26,5 @@ Map<String, dynamic> _$OrderModelToJson(OrderModel instance) =>
       'date': DateTime.now(),
       'status': instance.status,
       'address': instance.address,
+      'recipient': instance.recipient,
     };

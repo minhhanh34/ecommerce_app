@@ -19,7 +19,9 @@ class ProductServiceIml implements ProductService {
 
   @override
   Future<ProductModel> addProduct(ProductModel product) async {
-    return await repository.create(product);
+    final newProduct = await repository.create(product);
+    newProduct.buildImage();
+    return newProduct;
   }
 
   @override

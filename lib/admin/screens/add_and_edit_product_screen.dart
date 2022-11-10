@@ -4,15 +4,16 @@ import 'package:ecommerce_app/utils/alert_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class AddProductScreen extends StatefulWidget {
-  const AddProductScreen({super.key, this.product});
+class AddAndEditProductScreen extends StatefulWidget {
+  const AddAndEditProductScreen({super.key, this.product});
   final ProductModel? product;
 
   @override
-  State<AddProductScreen> createState() => _AddProductScreenState();
+  State<AddAndEditProductScreen> createState() =>
+      _AddAndEditProductScreenState();
 }
 
-class _AddProductScreenState extends State<AddProductScreen> {
+class _AddAndEditProductScreenState extends State<AddAndEditProductScreen> {
   late TextEditingController nameController;
   late TextEditingController priceController;
   late TextEditingController modelController;

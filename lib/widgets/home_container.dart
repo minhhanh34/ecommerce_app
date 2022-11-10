@@ -80,20 +80,31 @@ class _HomeContainerState extends State<HomeContainer> {
             SliverList(
               delegate: SliverChildListDelegate([column]),
             ),
-            SliverGrid(
-              delegate: SliverChildBuilderDelegate(
-                childCount: widget.products.length,
-                (context, index) =>
-                    ProductWidget(product: widget.products[index]),
-              ),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisExtent: 250.0
-              ),
-            ),
+            ProductSliverGridOverview(products: widget.products),
           ],
         ),
       ),
+    );
+  }
+}
+
+class ProductSliverGridOverview extends StatelessWidget {
+  const ProductSliverGridOverview({
+    Key? key,
+    required this.products,
+  }) : super(key: key);
+
+  final List<ProductModel> products;
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverGrid(
+      delegate: SliverChildBuilderDelegate(
+        childCount: products.length,
+        (context, index) => ProductWidget(product: products[index]),
+      ),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2, mainAxisExtent: 250.0),
     );
   }
 }

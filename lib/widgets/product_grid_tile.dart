@@ -12,6 +12,10 @@ class ProductWidget extends StatelessWidget {
       onTap: () => Navigator.of(context).push(
           MaterialPageRoute(builder: (_) => ProductPage(product: product))),
       child: Card(
+        clipBehavior: Clip.hardEdge,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+        ),
         elevation: 4,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,7 +64,7 @@ class ProductWidget extends StatelessWidget {
                       left: 16.0,
                     ),
                     child: Text(
-                      PriceFormat.format(product.price),
+                      PriceHealper.format(product.price),
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           color: Colors.red,
                           fontWeight: FontWeight.bold,

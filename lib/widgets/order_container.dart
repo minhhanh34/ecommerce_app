@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ecommerce_app/cubit/home/home_cubit.dart';
 import 'package:ecommerce_app/cubit/home/home_state.dart';
 import 'package:ecommerce_app/utils/price_format.dart';
@@ -20,7 +21,7 @@ class _OrderContainerState extends State<OrderContainer> {
   int totalPrice(List<Map<String, dynamic>> order) {
     int total = 0;
     for (var prod in order) {
-      total += (prod['product'].price as int) * (prod['quantity'] as int);
+      total += (prod['price'] as int) * (prod['quantity'] as int);
     }
     return total;
   }
@@ -57,8 +58,7 @@ class _OrderContainerState extends State<OrderContainer> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              '  ${DateFormat('dd/MM/yyyy')
-                                  .format(state.orders[index].date)}',
+                              '  ${DateFormat('dd/MM/yyyy').format(state.orders[index].date)}',
                               style: const TextStyle(
                                 fontSize: 18.0,
                               ),
@@ -80,82 +80,77 @@ class _OrderContainerState extends State<OrderContainer> {
                                     Text(
                                         'Mã đơn hàng: ${state.orders[index].id}'),
                                     const SizedBox(height: 8.0),
-                                    Text('Địa chỉ giao hàng: ${state.orders[index].address}'),
-                                    const SizedBox(height: 8.0),
+                                    const Divider(color: Colors.black),
                                     for (var prod in state.orders[index].order)
-                                      Card(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            ListTile(
-                                              isThreeLine: true,
-                                              leading: ConstrainedBox(
-                                                constraints:
-                                                    const BoxConstraints(
-                                                  maxHeight: 60,
-                                                  maxWidth: 60,
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          ListTile(
+                                            isThreeLine: true,
+                                            leading: ConstrainedBox(
+                                              constraints: const BoxConstraints(
+                                                maxHeight: 60,
+                                                maxWidth: 60,
+                                              ),
+                                              child: CachedNetworkImage(
+                                                imageUrl: prod['imageURL'],
+                                              ),
+                                            ),
+                                            title: Text(
+                                              prod['product'].name,
+                                            ),
+                                            subtitle: Column(
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    const Text('Màu: '),
+                                                    const SizedBox(width: 8.0),
+                                                    Container(
+                                                      width: 12,
+                                                      height: 12,
+                                                      color: Color(int.parse(
+                                                          prod['color'])),
+                                                    ),
+                                                  ],
                                                 ),
-                                                child: prod['product']
-                                                    .images['image1'],
-                                              ),
-                                              title: Text(
-                                                prod['product'].name,
-                                              ),
-                                              subtitle: Column(
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      const Text('Màu: '),
-                                                      const SizedBox(
-                                                          width: 8.0),
-                                                      Container(
-                                                        width: 12,
-                                                        height: 12,
-                                                        color: Color(int.parse(
-                                                            prod['color'])),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  Row(
-                                                    children: [
-                                                      const Text('Bộ nhớ:'),
-                                                      const SizedBox(
-                                                          width: 8.0),
-                                                      Text(
-                                                        prod['memory'],
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                              trailing: Text(
-                                                  'SL: ${prod["quantity"]}'),
+                                                Row(
+                                                  children: [
+                                                    const Text('Bộ nhớ:'),
+                                                    const SizedBox(width: 8.0),
+                                                    Text(
+                                                      prod['memory'],
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
                                             ),
-                                            SizedBox(
-                                              width: double.infinity,
-                                              child: Text(
-                                                PriceFormat.format(
-                                                    prod['product'].price *
-                                                        prod['quantity']),
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .titleLarge
-                                                    ?.copyWith(
-                                                        color: Colors.red),
-                                                textAlign: TextAlign.right,
+                                            trailing:
+                                                Text('SL: ${prod["quantity"]}'),
+                                          ),
+                                          SizedBox(
+                                            width: double.infinity,
+                                            child: Text(
+                                              PriceHealper.format(
+                                                prod['price'],
                                               ),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .titleLarge
+                                                  ?.copyWith(color: Colors.red),
+                                              textAlign: TextAlign.right,
                                             ),
-                                          ],
-                                        ),
+                                          ),
+                                        ],
                                       ),
+                                    const Divider(color: Colors.black),
                                     const SizedBox(height: 10),
                                     Row(
                                       children: [
                                         const Text('Tổng cộng: '),
                                         const SizedBox(width: 10),
                                         Text(
-                                          PriceFormat.format(
+                                          PriceHealper.format(
                                             totalPrice(
                                                 state.orders[index].order),
                                           ),
@@ -171,9 +166,19 @@ class _OrderContainerState extends State<OrderContainer> {
                                       'Thanh toán khi nhận hàng',
                                       style: Theme.of(context)
                                           .textTheme
-                                          .titleMedium,
+                                          .titleMedium
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.w600,
+                                          ),
                                     ),
-                                    const SizedBox(height: 10),
+                                    const SizedBox(height: 8.0),
+                                    Text(
+                                        'Địa chỉ giao hàng: ${state.orders[index].address}'),
+                                    const SizedBox(height: 8.0),
+                                    Text(
+                                      'Người nhận: ${state.orders[index].recipient}',
+                                    ),
+                                    const SizedBox(height: 8.0),
                                     Visibility(
                                       visible: state.orders[index].status
                                               .toLowerCase() ==
@@ -188,7 +193,7 @@ class _OrderContainerState extends State<OrderContainer> {
                                                 return AlertDialog(
                                                   title: const Text('Xác nhận'),
                                                   content: const Text(
-                                                      'Bạn có chắc muốn xóa?'),
+                                                      'Bạn có chắc muốn hủy?'),
                                                   actions: [
                                                     TextButton(
                                                       onPressed: () =>

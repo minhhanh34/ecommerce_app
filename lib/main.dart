@@ -1,6 +1,6 @@
-import 'package:ecommerce_app/admin/screens/add_product_screen.dart';
+import 'package:ecommerce_app/admin/screens/orders_screen.dart';
 import 'package:ecommerce_app/cubit/admin/admin_cubit.dart';
-import 'package:ecommerce_app/model/product_model.dart';
+import 'package:ecommerce_app/model/order_model.dart';
 import 'package:ecommerce_app/services/favorite_service.dart';
 import 'package:ecommerce_app/services/order_service.dart';
 import 'package:ecommerce_app/services/product_service.dart';
@@ -83,26 +83,45 @@ class EcommerceApp extends StatelessWidget {
         BlocProvider(create: (_) => ForgetPasswordCubit()),
         BlocProvider(
           create: (_) => AdminCubit(
+            orderService: OrderServiceIml(
+              OrderRepository(),
+              ProductRepository(),
+            ),
             productService: ProductServiceIml(ProductRepository()),
           ),
         )
       ],
       child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'Flutter Demo',
-          theme: ThemeData(
-            primarySwatch: Colors.blue,
-          ),
-          home: AddProductScreen(
-              product: ProductModel(
-            name: 'abc',
-            price: 123,
-            imageURL: {},
-          ))),
+        debugShowCheckedModeBanner: false,
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: FutureBuilder<List<OrderModel>>(
+          future: HomeCubit(
+            orderService: OrderServiceIml(
+              OrderRepository(),
+              ProductRepository(),
+            ),
+            homeService: HomeServiceIml(),
+            cartCubit: cartCubit,
+            favoriteService: FavoriteServiceIml(
+              FavoriteRepository(),
+              ProductRepository(),
+            ),
+            userService: UserServiceIml(UserRepository()),
+          ).homeService.getOrderProducts('b9e8be1c2f'),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return OrdersScreen(snapshot.data!);
+            }
+            return const CircularProgressIndicator();
+          },
+        ),
+      ),
     );
   }
 }
-
 
 // home
 // uid == null ? const SignInPage() : const HomePage()

@@ -1,5 +1,5 @@
 import 'package:ecommerce_app/model/product_model.dart';
-import 'package:ecommerce_app/utils/price_format.dart';
+import 'package:ecommerce_app/widgets/home_container.dart';
 import 'package:flutter/material.dart';
 
 class AllProductsPage extends StatelessWidget {
@@ -10,35 +10,19 @@ class AllProductsPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.blue.shade100,
       appBar: AppBar(
+        elevation: 0,
         title: const Text('Tất cả sản phẩm'),
       ),
-      body: GridView.builder(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-        ),
-        itemCount: products.length,
-        itemBuilder: (context, index) {
-          return Card(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxHeight: 120,
-                      maxWidth: MediaQuery.of(context).size.width * 0.5,
-                    ),
-                    child: products[index].images['image1']!),
-                Text(
-                  PriceFormat.format(products[index].price),
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        color: Colors.red,
-                      ),
-                ),
-              ],
-            ),
-          );
-        },
+      body: CustomScrollView(
+        slivers: [
+          const SliverToBoxAdapter(
+            child: SizedBox(height: 8.0),
+          ),
+          ProductSliverGridOverview(products: products),
+          const SliverToBoxAdapter(
+            child: SizedBox(height: 8.0),
+          ),
+        ],
       ),
     );
   }

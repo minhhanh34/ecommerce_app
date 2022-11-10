@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
+import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import 'package:ecommerce_app/model/product_model.dart';
@@ -14,6 +14,7 @@ class OrderModel {
   String status;
   List<Map<String, dynamic>> order;
   String address;
+  String recipient;
   OrderModel({
     required this.uid,
     required this.order,
@@ -21,6 +22,7 @@ class OrderModel {
     required this.id,
     required this.status,
     required this.address,
+    required this.recipient,
   });
 
   factory OrderModel.fromJson(Map<String, dynamic> json) =>
@@ -46,14 +48,16 @@ class OrderModel {
     String? status,
     List<Map<String, dynamic>>? order,
     String? address,
+    String? recipient,
   }) {
     return OrderModel(
-      address: address ?? this.address,
       id: id ?? this.id,
       uid: uid ?? this.uid,
       date: date ?? this.date,
       status: status ?? this.status,
       order: order ?? this.order,
+      address: address ?? this.address,
+      recipient: recipient ?? this.recipient,
     );
   }
 
@@ -66,7 +70,9 @@ class OrderModel {
         other.uid == uid &&
         other.date == date &&
         other.status == status &&
-        listEquals(other.order, order);
+        other.recipient == recipient &&
+        const DeepCollectionEquality.unordered().equals(other.order, order) &&
+        other.address == address;
   }
 
   @override
@@ -76,6 +82,7 @@ class OrderModel {
         date.hashCode ^
         status.hashCode ^
         order.hashCode ^
+        recipient.hashCode ^
         address.hashCode;
   }
 }

@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
-
+import 'package:collection/collection.dart';
 part 'product_model.g.dart';
 
 @JsonSerializable()
@@ -89,18 +89,74 @@ class ProductModel {
     }
   }
 
+  ProductModel copyWith({
+    String? name,
+    Map<String, dynamic>? imageURL,
+    int? price,
+    int? grade,
+    int? sold,
+    List<Map<String, dynamic>>? colorOption,
+    List<Map<String, dynamic>>? memoryOption,
+    String? screenSize,
+    String? resolution,
+    String? brand,
+    String? batteryCapacity,
+    String? fontCamera,
+    String? rearCamera,
+    String? gpu,
+    String? cpu,
+    String? cpuSpeed,
+    String? size,
+    String? displayType,
+    String? model,
+    String? sims,
+    String? batteryType,
+    String? weight,
+    String? ram,
+    String? rom,
+    String? wifi,
+  }) {
+    return ProductModel(
+      name: name ?? this.name,
+      imageURL: imageURL ?? this.imageURL,
+      price: price ?? this.price,
+      grade: grade ?? this.grade,
+      sold: sold ?? this.sold,
+      colorOption: colorOption ?? this.colorOption,
+      memoryOption: memoryOption ?? this.memoryOption,
+      screenSize: screenSize ?? this.screenSize,
+      resolution: resolution ?? this.resolution,
+      brand: brand ?? this.brand,
+      batteryCapacity: batteryCapacity ?? this.batteryCapacity,
+      fontCamera: fontCamera ?? this.fontCamera,
+      rearCamera: rearCamera ?? this.rearCamera,
+      gpu: gpu ?? this.gpu,
+      cpu: cpu ?? this.cpu,
+      cpuSpeed: cpuSpeed ?? this.cpuSpeed,
+      size: size ?? this.size,
+      displayType: displayType ?? this.displayType,
+      model: model ?? this.model,
+      sims: sims ?? this.sims,
+      batteryType: batteryType ?? this.batteryType,
+      weight: weight ?? this.weight,
+      ram: ram ?? this.ram,
+      rom: rom ?? this.rom,
+      wifi: wifi ?? this.wifi,
+    );
+  }
+
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-
+    const equal = DeepCollectionEquality.unordered();
     return other is ProductModel &&
         other.name == name &&
         mapEquals(other.imageURL, imageURL) &&
         other.price == price &&
         other.grade == grade &&
         other.sold == sold &&
-        listEquals(other.colorOption, colorOption) &&
-        listEquals(other.memoryOption, memoryOption) &&
+        equal.equals(other.colorOption, colorOption) &&
+        equal.equals(other.memoryOption, memoryOption) &&
         other.screenSize == screenSize &&
         other.resolution == resolution &&
         other.brand == brand &&
@@ -148,61 +204,5 @@ class ProductModel {
         ram.hashCode ^
         rom.hashCode ^
         wifi.hashCode;
-  }
-
-  ProductModel copyWith({
-    String? name,
-    Map<String, dynamic>? imageURL,
-    int? price,
-    int? grade,
-    int? sold,
-    List<Map<String,dynamic>>? colorOption,
-    List<Map<String,dynamic>>? memoryOption,
-    String? screenSize,
-    String? resolution,
-    String? brand,
-    String? batteryCapacity,
-    String? fontCamera,
-    String? rearCamera,
-    String? gpu,
-    String? cpu,
-    String? cpuSpeed,
-    String? size,
-    String? displayType,
-    String? model,
-    String? sims,
-    String? batteryType,
-    String? weight,
-    String? ram,
-    String? rom,
-    String? wifi,
-  }) {
-    return ProductModel(
-      name: name ?? this.name,
-      imageURL: imageURL ?? this.imageURL,
-      price: price ?? this.price,
-      grade: grade ?? this.grade,
-      sold: sold ?? this.sold,
-      colorOption: colorOption ?? this.colorOption,
-      memoryOption: memoryOption ?? this.memoryOption,
-      screenSize: screenSize ?? this.screenSize,
-      resolution: resolution ?? this.resolution,
-      brand: brand ?? this.brand,
-      batteryCapacity: batteryCapacity ?? this.batteryCapacity,
-      fontCamera: fontCamera ?? this.fontCamera,
-      rearCamera: rearCamera ?? this.rearCamera,
-      gpu: gpu ?? this.gpu,
-      cpu: cpu ?? this.cpu,
-      cpuSpeed: cpuSpeed ?? this.cpuSpeed,
-      size: size ?? this.size,
-      displayType: displayType ?? this.displayType,
-      model: model ?? this.model,
-      sims: sims ?? this.sims,
-      batteryType: batteryType ?? this.batteryType,
-      weight: weight ?? this.weight,
-      ram: ram ?? this.ram,
-      rom: rom ?? this.rom,
-      wifi: wifi ?? this.wifi,
-    );
   }
 }

@@ -126,17 +126,15 @@ class _SignUpPageState extends State<SignUpPage> {
                     context: context,
                     builder: (context) {
                       return AlertDialog(
+                        title: const Text('Trạng thái'),
                         content: const Text('Đăng ký thành công'),
                         actions: [
-                          InkWell(
-                            onTap: () {
+                          TextButton(
+                            onPressed: () {
                               Navigator.of(context).pop();
                               context.read<SignUpCubit>().onSignUped();
                             },
-                            child: const Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text('OK'),
-                            ),
+                            child: const Text('OK'),
                           ),
                         ],
                       );
@@ -160,12 +158,12 @@ class _SignUpPageState extends State<SignUpPage> {
                     bool result = formKey.currentState!.validate();
                     if (result) {
                       await context.read<SignUpCubit>().onSignUp(
-                          phoneController.text,
-                          passController.text,
-                          confirmController.text,
-                          nameController.text,
-                          addressController.text,
-                      );
+                            phoneController.text,
+                            passController.text,
+                            confirmController.text,
+                            nameController.text,
+                            addressController.text,
+                          );
                     }
                   },
                   child: const Icon(Icons.arrow_forward),

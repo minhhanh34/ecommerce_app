@@ -1,7 +1,7 @@
+import 'package:ecommerce_app/widgets/home_container.dart';
 import 'package:flutter/material.dart';
 
 import '../model/product_model.dart';
-import 'product_grid_tile.dart';
 
 class SearchScreen extends SearchDelegate {
   SearchScreen(this.products);
@@ -63,14 +63,15 @@ class SearchScreen extends SearchDelegate {
                   ],
                 ),
               ),
-              SliverGrid(
-                delegate: SliverChildBuilderDelegate(
-                  childCount: matchQuery.length,
-                  (context, index) => ProductWidget(product: matchQuery[index]),
-                ),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2, mainAxisExtent: 240.0),
-              ),
+              // SliverGrid(
+              //   delegate: SliverChildBuilderDelegate(
+              //     childCount: matchQuery.length,
+              //     (context, index) => ProductWidget(product: matchQuery[index]),
+              //   ),
+              //   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              //       crossAxisCount: 2, mainAxisExtent: 240.0),
+              // ),
+              ProductSliverGridOverview(products: matchQuery),
             ],
           )
         : const SizedBox();

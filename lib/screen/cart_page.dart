@@ -162,7 +162,7 @@ class _CartPageState extends State<CartPage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      PriceFormat.format(
+                                      PriceHealper.format(
                                           state.products[index].price),
                                       style: Theme.of(context)
                                           .textTheme

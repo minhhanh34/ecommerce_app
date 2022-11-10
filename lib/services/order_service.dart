@@ -4,9 +4,11 @@ import 'package:ecommerce_app/model/product_model.dart';
 import 'package:ecommerce_app/repository/repository_interface.dart';
 
 abstract class OrderService {
-  Future<List<ProductModel>> getOrderProducts(String uid);
+  Future<List<OrderModel>> getOrderProducts();
   Future<bool> updateOrderProducts(String uid, OrderModel products);
   Future<bool> remove(OrderModel order);
+  Future<OrderModel> addOrder(OrderModel order);
+  Future<bool> updateOrder(OrderModel order);
 }
 
 class OrderServiceIml implements OrderService {
@@ -14,7 +16,7 @@ class OrderServiceIml implements OrderService {
   Repository<ProductModel> productRepository;
   OrderServiceIml(this.orderRepository, this.productRepository);
   @override
-  Future<List<ProductModel>> getOrderProducts(String uid) async {
+  Future<List<OrderModel>> getOrderProducts() async {
     // final products = <ProductModel>[];
     // final docSnap = await orderRepository.getQueryDocumentSnapshot(uid);
     // final orderModel = await orderRepository.getOne(docSnap.id);
@@ -26,7 +28,7 @@ class OrderServiceIml implements OrderService {
     //   products.add(product);
     // }
     // return products;
-    throw UnimplementedError();
+    return await orderRepository.list();
   }
 
   Future<List<OrderModel>> getUserOrder(String uid) async {
@@ -61,5 +63,21 @@ class OrderServiceIml implements OrderService {
   @override
   Future<bool> remove(OrderModel order) async {
     return await orderRepository.delete(order.id);
+  }
+
+  @override
+  Future<OrderModel> addOrder(OrderModel order) async {
+    final resultOrder = await orderRepository.create(order);
+    await resultOrder.build();
+    return resultOrder;
+  }
+
+  @override
+  Future<bool> updateOrder(OrderModel order) async {
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('order')
+        .where('id', isEqualTo: order.id)
+        .get();
+    return await orderRepository.update(querySnapshot.docs.first.id, order);
   }
 }

@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce_app/model/order_model.dart';
 
-import '../utils/generator.dart';
 import 'repository_interface.dart';
 
 class OrderRepository implements Repository<OrderModel> {
@@ -9,9 +8,9 @@ class OrderRepository implements Repository<OrderModel> {
 
   @override
   Future<OrderModel> create(OrderModel item) async {
-    String id = Generator.generateString();
-    item.id = id;
-    await collection.doc(id).set(item.toJson());
+    // String id = Generator.generateString();
+    // item.id = id;
+    await collection.doc(item.id).set(item.toJson());
     return item;
   }
 

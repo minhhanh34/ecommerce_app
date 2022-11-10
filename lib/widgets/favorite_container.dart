@@ -2,6 +2,7 @@ import 'package:ecommerce_app/cubit/cart/cart_cubit.dart';
 import 'package:ecommerce_app/cubit/home/home_cubit.dart';
 import 'package:ecommerce_app/model/product_model.dart';
 import 'package:ecommerce_app/screen/product_page.dart';
+import 'package:ecommerce_app/utils/alert_dialog.dart';
 import 'package:ecommerce_app/utils/price_format.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../widgets/header_row.dart';
@@ -33,6 +34,26 @@ class _FavoriteProductContainerState extends State<FavoriteProductContainer> {
                   ProductModel product = widget.favoritedProducts[index];
                   return Dismissible(
                     key: Key(product.name),
+                    confirmDismiss: (direction) async {
+                      return await showDialog(
+                        context: context,
+                        builder: (context) => const CustomAlertDialog(
+                          title: 'Xác nhận',
+                          content: 'Bạn có chắc muốn xóa?',
+                        ),
+                      );
+                    },
+                    background: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                      child: const Icon(
+                        Icons.delete,
+                        color: Colors.white,
+                      ),
+                    ),
                     onDismissed: (direction) {
                       context.read<HomeCubit>().removeFavoriteProduct(product);
                     },
@@ -72,7 +93,7 @@ class _FavoriteProductContainerState extends State<FavoriteProductContainer> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '${PriceFormat.format(product.price)}',
+                                  PriceHealper.format(product.price),
                                   style: Theme.of(context)
                                       .textTheme
                                       .titleMedium!

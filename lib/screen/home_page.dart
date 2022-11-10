@@ -54,7 +54,7 @@ class _HomePageState extends State<HomePage> {
           const CartIcon(),
         ],
       ),
-      drawer: const MyDrawer(),
+      // drawer: const MyDrawer(),
       body: BlocBuilder<HomeCubit, HomeState>(
         builder: (context, state) {
           if (state is InitialState) {

@@ -1,12 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:ecommerce_app/cubit/cart/cart_cubit.dart';
-import 'package:ecommerce_app/cubit/home/home_cubit.dart';
+import 'package:ecommerce_app/model/order_model.dart';
 
 import 'package:ecommerce_app/model/product_model.dart';
+import 'package:ecommerce_app/utils/generator.dart';
+import 'package:ecommerce_app/utils/libs.dart';
 import 'package:ecommerce_app/utils/price_format.dart';
 import 'package:ecommerce_app/widgets/header_row.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../widgets/cart_icon.dart';
 
@@ -74,6 +73,12 @@ class _ProductPageState extends State<ProductPage> {
     });
   }
 
+  void goToOrder() {
+    int orderTabIndex = 2;
+    Navigator.of(context).pop();
+    context.read<HomeCubit>().onNavTap(orderTabIndex);
+  }
+
   void displayBottomSheet(BuildContext context, TypeClick typeClick) {
     final textTheme = Theme.of(context).textTheme;
     _controller = _scaffoldKey.currentState!.showBottomSheet(
@@ -83,6 +88,7 @@ class _ProductPageState extends State<ProductPage> {
       ),
       enableDrag: false,
       (context) {
+        final homeCubit = context.read<HomeCubit>();
         return Column(
           children: [
             ListTile(
@@ -113,7 +119,7 @@ class _ProductPageState extends State<ProductPage> {
                       ),
                       title: Text(widget.product.name),
                       subtitle: Text(
-                        PriceFormat.format(
+                        PriceHealper.format(
                           (widget.product.memoryOption != null &&
                                   widget.product.memoryOption!.isNotEmpty)
                               ? widget.product.memoryOption![selectMemory]
@@ -236,7 +242,7 @@ class _ProductPageState extends State<ProductPage> {
                     ListTile(
                       leading: const Text('Tổng cộng:'),
                       title: Text(
-                        PriceFormat.format(
+                        PriceHealper.format(
                           (widget.product.memoryOption != null &&
                                   widget.product.memoryOption!.isNotEmpty)
                               ? (widget.product.memoryOption![selectMemory]
@@ -260,10 +266,73 @@ class _ProductPageState extends State<ProductPage> {
                 child: ElevatedButton(
                   onPressed: () async {
                     if (typeClick == TypeClick.addToCart) {
-                      context.read<CartCubit>().addItem(widget.product);
+                      bool result = await context
+                          .read<CartCubit>()
+                          .addItem(widget.product);
+                      if (!mounted) return;
+                      if (result) {
+                        ScaffoldMessenger.of(context)
+                          ..hideCurrentSnackBar()
+                          ..showSnackBar(
+                            const SnackBar(
+                                content: Text('Đã thêm vào giỏ hàng!')),
+                          );
+                      } else {
+                        ScaffoldMessenger.of(context)
+                          ..hideCurrentSnackBar()
+                          ..showSnackBar(
+                            const SnackBar(
+                              content: Text('Sản phẩm đã có trong giỏ hàng!'),
+                            ),
+                          );
+                      }
                     } else {
-                      //TODO
-                      // by feature
+                      final spref = await SharedPreferences.getInstance();
+                      final uid = spref.getString('uid');
+                      final querySnapshot =
+                          await (homeCubit.homeService as HomeServiceIml)
+                              .productService
+                              .repository
+                              .getQueryDocumentSnapshot(widget.product.name);
+                      final ref = querySnapshot.reference;
+                      final user = await homeCubit.userRefresh();
+                      final recipient = user.name;
+                      final order = OrderModel(
+                        recipient: recipient,
+                        uid: uid!,
+                        order: [
+                          {
+                            'color': widget.product.colorOption![selectColor]
+                                ['color'],
+                            'memory': widget.product.memoryOption![selectMemory]
+                                ['memory'],
+                            'quantity': quantity,
+                            'imageURL': widget.product.colorOption![selectColor]
+                                ['imageURL'],
+                            'price': widget.product.memoryOption![selectMemory]
+                                ['price'],
+                            'ref': ref,
+                          }
+                        ],
+                        date: DateTime.now(),
+                        id: Generator.generateString(),
+                        status: 'Chờ xác nhận',
+                        address: '',
+                      );
+                      if (!mounted) return;
+                      await context.read<HomeCubit>().addOrder(order);
+                      if (!mounted) return;
+                      ScaffoldMessenger.of(context)
+                        ..hideCurrentSnackBar()
+                        ..showSnackBar(
+                          SnackBar(
+                            content: const Text('Đặt hàng thành công!'),
+                            action: SnackBarAction(
+                              label: 'Xem đơn hàng',
+                              onPressed: goToOrder,
+                            ),
+                          ),
+                        );
                     }
                     _controller.close();
                     await Future.delayed(const Duration(milliseconds: 175));
@@ -375,7 +444,7 @@ class _ProductPageState extends State<ProductPage> {
           ),
           ListTile(
             title: Text(
-              PriceFormat.format(
+              PriceHealper.format(
                 widget.product.price,
               ),
               style: textTheme.titleLarge?.copyWith(
