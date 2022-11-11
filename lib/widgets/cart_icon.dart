@@ -20,9 +20,7 @@ class _CartIconState extends State<CartIcon> {
       onTap: () async {
         Navigator.of(context).push(
           CupertinoPageRoute(
-            builder: (context) => CartPage(
-              products: const [],
-            ),
+            builder: (context) => const CartPage(),
           ),
         );
       },
@@ -48,7 +46,7 @@ class _CartIconState extends State<CartIcon> {
           ),
           BlocBuilder<CartCubit, CartState>(
             builder: (context, state) {
-              if (state is CartLoaded && state.products.isNotEmpty) {
+              if (state is CartLoaded && state.items.isNotEmpty) {
                 return Positioned(
                   top: 5,
                   right: 0,
@@ -60,7 +58,7 @@ class _CartIconState extends State<CartIcon> {
                       shape: BoxShape.circle,
                     ),
                     child: Center(
-                      child: Text(state.products.length.toString()),
+                      child: Text(state.items.length.toString()),
                     ),
                   ),
                 );

@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/model/cart_item.dart';
 import 'package:ecommerce_app/model/product_model.dart';
 import 'package:ecommerce_app/services/cart_service.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,17 +13,17 @@ class CartCubit extends Cubit<CartState> {
   }) : super(CartInitial());
   CartService service;
 
-  List<ProductModel>? products;
+  List<CartItem>? cartItems;
 
   Future<void> getCart() async {
-    if (products == null) {
+    if (cartItems == null) {
       emit(CartLoading());
       final pfres = await SharedPreferences.getInstance();
       final uid = pfres.getString('uid');
-      products = await service.getCart(userId: uid!);
-      emit(CartLoaded(products: products!));
+      cartItems = await service.getCart(userId: uid!);
+      emit(CartLoaded(items: cartItems!));
     } else {
-      emit(CartLoaded(products: products!));
+      emit(CartLoaded(items: cartItems!));
     }
   }
 
@@ -30,35 +31,48 @@ class CartCubit extends Cubit<CartState> {
     emit(CartDetail(product));
   }
 
-  Future<bool> addItem(ProductModel item) async {
-    if (products == null) {
+  Future<bool> addItem(CartItem item) async {
+    if (cartItems == null) {
       final pfres = await SharedPreferences.getInstance();
       final uid = pfres.getString('uid');
-      products = await service.getCart(userId: uid!);
+      cartItems = await service.getCart(userId: uid!);
     }
-    if (products!.contains(item)) return false;
-    products!.add(item);
-    final spref = await SharedPreferences.getInstance();
-    final uid = spref.getString('uid');
-    await service.update(uid!, products!);
-    emit(CartLoaded(products: products!));
+    if (cartItems!.contains(item)) return false;
+    await item.build();
+    cartItems!.add(item);
+    await service.addCartItem(item);
+    emit(CartLoaded(items: cartItems!));
     return true;
   }
 
-  void removeItem(ProductModel item) async {
-    products?.remove(item);
-    final spref = await SharedPreferences.getInstance();
-    final uid = spref.getString('uid');
-    await service.update(uid!, products!);
-    emit(CartLoaded(products: products!));
+  Future<void> removeItem(CartItem item) async {
+    await service.removeItem(item);
+    cartItems?.remove(item);
+    emit(CartLoaded(items: cartItems!));
+  }
+
+  Future<void> removeAllCartItem() async {
+    if (cartItems == null) return;
+    emit(CartLoading());
+    for (var item in cartItems!) {
+      removeItem(item);
+    }
+    emit(CartLoaded(items: cartItems!));
   }
 
   void dispose() {
-    products = null;
+    cartItems = null;
   }
 
   Future<void> refresh() async {
+    emit(CartLoading());
     dispose();
     getCart();
+  }
+
+  Future<bool> updateCartItem(CartItem item) async {
+    await service.update(item.id, item);
+    getCart();
+    return true;
   }
 }

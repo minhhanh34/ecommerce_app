@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/admin/screens/admin_screen.dart';
 import 'package:ecommerce_app/cubit/home/home_cubit.dart';
 import 'package:ecommerce_app/screen/forget_password_page.dart';
 import 'package:ecommerce_app/screen/home_page.dart';
@@ -39,74 +40,90 @@ class _SignInPageState extends State<SignInPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.blue.shade100,
-      appBar: AppBar(
-        title: const Text('My shop'),
-        centerTitle: true,
-        elevation: 0,
-      ),
-      body: Form(
-        key: formKey,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32.0),
-          child: ListView(
-            children: [
-              const SizedBox(height: 80),
-              Text(
-                'Đăng nhập',
-                textAlign: TextAlign.center,
-                style: Theme.of(context)
-                    .textTheme
-                    .headline5!
-                    .copyWith(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 30),
-              TextFormField(
-                validator: (value) =>
-                    context.read<SignInCubit>().validatePhone(value!),
-                keyboardType: TextInputType.number,
-                controller: phoneController,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  prefixIcon: const Icon(Icons.phone_rounded),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  label: const Text('Số điện thoại'),
+    return BlocListener<SignInCubit, SignInState>(
+      listener: (context, state) {
+        if (state is SignIned) {
+          Navigator.of(context).pushReplacement(
+            CupertinoPageRoute(builder: (_) => const HomePage()),
+          );
+        }
+        if (state is SignInValidator) {
+          bool result = formKey.currentState!.validate();
+          if (result) {
+            context
+                .read<SignInCubit>()
+                .onSignIn(phoneController.text, passController.text);
+          }
+        }
+        if (state is AdminLoged) {
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => const AdminScreen()));
+        }
+        if (state is SignUp) {
+          FocusScope.of(context).unfocus();
+          Navigator.of(context).push(
+            CupertinoPageRoute(builder: (_) => const SignUpPage()),
+          );
+        }
+        if (state is SignInForgetPassword) {
+          Navigator.of(context).push(
+            CupertinoPageRoute(builder: (_) => const ForgetPasswordPage()),
+          );
+        }
+      },
+      child: Scaffold(
+        backgroundColor: Colors.blue.shade100,
+        appBar: AppBar(
+          title: const Text('My shop'),
+          centerTitle: true,
+          elevation: 0,
+        ),
+        body: Form(
+          key: formKey,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 32.0),
+            child: ListView(
+              children: [
+                const SizedBox(height: 80),
+                Text(
+                  'Đăng nhập',
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline5!
+                      .copyWith(fontWeight: FontWeight.bold),
                 ),
-              ),
-              const SizedBox(height: 30),
-              BlocBuilder<SignInCubit, SignInState>(
-                builder: (context, state) {
-                  if (state is SignInInitial) {
-                    return buildInputPasswordInitial();
-                  }
-                  if (state is SignInPasswordVisibility) {
-                    return buildInputPasswordWithObscure(state);
-                  }
-                  return buildInputPasswordInitial();
-                },
-              ),
-              const SizedBox(height: 20),
-              BlocListener<SignInCubit, SignInState>(
-                listener: (context, state) {
-                  if (state is SignIned) {
-                    Navigator.of(context).pushReplacement(
-                      CupertinoPageRoute(builder: (_) => const HomePage()),
-                    );
-                  }
-                  if (state is SignInValidator) {
-                    bool result = formKey.currentState!.validate();
-                    if (result) {
-                      context
-                          .read<SignInCubit>()
-                          .onSignIn(phoneController.text, passController.text);
+                const SizedBox(height: 30),
+                TextFormField(
+                  validator: (value) =>
+                      context.read<SignInCubit>().validatePhone(value!),
+                  keyboardType: TextInputType.number,
+                  controller: phoneController,
+                  textInputAction: TextInputAction.next,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.white,
+                    prefixIcon: const Icon(Icons.phone_rounded),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    label: const Text('Số điện thoại'),
+                  ),
+                ),
+                const SizedBox(height: 30),
+                BlocBuilder<SignInCubit, SignInState>(
+                  builder: (context, state) {
+                    if (state is SignInInitial) {
+                      return buildInputPasswordInitial();
                     }
-                  }
-                },
-                child: Align(
+                    if (state is SignInPasswordVisibility) {
+                      return buildInputPasswordWithObscure(state);
+                    }
+                    return buildInputPasswordInitial();
+                  },
+                ),
+                const SizedBox(height: 20),
+                Align(
                   alignment: Alignment.centerRight,
                   child: ElevatedButton(
                     style: ButtonStyle(
@@ -116,42 +133,36 @@ class _SignInPageState extends State<SignInPage> {
                           const CircleBorder()),
                     ),
                     onPressed: () {
+                      FocusScope.of(context).unfocus();
                       context.read<SignInCubit>().onValidator();
                       context.read<HomeCubit>().mainTab();
                     },
                     child: const Icon(Icons.arrow_forward),
                   ),
                 ),
-              ),
-              BlocBuilder<SignInCubit, SignInState>(
-                builder: (context, state) {
-                  if (state is SignInMessage) {
-                    return Padding(
-                      padding: const EdgeInsets.all(32.0),
-                      child: Text(
-                        state.message ?? '',
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyLarge!
-                            .copyWith(color: Colors.red),
-                        textAlign: TextAlign.center,
-                      ),
-                    );
-                  }
-                  return const SizedBox();
-                },
-              ),
-              BlocListener<SignInCubit, SignInState>(
-                listener: (context, state) {
-                  if (state is SignUp) {
+                BlocBuilder<SignInCubit, SignInState>(
+                  builder: (context, state) {
+                    if (state is SignInMessage) {
+                      return Padding(
+                        padding: const EdgeInsets.all(32.0),
+                        child: Text(
+                          state.message ?? '',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge!
+                              .copyWith(color: Colors.red),
+                          textAlign: TextAlign.center,
+                        ),
+                      );
+                    }
+                    return const SizedBox();
+                  },
+                ),
+                TextButton(
+                  onPressed: () {
                     FocusScope.of(context).unfocus();
-                    Navigator.of(context).push(
-                      CupertinoPageRoute(builder: (_) => const SignUpPage()),
-                    );
-                  }
-                },
-                child: TextButton(
-                  onPressed: () => context.read<SignInCubit>().onRegister(),
+                    context.read<SignInCubit>().onRegister();
+                  },
                   child: Text(
                     'Đăng ký',
                     style: Theme.of(context)
@@ -160,23 +171,13 @@ class _SignInPageState extends State<SignInPage> {
                         .copyWith(color: Colors.red),
                   ),
                 ),
-              ),
-              BlocListener<SignInCubit, SignInState>(
-                listener: (context, state) {
-                  if (state is SignInForgetPassword) {
-                    Navigator.of(context).push(
-                      CupertinoPageRoute(
-                          builder: (_) => const ForgetPasswordPage()),
-                    );
-                  }
-                },
-                child: TextButton(
+                TextButton(
                   onPressed: () =>
                       context.read<SignInCubit>().onForgetPassword(),
                   child: const Text('Quên mật khẩu?'),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -214,6 +215,7 @@ class _SignInPageState extends State<SignInPage> {
       validator: (value) => context.read<SignInCubit>().validatePassword(value),
       controller: passController,
       obscureText: obscure,
+      textInputAction: TextInputAction.done,
       keyboardType: TextInputType.text,
       decoration: InputDecoration(
         filled: true,

@@ -1,11 +1,10 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:ecommerce_app/admin/components/order_list_tile.dart';
 import 'package:ecommerce_app/cubit/home/home_cubit.dart';
 import 'package:ecommerce_app/cubit/home/home_state.dart';
-import 'package:ecommerce_app/utils/price_format.dart';
+import 'package:ecommerce_app/widgets/empty_item.dart';
 import 'package:ecommerce_app/widgets/header_row.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 
 import '../model/order_model.dart';
 
@@ -45,6 +44,17 @@ class _OrderContainerState extends State<OrderContainer> {
                 );
               }
               if (state is OrderState) {
+                if (state.orders.isEmpty) {
+                  return const Expanded(
+                    child: EmptyItem(
+                      message: 'Bạn chưa có đơn hàng nào',
+                      child: Icon(
+                        Icons.not_interested_rounded,
+                        color: Colors.red,
+                      ),
+                    ),
+                  );
+                }
                 return Expanded(
                   child: RefreshIndicator(
                     onRefresh: () async =>
@@ -54,7 +64,24 @@ class _OrderContainerState extends State<OrderContainer> {
                           horizontal: 4.0, vertical: 4.0),
                       itemCount: state.orders.length,
                       itemBuilder: (context, index) {
-                        return Column(
+                        return OrderListTile(state.orders[index]);
+                      },
+                    ),
+                  ),
+                );
+              }
+              return const Text('error');
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+/*
+ Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
@@ -219,22 +246,10 @@ class _OrderContainerState extends State<OrderContainer> {
                                         ),
                                       ),
                                     ),
-                                  ],
-                                ),
+                                  ], 
+                                  ),
                               ),
                             ),
                           ],
                         );
-                      },
-                    ),
-                  ),
-                );
-              }
-              return const Text('error');
-            },
-          ),
-        ],
-      ),
-    );
-  }
-}
+ */

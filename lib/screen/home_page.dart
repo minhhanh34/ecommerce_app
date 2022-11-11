@@ -116,7 +116,7 @@ class MyDrawer extends StatelessWidget {
         }
         if (state is CheckCartState) {
           Navigator.of(context).push(
-            MaterialPageRoute(builder: (_) => CartPage(products: const [])),
+            MaterialPageRoute(builder: (_) => const CartPage()),
           );
         }
       },
@@ -168,8 +168,7 @@ class MyDrawer extends StatelessWidget {
               ontap: () async {
                 Navigator.of(context).pop();
                 Navigator.of(context).push(
-                  MaterialPageRoute(
-                      builder: (_) => CartPage(products: const [])),
+                  MaterialPageRoute(builder: (_) => const CartPage()),
                 );
                 // homeCubit.onCartTab();
               },

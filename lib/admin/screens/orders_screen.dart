@@ -3,8 +3,15 @@ import 'package:ecommerce_app/model/order_model.dart';
 import 'package:flutter/material.dart';
 
 class OrdersScreen extends StatelessWidget {
-  const OrdersScreen(this.orders, {super.key});
+  const OrdersScreen(
+    this.orders, {
+    super.key,
+    this.isAdmin = false,
+    this.isFinish = false,
+  });
   final List<OrderModel> orders;
+  final bool isAdmin;
+  final bool isFinish;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +36,7 @@ class OrdersScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: OrdersOverview(orders, isAdmin: true),
+      body: OrdersOverview(orders, isAdmin: isAdmin, isFinish: isFinish),
     );
   }
 }

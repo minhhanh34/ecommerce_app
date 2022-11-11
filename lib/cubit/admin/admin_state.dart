@@ -5,7 +5,14 @@ abstract class AdminState {}
 
 class AdminInitial extends AdminState {}
 
-class AdminOrders extends AdminState {
+class AdminProgressOrders extends AdminState {
   final List<OrderModel> orders;
-  AdminOrders(this.orders);
+  AdminProgressOrders(this.orders);
 }
+
+class AdminFinishedOrders extends AdminState {
+  AdminFinishedOrders(this.orders);
+  final List<OrderModel> orders;
+}
+
+class AdminLoading extends AdminState {}

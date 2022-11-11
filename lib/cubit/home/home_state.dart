@@ -63,3 +63,10 @@ class Nav extends HomeState {
 }
 
 class GoToTopScreen extends HomeState {}
+
+class HomeProductAddition extends HomeState {}
+
+class AllProducts extends HomeState{
+  final List<ProductModel> products;
+  AllProducts(this.products);
+}

@@ -23,7 +23,7 @@ Map<String, dynamic> _$OrderModelToJson(OrderModel instance) =>
       'id': instance.id,
       'uid': instance.uid,
       'order': instance.order,
-      'date': DateTime.now(),
+      'date': instance.date,
       'status': instance.status,
       'address': instance.address,
       'recipient': instance.recipient,

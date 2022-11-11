@@ -8,8 +8,8 @@ class CartInitial extends CartState {}
 class CartLoading extends CartState {}
 
 class CartLoaded extends CartState {
-  CartLoaded({required this.products});
-  final List<ProductModel> products;
+  CartLoaded({required this.items});
+  final List<CartItem> items;
 }
 
 class CartDetail extends CartState {

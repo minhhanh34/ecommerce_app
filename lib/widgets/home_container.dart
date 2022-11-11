@@ -49,6 +49,7 @@ class _HomeContainerState extends State<HomeContainer> {
         const ProductsCatalog(),
         HeaderRow(
           title: 'Sản phẩm gợi ý',
+          label: 'Tất cả',
           hasMore: true,
           onPress: () {
             Navigator.of(context).push(
@@ -92,16 +93,20 @@ class ProductSliverGridOverview extends StatelessWidget {
   const ProductSliverGridOverview({
     Key? key,
     required this.products,
+    this.isAdmin = false,
   }) : super(key: key);
 
   final List<ProductModel> products;
-
+  final bool isAdmin;
   @override
   Widget build(BuildContext context) {
     return SliverGrid(
       delegate: SliverChildBuilderDelegate(
         childCount: products.length,
-        (context, index) => ProductWidget(product: products[index]),
+        (context, index) => ProductWidget(
+          product: products[index],
+          isAdmin: isAdmin,
+        ),
       ),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2, mainAxisExtent: 250.0),

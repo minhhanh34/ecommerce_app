@@ -1,4 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:ecommerce_app/admin/screens/add_and_edit_product_screen.dart';
+import 'package:ecommerce_app/model/cart_item.dart';
 import 'package:ecommerce_app/model/order_model.dart';
 
 import 'package:ecommerce_app/model/product_model.dart';
@@ -15,8 +17,13 @@ enum TypeClick {
 }
 
 class ProductPage extends StatefulWidget {
-  const ProductPage({Key? key, required this.product}) : super(key: key);
+  const ProductPage({
+    Key? key,
+    required this.product,
+    this.isAdmin = false,
+  }) : super(key: key);
   final ProductModel product;
+  final bool isAdmin;
   @override
   State<ProductPage> createState() => _ProductPageState();
 }
@@ -74,9 +81,11 @@ class _ProductPageState extends State<ProductPage> {
   }
 
   void goToOrder() {
+    final homeCubit = context.read<HomeCubit>();
     int orderTabIndex = 2;
-    Navigator.of(context).pop();
-    context.read<HomeCubit>().onNavTap(orderTabIndex);
+    final route = MaterialPageRoute(builder: (_) => const HomePage());
+    Navigator.of(context).pushReplacement(route);
+    homeCubit.onNavTap(orderTabIndex);
   }
 
   void displayBottomSheet(BuildContext context, TypeClick typeClick) {
@@ -266,11 +275,29 @@ class _ProductPageState extends State<ProductPage> {
                 child: ElevatedButton(
                   onPressed: () async {
                     if (typeClick == TypeClick.addToCart) {
-                      bool result = await context
-                          .read<CartCubit>()
-                          .addItem(widget.product);
+                      final spref = await SharedPreferences.getInstance();
+                      final uid = spref.getString('uid');
+                      final ref = await ProductRepository()
+                          .getQueryDocumentSnapshot(widget.product.name);
+                      final cartItem = CartItem(
+                        id: Generator.generateString(),
+                        uid: uid!,
+                        color: widget.product.colorOption![selectColor]
+                            ['color'],
+                        imageURL: widget.product.colorOption![selectColor]
+                            ['imageURL'],
+                        memory: widget.product.memoryOption![selectMemory]
+                            ['memory'],
+                        price: widget.product.memoryOption![selectMemory]
+                            ['price'],
+                        quantity: quantity,
+                        ref: ref.reference,
+                      );
                       if (!mounted) return;
+                      final result =
+                          await context.read<CartCubit>().addItem(cartItem);
                       if (result) {
+                        if (!mounted) return;
                         ScaffoldMessenger.of(context)
                           ..hideCurrentSnackBar()
                           ..showSnackBar(
@@ -278,6 +305,7 @@ class _ProductPageState extends State<ProductPage> {
                                 content: Text('Đã thêm vào giỏ hàng!')),
                           );
                       } else {
+                        if (!mounted) return;
                         ScaffoldMessenger.of(context)
                           ..hideCurrentSnackBar()
                           ..showSnackBar(
@@ -361,13 +389,50 @@ class _ProductPageState extends State<ProductPage> {
         child: SafeArea(
           child: SizedBox(
             height: 56,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Expanded(
-                  child: BlocBuilder<CartCubit, CartState>(
-                    builder: (_, state) => ElevatedButton(
+            width: double.infinity,
+            child: Builder(builder: (context) {
+              if (widget.isAdmin) {
+                return ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) =>
+                            AddAndEditProductScreen(product: widget.product),
+                      ),
+                    );
+                  },
+                  child: const Text('Cập nhật sản phẩm'),
+                );
+              }
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    child: BlocBuilder<CartCubit, CartState>(
+                      builder: (_, state) => ElevatedButton(
+                        style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(0),
+                            ),
+                          ),
+                          backgroundColor:
+                              MaterialStateProperty.all<Color>(Colors.blue),
+                        ),
+                        onPressed: () async {
+                          setState(() {
+                            navVisible = false;
+                          });
+                          displayBottomSheet(context, TypeClick.addToCart);
+                        },
+                        child: const Text('Thêm vào giỏ hàng'),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: ElevatedButton(
                       style: ButtonStyle(
                         shape:
                             MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -376,40 +441,20 @@ class _ProductPageState extends State<ProductPage> {
                           ),
                         ),
                         backgroundColor:
-                            MaterialStateProperty.all<Color>(Colors.blue),
+                            MaterialStateProperty.all<Color>(Colors.red),
                       ),
-                      onPressed: () async {
+                      onPressed: () {
                         setState(() {
                           navVisible = false;
                         });
-                        displayBottomSheet(context, TypeClick.addToCart);
+                        displayBottomSheet(context, TypeClick.buy);
                       },
-                      child: const Text('Thêm vào giỏ hàng'),
+                      child: const Text('Mua ngay'),
                     ),
                   ),
-                ),
-                Expanded(
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(0),
-                        ),
-                      ),
-                      backgroundColor:
-                          MaterialStateProperty.all<Color>(Colors.red),
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        navVisible = false;
-                      });
-                      displayBottomSheet(context, TypeClick.buy);
-                    },
-                    child: const Text('Mua ngay'),
-                  ),
-                ),
-              ],
-            ),
+                ],
+              );
+            }),
           ),
         ),
       ),
@@ -418,13 +463,16 @@ class _ProductPageState extends State<ProductPage> {
         title: Text(widget.product.name),
         centerTitle: true,
         elevation: 0,
-        actions: const [
-          CartIcon(),
+        actions: [
+          Visibility(visible: !widget.isAdmin, child: const CartIcon()),
         ],
       ),
       body: ListView(
         children: [
-          ImageSlidable(widget.product),
+          ImageSlidable(
+            widget.product,
+            isAdmin: widget.isAdmin,
+          ),
           ListTile(
             title: Text(
               widget.product.name,
@@ -626,8 +674,10 @@ class _ProductPageState extends State<ProductPage> {
 }
 
 class ImageSlidable extends StatefulWidget {
-  const ImageSlidable(this.product, {super.key});
+  const ImageSlidable(this.product, {super.key, this.isAdmin = false});
   final ProductModel product;
+  final bool isAdmin;
+
   @override
   State<ImageSlidable> createState() => _ImageSlidableState();
 }
@@ -684,30 +734,33 @@ class _ImageSlidableState extends State<ImageSlidable> {
               ),
             ),
           ),
-          Positioned(
-            right: 0,
-            top: 0,
-            child: IconButton(
-              icon: isFavorite
-                  ? const Icon(
-                      Icons.favorite_rounded,
-                      color: Colors.red,
-                    )
-                  : const Icon(Icons.favorite_outline),
-              onPressed: () async {
-                if (isFavorite) {
-                  context
-                      .read<HomeCubit>()
-                      .removeFavoriteProduct(widget.product);
-                } else {
-                  context.read<HomeCubit>().addFavoriteProduct(
-                        widget.product,
-                      );
-                }
-                setState(() {
-                  isFavorite = !isFavorite;
-                });
-              },
+          Visibility(
+            visible: !widget.isAdmin,
+            child: Positioned(
+              right: 0,
+              top: 0,
+              child: IconButton(
+                icon: isFavorite
+                    ? const Icon(
+                        Icons.favorite_rounded,
+                        color: Colors.red,
+                      )
+                    : const Icon(Icons.favorite_outline),
+                onPressed: () async {
+                  if (isFavorite) {
+                    context
+                        .read<HomeCubit>()
+                        .removeFavoriteProduct(widget.product);
+                  } else {
+                    context.read<HomeCubit>().addFavoriteProduct(
+                          widget.product,
+                        );
+                  }
+                  setState(() {
+                    isFavorite = !isFavorite;
+                  });
+                },
+              ),
             ),
           ),
         ],

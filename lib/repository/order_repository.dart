@@ -41,7 +41,9 @@ class OrderRepository implements Repository<OrderModel> {
 
   @override
   Future<bool> update(String id, OrderModel item) async {
-    await collection.doc(id).update(item.toJson()).catchError((e) => false);
+    await collection.doc(id).update({
+      'status': item.status,
+    }).catchError((e) => false);
     return true;
   }
 

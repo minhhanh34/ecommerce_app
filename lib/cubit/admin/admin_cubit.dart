@@ -15,7 +15,8 @@ class AdminCubit extends Cubit<AdminState> {
   final ProductService productService;
   final OrderService orderService;
 
-  List<OrderModel>? orders;
+  List<OrderModel>? progressOrders;
+  List<OrderModel>? finishedOrders;
 
   Future<ProductModel> addProduct(ProductModel product) async {
     return await productService.addProduct(product);
@@ -25,11 +26,34 @@ class AdminCubit extends Cubit<AdminState> {
     return await productService.updateProduct(product);
   }
 
-  Future<List<OrderModel>> getOrders() async {
-    return await orderService.getOrderProducts();
+  // Future<List<OrderModel>> getOrders() async {
+  //   progressOrders ??= await orderService.getOrders();
+  //   emit(AdminProgressOrders(progressOrders!));
+  //   return progressOrders!;
+  // }
+
+  Future<void> getProgressOrders() async {
+    emit(AdminLoading());
+
+    progressOrders ??= await orderService.getProgressOrders();
+    emit(AdminProgressOrders(progressOrders!));
   }
 
   Future<bool> updateOrder(OrderModel order) async {
-    return await orderService.updateOrder(order);
+    emit(AdminLoading());
+    final result = await orderService.updateOrder(order);
+    return result;
+  }
+
+  Future<void> refreshOrders(bool isFinish) async {
+    emit(AdminLoading());
+    if (isFinish) finishedOrders = null;
+    getFinishedOrders();
+  }
+
+  Future<void> getFinishedOrders() async {
+    emit(AdminLoading());
+    finishedOrders ??= await orderService.getFinishedOrders();
+    emit(AdminFinishedOrders(finishedOrders!));
   }
 }

@@ -3,7 +3,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto/crypto.dart';
-import 'package:ecommerce_app/model/cart_model.dart';
+import 'package:ecommerce_app/model/cart_item.dart';
 import 'package:ecommerce_app/model/favorite_model.dart';
 import 'package:ecommerce_app/model/history_model.dart';
 import 'package:ecommerce_app/model/order_model.dart';
@@ -26,7 +26,7 @@ abstract class SignService extends Service {
 
 class SignServiceIml implements SignService {
   Repository<UserModel> userRepo;
-  Repository<CartModel> cartRepo;
+  Repository<CartItem> cartRepo;
   Repository<FavoriteModel> favoriteRepo;
   Repository<HistoryModel> historyRepo;
   Repository<OrderModel> orderRepo;
@@ -54,12 +54,17 @@ class SignServiceIml implements SignService {
   @override
   Future<String?> signIn(
       {required String phone, required String password}) async {
-    final user = await (userRepo as UserRepository).getKeyUnique(phone);
-    password += user.keyUnique;
-    password = md5.convert(utf8.encode(password)).toString();
-    if (user.password == password) {
-      return user.uid;
+    try {
+      final user = await (userRepo as UserRepository).getKeyUnique(phone);
+      password += user.keyUnique;
+      password = md5.convert(utf8.encode(password)).toString();
+      if (user.password == password) {
+        return user.uid;
+      }
+    } catch (e) {
+      log('error', error: e);
     }
+
     // final docs = await FirebaseFirestore.instance.collection('user').get();
     // for (var doc in docs.docs) {
     //   final data = doc.data();
@@ -91,7 +96,15 @@ class SignServiceIml implements SignService {
         },
       );
       userRepo.create(userModel);
-      cartRepo.create(CartModel(uid: uid, cart: <String, DocumentReference>{}));
+      // cartRepo.create(
+      //   CartItem(
+      //       color: '',
+      //       imageURL: imageURL,
+      //       memory: memory,
+      //       price: price,
+      //       quantity: quantity,
+      //       ref: ref),
+      // );
       favoriteRepo.create(
         FavoriteModel(uid: uid, favorite: <String, DocumentReference>{}),
       );

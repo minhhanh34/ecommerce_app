@@ -155,6 +155,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         const CircleBorder()),
                   ),
                   onPressed: () async {
+                    FocusScope.of(context).unfocus();
                     bool result = formKey.currentState!.validate();
                     if (result) {
                       await context.read<SignUpCubit>().onSignUp(

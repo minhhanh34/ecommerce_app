@@ -1,6 +1,4 @@
-import 'package:ecommerce_app/admin/screens/orders_screen.dart';
 import 'package:ecommerce_app/cubit/admin/admin_cubit.dart';
-import 'package:ecommerce_app/model/order_model.dart';
 import 'package:ecommerce_app/services/favorite_service.dart';
 import 'package:ecommerce_app/services/order_service.dart';
 import 'package:ecommerce_app/services/product_service.dart';
@@ -8,6 +6,7 @@ import 'package:ecommerce_app/services/user_service.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 import './utils/libs.dart';
+import 'admin/screens/admin_screen.dart';
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -15,6 +14,7 @@ void main() async {
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   final spref = await SharedPreferences.getInstance();
   String? uid = spref.getString('uid');
+  // await spref.remove('uid');
   // final service = OrderServiceIml(OrderRepository(), ProductRepository());
   // final orderRepository = OrderRepository();
   // // final docs = await service.getUserOrder('fec245c1f9');
@@ -38,6 +38,14 @@ void main() async {
   // print(uid!);
   // final service = HistoryServiceIml(HistoryRepository(), ProductRepository());
   // final historyOrders = await service.getHistoryOrders(uid!);
+  // final orderRepository = OrderRepository();
+  // final order = await orderRepository.getOne('aShagOpITyPvbqMFaYgt');
+  // final orderService = OrderServiceIml(OrderRepository(), ProductRepository());
+  // final adminCubit = AdminCubit(
+  //     productService: ProductServiceIml(ProductRepository()),
+  //     orderService: orderService);
+  // adminCubit.updateOrder(order.copyWith(status: 'da giao hang'));
+
   runApp(EcommerceApp(uid: uid));
 }
 
@@ -97,7 +105,29 @@ class EcommerceApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: FutureBuilder<List<OrderModel>>(
+        home: Builder(
+          builder: (context) {
+            if (uid == null) {
+              return const SignInPage();
+            }
+            if (uid == 'admin') {
+              return const AdminScreen();
+            }
+            return const HomePage();
+          },
+        ),
+      ),
+    );
+  }
+}
+
+// home
+// uid == null ? const SignInPage() : const HomePage()
+
+
+// update order status
+/*
+  FutureBuilder<List<OrderModel>>(
           future: HomeCubit(
             orderService: OrderServiceIml(
               OrderRepository(),
@@ -117,11 +147,5 @@ class EcommerceApp extends StatelessWidget {
             }
             return const CircularProgressIndicator();
           },
-        ),
-      ),
-    );
-  }
-}
-
-// home
-// uid == null ? const SignInPage() : const HomePage()
+        )
+ */ 

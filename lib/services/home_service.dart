@@ -28,6 +28,7 @@ abstract class HomeService extends Service {
   Future<bool> updateHistoryProducts(String uid, List<ProductModel> products);
   Future<UserModel> getUserInfo(String uid);
   Future<bool> updateUserInfo(UserModel userModel);
+  // Future<List<OrderModel>> getUserOrders(String uid);
 }
 
 class HomeServiceIml implements HomeService {
@@ -91,4 +92,18 @@ class HomeServiceIml implements HomeService {
   Future<bool> updateUserInfo(UserModel userModel) async {
     return await userService.updateUserInfo(userModel);
   }
+
+  // @override
+  // Future<List<OrderModel>> getUserOrders(String uid) async {
+  //   final docs = await (orderService.orderRepository as OrderRepository)
+  //       .collection
+  //       .where('uid', isEqualTo: uid)
+  //       .get();
+  //   final orders =
+  //       docs.docs.map((order) => OrderModel.fromJson(order.data())).toList();
+  //   for (var order in orders) {
+  //     await order.build();
+  //   }
+  //   return orders;
+  // }
 }

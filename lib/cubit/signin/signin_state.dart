@@ -22,3 +22,5 @@ class SignInMessage extends SignInState {
   SignInMessage(this.message);
   final String? message;
 }
+
+class AdminLoged extends SignInState {}

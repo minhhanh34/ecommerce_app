@@ -26,7 +26,7 @@ class OrderModel {
   });
 
   factory OrderModel.fromJson(Map<String, dynamic> json) =>
-      _$OrderModelFromJson(json);
+      _$OrderModelFromJson(json)..build();
 
   Map<String, dynamic> toJson() => _$OrderModelToJson(this);
 

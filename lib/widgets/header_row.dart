@@ -3,10 +3,16 @@ import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
 class HeaderRow extends StatelessWidget {
-  HeaderRow({Key? key, required this.title, this.hasMore = false, this.onPress})
+  HeaderRow(
+      {Key? key,
+      required this.title,
+      this.hasMore = false,
+      this.onPress,
+      this.label})
       : super(key: key);
   final String title;
   final bool hasMore;
+  final String? label;
   VoidCallback? onPress;
   @override
   Widget build(BuildContext context) {
@@ -24,12 +30,13 @@ class HeaderRow extends StatelessWidget {
               style: Theme.of(context).textTheme.headline6,
             ),
           ),
-          hasMore
-              ? IconButton(
-                  onPressed: onPress,
-                  icon: const Icon(CupertinoIcons.forward),
-                )
-              : const SizedBox(),
+          Visibility(
+            visible: hasMore,
+            child: IconButton(
+              onPressed: onPress,
+              icon: const Icon(CupertinoIcons.forward),
+            ),
+          ),
         ],
       ),
     );

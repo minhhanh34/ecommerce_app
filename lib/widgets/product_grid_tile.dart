@@ -4,13 +4,24 @@ import 'package:ecommerce_app/utils/price_format.dart';
 import 'package:flutter/material.dart';
 
 class ProductWidget extends StatelessWidget {
-  const ProductWidget({Key? key, required this.product}) : super(key: key);
+  const ProductWidget({
+    Key? key,
+    required this.product,
+    this.isAdmin = false,
+  }) : super(key: key);
   final ProductModel product;
+  final bool isAdmin;
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () => Navigator.of(context).push(
-          MaterialPageRoute(builder: (_) => ProductPage(product: product))),
+        MaterialPageRoute(
+          builder: (_) => ProductPage(
+            product: product,
+            isAdmin: isAdmin,
+          ),
+        ),
+      ),
       child: Card(
         clipBehavior: Clip.hardEdge,
         shape: RoundedRectangleBorder(

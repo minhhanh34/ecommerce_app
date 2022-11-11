@@ -23,7 +23,7 @@ class HistoryServiceIml implements HistoryService {
         OrderServiceIml(OrderRepository(), ProductRepository());
     final orders = await orderService.getUserOrder(uid);
     return orders
-        .where((order) => order.status.toLowerCase() == 'đã giao')
+        .where((order) => order.status.toLowerCase() == 'đã giao hàng')
         .toList();
   }
 

@@ -14,7 +14,7 @@ class CustomAlertDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(title),
-      content: Text(title),
+      content: Text(content),
       actions: [
         for (var action in actions)
           TextButton(

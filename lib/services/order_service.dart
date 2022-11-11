@@ -2,13 +2,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce_app/model/order_model.dart';
 import 'package:ecommerce_app/model/product_model.dart';
 import 'package:ecommerce_app/repository/repository_interface.dart';
+import 'package:ecommerce_app/utils/libs.dart';
 
 abstract class OrderService {
-  Future<List<OrderModel>> getOrderProducts();
+  Future<List<OrderModel>> getOrders();
   Future<bool> updateOrderProducts(String uid, OrderModel products);
   Future<bool> remove(OrderModel order);
   Future<OrderModel> addOrder(OrderModel order);
   Future<bool> updateOrder(OrderModel order);
+  Future<List<OrderModel>> getFinishedOrders();
+  Future<List<OrderModel>> getProgressOrders();
 }
 
 class OrderServiceIml implements OrderService {
@@ -16,7 +19,7 @@ class OrderServiceIml implements OrderService {
   Repository<ProductModel> productRepository;
   OrderServiceIml(this.orderRepository, this.productRepository);
   @override
-  Future<List<OrderModel>> getOrderProducts() async {
+  Future<List<OrderModel>> getOrders() async {
     // final products = <ProductModel>[];
     // final docSnap = await orderRepository.getQueryDocumentSnapshot(uid);
     // final orderModel = await orderRepository.getOne(docSnap.id);
@@ -28,7 +31,25 @@ class OrderServiceIml implements OrderService {
     //   products.add(product);
     // }
     // return products;
-    return await orderRepository.list();
+    final orders = await orderRepository.list();
+    for (var order in orders) {
+      await order.build();
+    }
+    return orders;
+  }
+
+  @override
+  Future<List<OrderModel>> getProgressOrders() async {
+    final docs = await (orderRepository as OrderRepository)
+        .collection
+        .where('status', isNotEqualTo: 'Đã giao hàng')
+        .get();
+    final orders =
+        docs.docs.map((order) => OrderModel.fromJson(order.data())).toList();
+    for (var order in orders) {
+      await order.build();
+    }
+    return orders;
   }
 
   Future<List<OrderModel>> getUserOrder(String uid) async {
@@ -74,10 +95,21 @@ class OrderServiceIml implements OrderService {
 
   @override
   Future<bool> updateOrder(OrderModel order) async {
-    final querySnapshot = await FirebaseFirestore.instance
-        .collection('order')
-        .where('id', isEqualTo: order.id)
+    return await orderRepository.update(order.id, order);
+  }
+
+  @override
+  Future<List<OrderModel>> getFinishedOrders() async {
+    final docs = await (orderRepository as OrderRepository)
+        .collection
+        .where('status'.toLowerCase(), isEqualTo: 'Đã giao hàng')
         .get();
-    return await orderRepository.update(querySnapshot.docs.first.id, order);
+    final orders = docs.docs
+        .map((orderSnapshot) => OrderModel.fromJson(orderSnapshot.data()))
+        .toList();
+    for (var order in orders) {
+      await order.build();
+    }
+    return orders;
   }
 }
