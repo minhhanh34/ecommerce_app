@@ -1,7 +1,7 @@
-import 'package:ecommerce_app/widgets/home_container.dart';
 import 'package:flutter/material.dart';
 
 import '../model/product_model.dart';
+import 'product_sliver_grid_overview.dart';
 
 class SearchScreen extends SearchDelegate {
   SearchScreen(this.products);

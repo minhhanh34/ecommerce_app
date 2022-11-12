@@ -1,6 +1,7 @@
 import 'package:ecommerce_app/model/product_model.dart';
-import 'package:ecommerce_app/widgets/home_container.dart';
 import 'package:flutter/material.dart';
+
+import '../widgets/product_sliver_grid_overview.dart';
 
 class AllProductsPage extends StatelessWidget {
   const AllProductsPage({Key? key, required this.products}) : super(key: key);

@@ -2,8 +2,7 @@ import 'package:ecommerce_app/model/order_model.dart';
 import 'package:ecommerce_app/model/product_model.dart';
 import 'package:ecommerce_app/services/order_service.dart';
 import 'package:ecommerce_app/services/product_service.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ecommerce_app/utils/libs.dart';
 
 part 'admin_state.dart';
 
@@ -17,6 +16,7 @@ class AdminCubit extends Cubit<AdminState> {
 
   List<OrderModel>? progressOrders;
   List<OrderModel>? finishedOrders;
+  List<ProductModel>? products;
 
   Future<ProductModel> addProduct(ProductModel product) async {
     return await productService.addProduct(product);
@@ -25,12 +25,6 @@ class AdminCubit extends Cubit<AdminState> {
   Future<bool> updateProduct(ProductModel product) async {
     return await productService.updateProduct(product);
   }
-
-  // Future<List<OrderModel>> getOrders() async {
-  //   progressOrders ??= await orderService.getOrders();
-  //   emit(AdminProgressOrders(progressOrders!));
-  //   return progressOrders!;
-  // }
 
   Future<void> getProgressOrders() async {
     emit(AdminLoading());
@@ -55,5 +49,28 @@ class AdminCubit extends Cubit<AdminState> {
     emit(AdminLoading());
     finishedOrders ??= await orderService.getFinishedOrders();
     emit(AdminFinishedOrders(finishedOrders!));
+  }
+
+  Future<void> logout() async {
+    final spref = await SharedPreferences.getInstance();
+    await spref.remove('uid');
+    finishedOrders = null;
+    progressOrders = null;
+    products = null;
+    emit(AdminLogout());
+  }
+
+  Future<void> onAllProducts() async {
+    emit(AdminLoading());
+    products ??= await productService.getAllProducts();
+    emit(AdminAllProducts(products!));
+  }
+
+  void onProductAddition() {
+    emit(AdminProductAddition());
+  }
+
+  void onDetailProduct(ProductModel product) {
+    emit(AdminDetailProduct(product));
   }
 }

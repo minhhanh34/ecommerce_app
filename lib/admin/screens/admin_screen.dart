@@ -1,8 +1,7 @@
 import 'package:ecommerce_app/admin/screens/add_and_edit_product_screen.dart';
 import 'package:ecommerce_app/admin/screens/orders_screen.dart';
 import 'package:ecommerce_app/cubit/admin/admin_cubit.dart';
-import 'package:ecommerce_app/cubit/home/home_cubit.dart';
-import 'package:ecommerce_app/cubit/home/home_state.dart';
+import 'package:ecommerce_app/screen/product_page.dart';
 import 'package:ecommerce_app/screen/sign_in_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,6 +13,7 @@ class AdminScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final adminCubit = context.read<AdminCubit>();
     return BlocConsumer<AdminCubit, AdminState>(
       listener: (context, state) {
         if (state is AdminProgressOrders) {
@@ -34,6 +34,33 @@ class AdminScreen extends StatelessWidget {
               isFinish: true,
             ),
           );
+          Navigator.of(context).push(route);
+        }
+        if (state is AdminLogout) {
+          final route = MaterialPageRoute(builder: (_) => const SignInPage());
+          Navigator.of(context).pushAndRemoveUntil(route, (route) => false);
+        }
+        if (state is AdminAllProducts) {
+          builder(context) => ProductOverviewScreen(
+                state.products,
+                isAdmin: true,
+              );
+          final route = MaterialPageRoute(builder: builder);
+          Navigator.of(context).push(route);
+        }
+        if (state is AdminProductAddition) {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => const AddAndEditProductScreen(),
+            ),
+          );
+        }
+        if (state is AdminDetailProduct) {
+          builder(context) => ProductPage(
+                product: state.product,
+                isAdmin: true,
+              );
+          final route = MaterialPageRoute(builder: builder);
           Navigator.of(context).push(route);
         }
       },
@@ -64,46 +91,20 @@ class AdminScreen extends StatelessWidget {
                         context.read<AdminCubit>().getProgressOrders(),
                     child: const Text('Đơn hàng'),
                   ),
-                  BlocListener<HomeCubit, HomeState>(
-                    listener: (context, state) {
-                      if (state is LogoutState) {
-                        final route = MaterialPageRoute(
-                            builder: (_) => const SignInPage());
-                        Navigator.of(context)
-                            .pushAndRemoveUntil(route, (route) => false);
-                      }
-                      if (state is HomeProductAddition) {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (_) => const AddAndEditProductScreen(),
-                          ),
-                        );
-                      }
-                      if (state is AllProducts) {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (_) =>
-                                ProductOverviewScreen(state.products),
-                          ),
-                        );
-                      }
-                    },
-                    child: ElevatedButton(
-                      onPressed: () => context.read<HomeCubit>().logout(),
-                      child: const Text('logout'),
-                    ),
+                  ElevatedButton(
+                    onPressed: () => context.read<AdminCubit>().logout(),
+                    child: const Text('logout'),
                   ),
                   ElevatedButton(
-                    onPressed: () =>
-                        context.read<AdminCubit>().getFinishedOrders(),
+                    onPressed: () => adminCubit.getFinishedOrders(),
                     child: const Text('Đơn hàng thành công'),
                   ),
                   ElevatedButton(
-                    onPressed: context.read<HomeCubit>().onAddProduct,
+                    onPressed: adminCubit.onProductAddition,
                     child: const Text('Thêm sản phẩm'),
                   ),
                   ElevatedButton(
-                    onPressed: context.read<HomeCubit>().onAllProduct,
+                    onPressed: adminCubit.onAllProducts,
                     child: const Text('Tất cả sản phẩm'),
                   ),
                 ],

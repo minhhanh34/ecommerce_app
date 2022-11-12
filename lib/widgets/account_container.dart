@@ -1,11 +1,15 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ecommerce_app/cubit/home/home_cubit.dart';
 import 'package:ecommerce_app/cubit/home/home_state.dart';
+import 'package:ecommerce_app/model/user_model.dart';
 import 'package:ecommerce_app/screen/info_edition_screen.dart';
 import 'package:ecommerce_app/screen/sign_in_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+
+import '../screen/user_avatar_screen.dart';
 
 class AccountContainer extends StatefulWidget {
   const AccountContainer({Key? key}) : super(key: key);
@@ -15,8 +19,20 @@ class AccountContainer extends StatefulWidget {
 }
 
 class _AccountContainerState extends State<AccountContainer> {
+  final maleAvatarUrl =
+      'https://firebasestorage.googleapis.com/v0/b/ecommerce-app-f4334.appspot.com/o/avatars%2Fmale-avatar.png?alt=media&token=2ab2c77e-4254-40e0-82b2-49132c1420ca';
+  final femaleAvatarUrl =
+      'https://firebasestorage.googleapis.com/v0/b/ecommerce-app-f4334.appspot.com/o/avatars%2Ffemale-avatar.png?alt=media&token=8888de2c-5332-41c9-91ec-dbfd455adf6d';
+
+  String getAvatarUrl(UserModel user) {
+    if (user.url != null) return user.url!;
+    if (user.gender?.toLowerCase() == 'nam') return maleAvatarUrl;
+    return femaleAvatarUrl;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final homeCubit = context.read<HomeCubit>();
     return BlocConsumer<HomeCubit, HomeState>(
       listener: (context, state) {
         if (state is LogoutState) {
@@ -26,9 +42,13 @@ class _AccountContainerState extends State<AccountContainer> {
           );
         }
         if (state is InfoEdition) {
-          Navigator.of(context).push(
-            CupertinoPageRoute(builder: (context) => InfoEditionScreen(state.user))
-          );
+          Navigator.of(context).push(CupertinoPageRoute(
+              builder: (context) => InfoEditionScreen(state.user)));
+        }
+        if (state is AvatarView) {
+          builder(context) => UserAvatarScreen(state.user);
+          final route = MaterialPageRoute(builder: builder);
+          Navigator.of(context).push(route);
         }
       },
       builder: (context, state) {
@@ -65,9 +85,21 @@ class _AccountContainerState extends State<AccountContainer> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         const SizedBox(width: 16.0),
-                        const CircleAvatar(
-                          radius: 32.0,
-                          child: FlutterLogo(),
+                        InkWell(
+                          onTap: () => homeCubit.onAvatarView(state.user),
+                          child: CircleAvatar(
+                            radius: 33.0,
+                            child: Hero(
+                              tag: state.user.name,
+                              child: CircleAvatar(
+                                backgroundImage: CachedNetworkImageProvider(
+                                  getAvatarUrl(state.user),
+                                ),
+                                backgroundColor: Colors.white,
+                                radius: 32.0,
+                              ),
+                            ),
+                          ),
                         ),
                         const SizedBox(width: 40.0),
                         Text(state.user.name,

@@ -40,6 +40,7 @@ class _OrderListTileState extends State<OrderListTile> {
 
   @override
   Widget build(BuildContext context) {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
     final adminCubit = context.read<AdminCubit>();
     return Visibility(
       visible: visible(),
@@ -156,10 +157,14 @@ class _OrderListTileState extends State<OrderListTile> {
                                 children: [
                                   const Text('Màu: '),
                                   const SizedBox(width: 8.0),
-                                  Container(
-                                    width: 12,
-                                    height: 12,
-                                    color: Color(int.parse(prod['color'])),
+                                  CircleAvatar(
+                                    backgroundColor: Colors.grey.shade300,
+                                    radius: 11.0,
+                                    child: CircleAvatar(
+                                      radius: 10.0,
+                                      backgroundColor:
+                                          Color(int.parse(prod['color'])),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -253,6 +258,12 @@ class _OrderListTileState extends State<OrderListTile> {
                           );
                           if (confirm) {
                             cancelOrder(widget.order);
+                            scaffoldMessenger
+                              ..hideCurrentSnackBar()
+                              ..showSnackBar(
+                                const SnackBar(
+                                    content: Text('Đã hủy đơn hàng!')),
+                              );
                           }
                         },
                         child: const Text('Hủy'),

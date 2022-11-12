@@ -29,58 +29,9 @@ class CartItem {
     product = ProductModel.fromJson(data.data()!);
   }
 
-  CartItem copyWith({
-    ProductModel? product,
-    String? color,
-    String? imageURL,
-    String? memory,
-    int? price,
-    int? quantity,
-    DocumentReference? ref,
-    String? uid,
-    String? id,
-  }) {
-    return CartItem(
-      id: id ?? this.id,
-      product: product ?? this.product,
-      color: color ?? this.color,
-      imageURL: imageURL ?? this.imageURL,
-      memory: memory ?? this.memory,
-      price: price ?? this.price,
-      quantity: quantity ?? this.quantity,
-      ref: ref ?? this.ref,
-      uid: uid ?? this.uid,
-    );
-  }
+  
 
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is CartItem &&
-        other.product == product &&
-        other.color == color &&
-        other.imageURL == imageURL &&
-        other.memory == memory &&
-        other.price == price &&
-        other.quantity == quantity &&
-        other.ref == ref &&
-        other.id == id &&
-        other.uid == uid;
-  }
-
-  @override
-  int get hashCode {
-    return product.hashCode ^
-        color.hashCode ^
-        imageURL.hashCode ^
-        memory.hashCode ^
-        price.hashCode ^
-        quantity.hashCode ^
-        id.hashCode ^
-        uid.hashCode ^
-        ref.hashCode;
-  }
+  
 
   factory CartItem.fromJson(Map<String, dynamic> json) {
     return CartItem(
@@ -106,5 +57,58 @@ class CartItem {
       'uid': uid,
       'id': id,
     };
+  }
+
+  CartItem copyWith({
+    String? id,
+    String? uid,
+    ProductModel? product,
+    String? color,
+    String? imageURL,
+    String? memory,
+    int? price,
+    int? quantity,
+    DocumentReference? ref,
+  }) {
+    return CartItem(
+      id: id ?? this.id,
+      uid: uid ?? this.uid,
+      product: product ?? this.product,
+      color: color ?? this.color,
+      imageURL: imageURL ?? this.imageURL,
+      memory: memory ?? this.memory,
+      price: price ?? this.price,
+      quantity: quantity ?? this.quantity,
+      ref: ref ?? this.ref,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+  
+    return other is CartItem &&
+      other.id == id &&
+      other.uid == uid &&
+      other.product == product &&
+      other.color == color &&
+      other.imageURL == imageURL &&
+      other.memory == memory &&
+      other.price == price &&
+      other.quantity == quantity &&
+      other.ref == ref;
+  }
+
+  @override
+  int get hashCode {
+    return id.hashCode ^
+      uid.hashCode ^
+      product.hashCode ^
+      color.hashCode ^
+      imageURL.hashCode ^
+      memory.hashCode ^
+      price.hashCode ^
+      quantity.hashCode ^
+      ref.hashCode;
   }
 }

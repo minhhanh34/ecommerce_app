@@ -1,7 +1,9 @@
+import 'package:ecommerce_app/cubit/admin/admin_cubit.dart';
+import 'package:ecommerce_app/cubit/home/home_cubit.dart';
 import 'package:ecommerce_app/model/product_model.dart';
-import 'package:ecommerce_app/screen/product_page.dart';
 import 'package:ecommerce_app/utils/price_format.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProductWidget extends StatelessWidget {
   const ProductWidget({
@@ -13,15 +15,16 @@ class ProductWidget extends StatelessWidget {
   final bool isAdmin;
   @override
   Widget build(BuildContext context) {
+    final homeCubit = context.read<HomeCubit>();
+    final adminCubit = context.read<AdminCubit>();
     return InkWell(
-      onTap: () => Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (_) => ProductPage(
-            product: product,
-            isAdmin: isAdmin,
-          ),
-        ),
-      ),
+      onTap: () {
+        if (!isAdmin) {
+          homeCubit.onDetailProduct(product);
+          return;
+        }
+        adminCubit.onDetailProduct(product);
+      },
       child: Card(
         clipBehavior: Clip.hardEdge,
         shape: RoundedRectangleBorder(

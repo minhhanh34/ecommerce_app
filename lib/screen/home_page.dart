@@ -1,8 +1,6 @@
 import 'package:ecommerce_app/cubit/home/home_cubit.dart';
 import 'package:ecommerce_app/cubit/home/home_state.dart';
-
-import 'package:ecommerce_app/screen/cart_page.dart';
-import 'package:ecommerce_app/screen/sign_in_page.dart';
+import 'package:ecommerce_app/screen/product_page.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -55,7 +53,14 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       // drawer: const MyDrawer(),
-      body: BlocBuilder<HomeCubit, HomeState>(
+      body: BlocConsumer<HomeCubit, HomeState>(
+        listener: (context, state) {
+          if (state is ProductDetail) {
+            builder(context) => ProductPage(product: state.product);
+            final route = MaterialPageRoute(builder: builder);
+            Navigator.of(context).push(route);
+          }
+        },
         builder: (context, state) {
           if (state is InitialState) {
             context.read<HomeCubit>().mainTab();
@@ -95,152 +100,6 @@ class _HomePageState extends State<HomePage> {
   Widget buildLoading() {
     return const Center(
       child: CircularProgressIndicator(),
-    );
-  }
-}
-
-class MyDrawer extends StatelessWidget {
-  const MyDrawer({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocListener<HomeCubit, HomeState>(
-      listener: (context, state) {
-        if (state is LogoutState) {
-          Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => const SignInPage()),
-            (route) => false,
-          );
-        }
-        if (state is CheckCartState) {
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (_) => const CartPage()),
-          );
-        }
-      },
-      child: Drawer(
-        child: Column(
-          children: [
-            SizedBox(
-              width: MediaQuery.of(context).size.width,
-              child: DrawerHeader(
-                curve: Curves.easeInOut,
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    transform: GradientRotation(2),
-                    colors: [
-                      Colors.red,
-                      Colors.blue,
-                      Colors.orange,
-                    ],
-                  ),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: const [
-                    CircleAvatar(
-                      maxRadius: 40,
-                      child: FlutterLogo(size: 40),
-                    ),
-                    Text(
-                      'Minh Hanh',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1.5,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            DrawerListTile(
-              leading: Icons.home_rounded,
-              ontap: () {},
-              title: 'Trang chủ',
-              isSelected: true,
-            ),
-            DrawerListTile(
-              leading: Icons.shopping_cart_outlined,
-              ontap: () async {
-                Navigator.of(context).pop();
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const CartPage()),
-                );
-                // homeCubit.onCartTab();
-              },
-              title: 'Giỏ hàng',
-            ),
-            // const Divider(color: Colors.black),
-            DrawerListTile(
-              ontap: () {},
-              leading: Icons.border_all_rounded,
-              title: 'Tất cả sản phẩm',
-            ),
-            DrawerListTile(
-              leading: Icons.category_rounded,
-              ontap: () {},
-              title: 'Danh mục',
-            ),
-            DrawerListTile(
-              ontap: () {},
-              leading: Icons.feedback_rounded,
-              title: 'Phản hồi',
-            ),
-            DrawerListTile(
-              ontap: () {},
-              leading: Icons.info_rounded,
-              title: 'Thông tin',
-            ),
-            const Spacer(),
-            const Divider(color: Colors.black, height: 2),
-            DrawerListTile(
-              ontap: () async {
-                Navigator.of(context).pop();
-                await BlocProvider.of<HomeCubit>(context).logout();
-              },
-              title: 'Đăng xuất',
-              trailing: Icons.logout_rounded,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class DrawerListTile extends StatelessWidget {
-  const DrawerListTile({
-    Key? key,
-    this.isSelected = false,
-    this.leading,
-    required this.ontap,
-    required this.title,
-    this.trailing,
-  }) : super(key: key);
-
-  final bool isSelected;
-  final VoidCallback ontap;
-  final IconData? leading;
-  final String title;
-  final IconData? trailing;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      selected: isSelected,
-      selectedTileColor: Colors.pink.shade100,
-      selectedColor: Colors.white,
-      onTap: ontap,
-      leading: Icon(leading),
-      trailing: Icon(trailing),
-      title: Text(
-        title,
-        style: Theme.of(context).textTheme.titleLarge,
-      ),
     );
   }
 }

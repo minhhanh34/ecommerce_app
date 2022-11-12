@@ -103,71 +103,59 @@ class _AddAndEditProductScreenState extends State<AddAndEditProductScreen> {
     }
 
     //
-    nameController = TextEditingController(text: widget.product!.name);
-    priceController =
-        TextEditingController(text: widget.product!.price.toString());
-    modelController = TextEditingController(text: widget.product!.model);
-    ramController = TextEditingController(text: widget.product!.ram);
-    frontCameraController =
-        TextEditingController(text: widget.product!.fontCamera);
-    rearCameraController =
-        TextEditingController(text: widget.product!.rearCamera);
-    resolutionController =
-        TextEditingController(text: widget.product!.resolution);
-    romController = TextEditingController(text: widget.product!.rom);
-    displayController = TextEditingController(text: widget.product!.screenSize);
-    simsController = TextEditingController(text: widget.product!.sims);
-    sizeController = TextEditingController(text: widget.product!.size);
-    soldController =
-        TextEditingController(text: widget.product!.sold.toString());
-    weightController = TextEditingController(text: widget.product!.weight);
-    wifiController = TextEditingController(text: widget.product!.wifi);
+    final product = widget.product;
+    nameController = TextEditingController(text: product?.name);
+    priceController = TextEditingController(text: product?.price.toString());
+    modelController = TextEditingController(text: product?.model);
+    ramController = TextEditingController(text: product?.ram);
+    frontCameraController = TextEditingController(text: product?.fontCamera);
+    rearCameraController = TextEditingController(text: product?.rearCamera);
+    resolutionController = TextEditingController(text: product?.resolution);
+    romController = TextEditingController(text: product?.rom);
+    displayController = TextEditingController(text: product?.screenSize);
+    simsController = TextEditingController(text: product?.sims);
+    sizeController = TextEditingController(text: product?.size);
+    soldController = TextEditingController(text: product?.sold.toString());
+    weightController = TextEditingController(text: product?.weight);
+    wifiController = TextEditingController(text: product?.wifi);
     pinCapacityController =
-        TextEditingController(text: widget.product!.batteryCapacity);
-    pinTypeController =
-        TextEditingController(text: widget.product!.batteryType);
-    cpuController = TextEditingController(text: widget.product!.cpu);
-    cpuSpeedController = TextEditingController(text: widget.product!.cpuSpeed);
-    displayTypeController =
-        TextEditingController(text: widget.product!.displayType);
-    gpuController = TextEditingController(text: widget.product!.gpu);
-    gradeController =
-        TextEditingController(text: widget.product!.grade.toString());
-    url1Controller =
-        TextEditingController(text: widget.product!.imageURL['image1']);
-    url2Controller =
-        TextEditingController(text: widget.product!.imageURL['image2']);
-    url3Controller =
-        TextEditingController(text: widget.product!.imageURL['image3']);
-    url4Controller =
-        TextEditingController(text: widget.product!.imageURL['image4']);
-    url5Controller =
-        TextEditingController(text: widget.product!.imageURL['image5']);
+        TextEditingController(text: product?.batteryCapacity);
+    pinTypeController = TextEditingController(text: product?.batteryType);
+    cpuController = TextEditingController(text: product?.cpu);
+    cpuSpeedController = TextEditingController(text: product?.cpuSpeed);
+    displayTypeController = TextEditingController(text: product?.displayType);
+    gpuController = TextEditingController(text: product?.gpu);
+    gradeController = TextEditingController(text: product?.grade.toString());
+    url1Controller = TextEditingController(text: product?.imageURL['image1']);
+    url2Controller = TextEditingController(text: product?.imageURL['image2']);
+    url3Controller = TextEditingController(text: product?.imageURL['image3']);
+    url4Controller = TextEditingController(text: product?.imageURL['image4']);
+    url5Controller = TextEditingController(text: product?.imageURL['image5']);
     colorOption1Controller =
-        TextEditingController(text: widget.product!.colorOption?[0]['color']);
+        TextEditingController(text: product?.colorOption?[0]['color']);
     colorOption2Controller =
-        TextEditingController(text: widget.product!.colorOption?[1]['color']);
+        TextEditingController(text: product?.colorOption?[1]['color']);
     colorOption3Controller =
-        TextEditingController(text: widget.product!.colorOption?[2]['color']);
+        TextEditingController(text: product?.colorOption?[2]['color']);
     memoryOption1Controller =
-        TextEditingController(text: widget.product!.memoryOption?[0]['memory']);
+        TextEditingController(text: product?.memoryOption?[0]['memory']);
     memoryOption2Controller =
-        TextEditingController(text: widget.product!.memoryOption?[1]['memory']);
+        TextEditingController(text: product?.memoryOption?[1]['memory']);
     memoryOption3Controller =
-        TextEditingController(text: widget.product!.memoryOption?[2]['memory']);
-    brandController = TextEditingController(text: widget.product!.brand);
-    colorOption1UrlController = TextEditingController(
-        text: widget.product!.colorOption?[0]['imageURL']);
-    colorOption2UrlController = TextEditingController(
-        text: widget.product!.colorOption?[1]['imageURL']);
-    colorOption3UrlController = TextEditingController(
-        text: widget.product!.colorOption?[2]['imageURL']);
+        TextEditingController(text: product?.memoryOption?[2]['memory']);
+    brandController = TextEditingController(text: product?.brand);
+    colorOption1UrlController =
+        TextEditingController(text: product?.colorOption?[0]['imageURL']);
+    colorOption2UrlController =
+        TextEditingController(text: product?.colorOption?[1]['imageURL']);
+    colorOption3UrlController =
+        TextEditingController(text: product?.colorOption?[2]['imageURL']);
     memoryOption1PriceController = TextEditingController(
-        text: widget.product!.memoryOption?[0]['price'].toString());
+        text: product?.memoryOption?[0]['price'].toString());
     memoryOption2PriceController = TextEditingController(
-        text: widget.product!.memoryOption?[1]['price'].toString());
+        text: product?.memoryOption?[1]['price'].toString());
     memoryOption3PriceController = TextEditingController(
-        text: widget.product!.memoryOption?[2]['price'].toString());
+        text: product?.memoryOption?[2]['price'].toString());
   }
 
   @override

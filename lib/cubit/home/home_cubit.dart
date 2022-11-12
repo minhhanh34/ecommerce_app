@@ -34,13 +34,7 @@ class HomeCubit extends Cubit<HomeState> {
   List<OrderModel>? orders;
   List<OrderModel>? historyOrders;
   UserModel? user;
-  BannerModel? bannersData;
-
-  Brightness _brightness = Brightness.light;
-
-  Brightness get brightness => _brightness;
-
-  set toggleBrightness(Brightness brightness) => _brightness = brightness;
+  BannerModel? banners;
 
   List<String>? get favoriteProductNames =>
       favoriteProducts?.map((product) => product.name).toList();
@@ -57,9 +51,9 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 
-  void onAddProduct() {
-    emit(HomeProductAddition());
-  }
+  // void onAddProduct() {
+  //   emit(HomeProductAddition());
+  // }
 
   Future<void> favoriteRefresh() async {
     favoriteProducts = null;
@@ -77,10 +71,10 @@ class HomeCubit extends Cubit<HomeState> {
 
   Future<OrderModel> addOrder(OrderModel order) async {
     final resultOrder = await orderService.addOrder(order);
-    orders?.add(resultOrder);
+    int firstIndex = 0;
+    orders?.insert(firstIndex, resultOrder);
     return resultOrder;
   }
-
 
   Future<UserModel> userRefresh() async {
     user = null;
@@ -113,22 +107,22 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   Future<void> mainTab() async {
-    if (products == null || bannersData == null) {
+    if (products == null || banners == null) {
       emit(LoadingState());
-      bannersData = await homeService.getBanners();
+      banners = await homeService.getBanners();
       products = await homeService.getAllProducts();
       await cartCubit.getCart();
       if (navIndex == 0) {
         emit(
           MainState(
-            banners: bannersData!,
+            banners: banners!,
             products: products!,
           ),
         );
       }
     } else {
       emit(MainState(
-        banners: bannersData!,
+        banners: banners!,
         products: products!,
       ));
     }
@@ -136,7 +130,7 @@ class HomeCubit extends Cubit<HomeState> {
 
   Future<void> mainRefresh() async {
     products = null;
-    bannersData = null;
+    banners = null;
     mainTab();
   }
 
@@ -146,8 +140,9 @@ class HomeCubit extends Cubit<HomeState> {
       final spref = await SharedPreferences.getInstance();
       final uid = spref.getString('uid');
       orders = await homeService.getOrderProducts(uid!);
-      orders?.removeWhere(
-          (order) => order.status.toLowerCase() == 'đã giao hàng');
+      orders
+        ?..removeWhere((order) => order.status.toLowerCase() == 'đã giao hàng')
+        ..sort((a, b) => b.date.compareTo(a.date));
       if (navIndex == 2) {
         emit(OrderState(orders!));
       }
@@ -196,7 +191,7 @@ class HomeCubit extends Cubit<HomeState> {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.remove('uid');
-      bannersData = null;
+      banners = null;
       products = null;
       favoriteProducts = null;
       orders = null;
@@ -212,6 +207,7 @@ class HomeCubit extends Cubit<HomeState> {
 
   void onDetailProduct(ProductModel product) {
     emit(ProductDetail(product));
+    emit(MainState(banners: banners!, products: products!));
   }
 
   void onCartTab() {
@@ -261,5 +257,22 @@ class HomeCubit extends Cubit<HomeState> {
   void onAllProduct() async {
     products ??= await homeService.getAllProducts();
     emit(AllProducts(products!));
+  }
+
+  void productsByBrand(String brand) {
+    final productsByBrand = products
+        ?.where((product) =>
+            product.name.toLowerCase().contains(brand.toLowerCase()))
+        .toList();
+
+    emit(ProductsByBrand(productsByBrand ?? [], brand));
+    emit(MainState(banners: banners!, products: products!));
+  }
+
+  void onAvatarView(UserModel user) {
+    emit(AvatarView(user));
+    int accountTab = 4;
+    navIndex = accountTab;
+    emit(AccountState(user));
   }
 }

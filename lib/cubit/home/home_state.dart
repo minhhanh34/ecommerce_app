@@ -64,9 +64,20 @@ class Nav extends HomeState {
 
 class GoToTopScreen extends HomeState {}
 
-class HomeProductAddition extends HomeState {}
+// class HomeProductAddition extends HomeState {}
 
-class AllProducts extends HomeState{
+class AllProducts extends HomeState {
   final List<ProductModel> products;
   AllProducts(this.products);
+}
+
+class ProductsByBrand extends HomeState {
+  final List<ProductModel> products;
+  final String brand;
+  ProductsByBrand(this.products, this.brand);
+}
+
+class AvatarView extends HomeState {
+  final UserModel user;
+  AvatarView(this.user);
 }

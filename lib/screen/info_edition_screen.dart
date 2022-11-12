@@ -1,6 +1,11 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ecommerce_app/model/user_model.dart';
+import 'package:ecommerce_app/utils/generator.dart';
 import 'package:ecommerce_app/utils/libs.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 class InfoEditionScreen extends StatefulWidget {
@@ -10,6 +15,8 @@ class InfoEditionScreen extends StatefulWidget {
   State<InfoEditionScreen> createState() => _InfoEditionScreenState();
 }
 
+enum AvatarType { display, update }
+
 class _InfoEditionScreenState extends State<InfoEditionScreen> {
   final formKey = GlobalKey<FormState>();
   late TextEditingController nameController;
@@ -18,6 +25,8 @@ class _InfoEditionScreenState extends State<InfoEditionScreen> {
   late TextEditingController mailController;
   late TextEditingController genderController;
   late TextEditingController dateController;
+  Image? image;
+  File? file;
 
   @override
   void initState() {
@@ -44,9 +53,21 @@ class _InfoEditionScreenState extends State<InfoEditionScreen> {
     super.dispose();
   }
 
+  final maleAvatarUrl =
+      'https://firebasestorage.googleapis.com/v0/b/ecommerce-app-f4334.appspot.com/o/avatars%2Fmale-avatar.png?alt=media&token=2ab2c77e-4254-40e0-82b2-49132c1420ca';
+  final femaleAvatarUrl =
+      'https://firebasestorage.googleapis.com/v0/b/ecommerce-app-f4334.appspot.com/o/avatars%2Ffemale-avatar.png?alt=media&token=8888de2c-5332-41c9-91ec-dbfd455adf6d';
+
+  String getAvatarUrl(UserModel user) {
+    if (user.url != null) return user.url!;
+    if (user.gender?.toLowerCase() == 'nam') return maleAvatarUrl;
+    return femaleAvatarUrl;
+  }
+
   @override
   Widget build(BuildContext context) {
     final nav = Navigator.of(context);
+    final homeCubit = context.read<HomeCubit>();
     return Scaffold(
       backgroundColor: Colors.blue.shade100,
       body: SafeArea(
@@ -84,8 +105,8 @@ class _InfoEditionScreenState extends State<InfoEditionScreen> {
                   top: 40.0,
                   left: 16.0,
                   child: InkWell(
-                    onTap: () {
-                      showModalBottomSheet(
+                    onTap: () async {
+                      final type = await showModalBottomSheet<AvatarType>(
                         context: context,
                         backgroundColor: Colors.white,
                         constraints: BoxConstraints(
@@ -95,39 +116,40 @@ class _InfoEditionScreenState extends State<InfoEditionScreen> {
                           return ListView(
                             children: [
                               ListTile(
-                                onTap: () {
-                                  print('update avatar');
-                                },
+                                onTap: () => nav.pop(AvatarType.update),
                                 title: const Text('Ảnh đại diện mới'),
                               ),
                               ListTile(
-                                onTap: () {
-                                  print('show avatar');
-                                },
+                                onTap: () => nav.pop(AvatarType.display),
                                 title: const Text('Xem ảnh đại diện'),
                               ),
                             ],
                           );
                         },
                       );
+                      if (type == AvatarType.display) {
+                        homeCubit.onAvatarView(widget.user);
+                        return;
+                      }
+                      final imagePicker = ImagePicker();
+                      final xfile = await imagePicker.pickImage(
+                        source: ImageSource.gallery,
+                      );
+                      file = File(xfile!.path);
+                      image = Image.file(file!);
+                      setState(() {});
                     },
-                    child: CircleAvatar(
-                      radius: 40.0,
-                      child: widget.user.url != null
-                          ? ClipRRect(
-                              borderRadius: BorderRadius.circular(100.0),
-                              child: AspectRatio(
-                                aspectRatio: 1,
-                                child: CachedNetworkImage(
-                                  fit: BoxFit.fill,
-                                  imageUrl: widget.user.url!,
-                                  placeholder: (context, url) => Container(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            )
-                          : const FlutterLogo(size: 50),
+                    child: Hero(
+                      tag: widget.user.name,
+                      child: CircleAvatar(
+                        backgroundColor: Colors.white,
+                        radius: 40.0,
+                        backgroundImage: image == null
+                            ? CachedNetworkImageProvider(
+                                getAvatarUrl(widget.user),
+                              )
+                            : image!.image,
+                      ),
                     ),
                   ),
                 ),
@@ -178,16 +200,24 @@ class _InfoEditionScreenState extends State<InfoEditionScreen> {
                             if (!isValidate) return;
 
                             final homeCubit = context.read<HomeCubit>();
+                            // await FirebaseStorage.instance.ref(widget.user.url).delete();
+                            final ref =
+                                FirebaseStorage.instance.ref().child('avatars');
+                            await ref
+                                .child(Generator.generateString())
+                                .putFile(file!);
+                            final url = await ref.getDownloadURL();
                             final upUser = widget.user.copyWith(
-                              address: addressController.text,
-                              birthDay: DateFormat('dd/MM/yyyy')
-                                  .parse(dateController.text),
-                              email: mailController.text,
-                              gender: genderController.text,
-                              name: nameController.text,
-                              phone: phoneController.text,
-                              password: widget.user.password
-                            );
+                                address: addressController.text,
+                                birthDay: DateFormat('dd/MM/yyyy')
+                                    .parse(dateController.text),
+                                email: mailController.text,
+                                gender: genderController.text,
+                                name: nameController.text,
+                                phone: phoneController.text,
+                                url: url,
+                                password: widget.user.password);
+                            if (!mounted) return;
                             bool confirm = await showAlertDialog(
                                     context,
                                     'Xác nhận',
@@ -358,7 +388,7 @@ class __HeadNameState extends State<_HeadName> {
       children: [
         isEditingName
             ? SizedBox(
-                width: 120.0,
+                width: 240.0,
                 child: TextFormField(
                   controller: widget.nameController,
                   decoration: const InputDecoration(

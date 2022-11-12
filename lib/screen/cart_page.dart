@@ -40,6 +40,9 @@ class _CartPageState extends State<CartPage> {
 
   @override
   Widget build(BuildContext context) {
+    final homeCubit = context.read<HomeCubit>();
+    final cartCubit = context.read<CartCubit>();
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
     return Scaffold(
       backgroundColor: Colors.blue.shade100,
       //drawer: MyDrawer(homeCubit: context.read<HomeCubit>()),
@@ -52,6 +55,9 @@ class _CartPageState extends State<CartPage> {
         builder: (context, state) {
           if (state is CartInitial) {
             context.read<CartCubit>().getCart();
+            return buildLoading();
+          }
+          if (state is CartLoading) {
             return buildLoading();
           }
           if (state is CartLoaded) {
@@ -78,11 +84,12 @@ class _CartPageState extends State<CartPage> {
             }
             return Column(
               children: [
+                const SizedBox(height: 8.0),
                 Expanded(
                   child: RefreshIndicator(
                     onRefresh: () async => context.read<CartCubit>().refresh(),
                     child: ListView.builder(
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       itemCount: state.items.length,
                       itemBuilder: (context, index) {
                         return CartListTile(state.items[index]);
@@ -90,7 +97,7 @@ class _CartPageState extends State<CartPage> {
                     ),
                   ),
                 ),
-                const Divider(color: Colors.white),
+                // const Divider(color: Colors.white),
                 SizedBox(
                   width: double.infinity,
                   height: 56.0,
@@ -111,18 +118,19 @@ class _CartPageState extends State<CartPage> {
                           bool confirm = await showDialog(
                             context: context,
                             builder: (context) {
-                              return const CustomAlertDialog(
+                              return CustomAlertDialog(
                                 title: 'Xác nhận',
-                                content: 'Xác nhận đặt hàng?',
+                                content:
+                                    'Xác nhận đặt ${state.items.length} sản phẩm',
                               );
                             },
                           );
                           if (!confirm) return;
+                          cartCubit.onOrdering();
                           final spref = await SharedPreferences.getInstance();
                           final uid = spref.getString('uid');
-                          if (!mounted) return;
-                          final user = context.read<HomeCubit>().user ??=
-                              await context.read<HomeCubit>().getUserInfo(uid!);
+                          final user = homeCubit.user ??=
+                              await homeCubit.getUserInfo(uid!);
                           final order = OrderModel(
                             uid: state.items[0].uid,
                             order: state.items
@@ -134,12 +142,9 @@ class _CartPageState extends State<CartPage> {
                             address: user.address,
                             recipient: user.name,
                           );
-                          if (!mounted) return;
-                          await context.read<HomeCubit>().addOrder(order);
-                          if (!mounted) return;
-                          await context.read<CartCubit>().removeAllCartItem();
-                          if (!mounted) return;
-                          ScaffoldMessenger.of(context)
+                          await homeCubit.addOrder(order);
+                          await cartCubit.removeAllCartItem();
+                          scaffoldMessenger
                             ..hideCurrentSnackBar()
                             ..showSnackBar(
                               SnackBar(
@@ -147,10 +152,13 @@ class _CartPageState extends State<CartPage> {
                                 action: SnackBarAction(
                                   label: 'Xem đơn hàng',
                                   onPressed: () {
-                                    Navigator.of(context).pushReplacement(
+                                    ScaffoldMessenger.of(context)
+                                        .hideCurrentSnackBar();
+                                    Navigator.of(context).pushAndRemoveUntil(
                                       MaterialPageRoute(
                                         builder: (_) => const HomePage(),
                                       ),
+                                      (_) => false,
                                     );
                                     int orderTabIndex = 2;
                                     context

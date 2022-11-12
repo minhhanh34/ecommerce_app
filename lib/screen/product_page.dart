@@ -33,6 +33,7 @@ class _ProductPageState extends State<ProductPage> {
   // int currentPage = 1;
   // late bool isFavorite;
   // late List<ProductModel> sameProducts;
+  bool loadingBottomSheet = false;
   int selectColor = 0;
   int selectMemory = 0;
   int quantity = 1;
@@ -81,10 +82,11 @@ class _ProductPageState extends State<ProductPage> {
   }
 
   void goToOrder() {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     final homeCubit = context.read<HomeCubit>();
     int orderTabIndex = 2;
     final route = MaterialPageRoute(builder: (_) => const HomePage());
-    Navigator.of(context).pushReplacement(route);
+    Navigator.of(context).pushAndRemoveUntil(route, (_) => false);
     homeCubit.onNavTap(orderTabIndex);
   }
 
@@ -98,6 +100,11 @@ class _ProductPageState extends State<ProductPage> {
       enableDrag: false,
       (context) {
         final homeCubit = context.read<HomeCubit>();
+        final cartCubit = context.read<CartCubit>();
+        final scaffoldMessenger = ScaffoldMessenger.of(context);
+        if (loadingBottomSheet) {
+          return const Center(child: CircularProgressIndicator());
+        }
         return Column(
           children: [
             ListTile(
@@ -274,9 +281,10 @@ class _ProductPageState extends State<ProductPage> {
                 width: MediaQuery.of(context).size.width * 0.8,
                 child: ElevatedButton(
                   onPressed: () async {
+                    _controller.setState!(() => loadingBottomSheet = true);
+                    final spref = await SharedPreferences.getInstance();
+                    final uid = spref.getString('uid');
                     if (typeClick == TypeClick.addToCart) {
-                      final spref = await SharedPreferences.getInstance();
-                      final uid = spref.getString('uid');
                       final ref = await ProductRepository()
                           .getQueryDocumentSnapshot(widget.product.name);
                       final cartItem = CartItem(
@@ -293,12 +301,9 @@ class _ProductPageState extends State<ProductPage> {
                         quantity: quantity,
                         ref: ref.reference,
                       );
-                      if (!mounted) return;
-                      final result =
-                          await context.read<CartCubit>().addItem(cartItem);
+                      final result = await cartCubit.addItem(cartItem);
                       if (result) {
-                        if (!mounted) return;
-                        ScaffoldMessenger.of(context)
+                        scaffoldMessenger
                           ..hideCurrentSnackBar()
                           ..showSnackBar(
                             const SnackBar(
@@ -306,7 +311,7 @@ class _ProductPageState extends State<ProductPage> {
                           );
                       } else {
                         if (!mounted) return;
-                        ScaffoldMessenger.of(context)
+                        scaffoldMessenger
                           ..hideCurrentSnackBar()
                           ..showSnackBar(
                             const SnackBar(
@@ -315,8 +320,6 @@ class _ProductPageState extends State<ProductPage> {
                           );
                       }
                     } else {
-                      final spref = await SharedPreferences.getInstance();
-                      final uid = spref.getString('uid');
                       final querySnapshot =
                           await (homeCubit.homeService as HomeServiceIml)
                               .productService
@@ -347,10 +350,8 @@ class _ProductPageState extends State<ProductPage> {
                         status: 'Chờ xác nhận',
                         address: '',
                       );
-                      if (!mounted) return;
-                      await context.read<HomeCubit>().addOrder(order);
-                      if (!mounted) return;
-                      ScaffoldMessenger.of(context)
+                      await homeCubit.addOrder(order);
+                      scaffoldMessenger
                         ..hideCurrentSnackBar()
                         ..showSnackBar(
                           SnackBar(
@@ -365,8 +366,10 @@ class _ProductPageState extends State<ProductPage> {
                     _controller.close();
                     await Future.delayed(const Duration(milliseconds: 175));
                     setState(() {
+                      loadingBottomSheet = false;
                       navVisible = true;
                     });
+                    homeCubit.mainTab();
                   },
                   child: const Text('Ok'),
                 ),
@@ -394,12 +397,11 @@ class _ProductPageState extends State<ProductPage> {
               if (widget.isAdmin) {
                 return ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) =>
-                            AddAndEditProductScreen(product: widget.product),
-                      ),
-                    );
+                    builder(context) => AddAndEditProductScreen(
+                          product: widget.product,
+                        );
+                    final route = MaterialPageRoute(builder: builder);
+                    Navigator.of(context).push(route);
                   },
                   child: const Text('Cập nhật sản phẩm'),
                 );
@@ -704,6 +706,7 @@ class _ImageSlidableState extends State<ImageSlidable> {
 
   @override
   Widget build(BuildContext context) {
+    final homeCubit = context.read<HomeCubit>();
     return AspectRatio(
       aspectRatio: 1.5,
       child: Stack(
@@ -752,9 +755,9 @@ class _ImageSlidableState extends State<ImageSlidable> {
                         .read<HomeCubit>()
                         .removeFavoriteProduct(widget.product);
                   } else {
-                    context.read<HomeCubit>().addFavoriteProduct(
-                          widget.product,
-                        );
+                    homeCubit.addFavoriteProduct(
+                      widget.product,
+                    );
                   }
                   setState(() {
                     isFavorite = !isFavorite;

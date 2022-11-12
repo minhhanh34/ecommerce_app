@@ -16,3 +16,17 @@ class AdminFinishedOrders extends AdminState {
 }
 
 class AdminLoading extends AdminState {}
+
+class AdminLogout extends AdminState {}
+
+class AdminAllProducts extends AdminState {
+  final List<ProductModel> products;
+  AdminAllProducts(this.products);
+}
+
+class AdminProductAddition extends AdminState {}
+
+class AdminDetailProduct extends AdminState {
+  final ProductModel product;
+  AdminDetailProduct(this.product);
+}

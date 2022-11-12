@@ -9,7 +9,8 @@ import '../widgets/products_catalog.dart';
 import '../model/product_model.dart';
 import 'banner.dart';
 import 'header_row.dart';
-import 'product_grid_tile.dart';
+import 'product_by_brand.dart';
+import 'product_sliver_grid_overview.dart';
 
 class HomeContainer extends StatefulWidget {
   const HomeContainer({Key? key, required this.banners, required this.products})
@@ -72,6 +73,11 @@ class _HomeContainerState extends State<HomeContainer> {
             curve: Curves.easeInQuad,
           );
         }
+        if (state is ProductsByBrand) {
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (_) => ProductsByBrandScreen(state.products, state.brand),
+          ));
+        }
       },
       child: RefreshIndicator(
         onRefresh: () => context.read<HomeCubit>().mainRefresh(),
@@ -85,31 +91,6 @@ class _HomeContainerState extends State<HomeContainer> {
           ],
         ),
       ),
-    );
-  }
-}
-
-class ProductSliverGridOverview extends StatelessWidget {
-  const ProductSliverGridOverview({
-    Key? key,
-    required this.products,
-    this.isAdmin = false,
-  }) : super(key: key);
-
-  final List<ProductModel> products;
-  final bool isAdmin;
-  @override
-  Widget build(BuildContext context) {
-    return SliverGrid(
-      delegate: SliverChildBuilderDelegate(
-        childCount: products.length,
-        (context, index) => ProductWidget(
-          product: products[index],
-          isAdmin: isAdmin,
-        ),
-      ),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2, mainAxisExtent: 250.0),
     );
   }
 }

@@ -1,10 +1,12 @@
 import 'package:ecommerce_app/model/product_model.dart';
-import 'package:ecommerce_app/widgets/home_container.dart';
 import 'package:flutter/material.dart';
 
+import '../widgets/product_sliver_grid_overview.dart';
+
 class ProductOverviewScreen extends StatelessWidget {
-  const ProductOverviewScreen(this.products, {super.key});
+  const ProductOverviewScreen(this.products, {super.key, this.isAdmin = false});
   final List<ProductModel> products;
+  final bool isAdmin;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -15,7 +17,7 @@ class ProductOverviewScreen extends StatelessWidget {
             title: Text('Tất cả sản phẩm'),
             floating: true,
           ),
-          ProductSliverGridOverview(products: products, isAdmin: true),
+          ProductSliverGridOverview(products: products, isAdmin: isAdmin),
         ],
       ),
     );

@@ -11,8 +11,8 @@ class CartCubit extends Cubit<CartState> {
   CartCubit({
     required this.service,
   }) : super(CartInitial());
-  CartService service;
 
+  CartService service;
   List<CartItem>? cartItems;
 
   Future<void> getCart() async {
@@ -37,8 +37,15 @@ class CartCubit extends Cubit<CartState> {
       final uid = pfres.getString('uid');
       cartItems = await service.getCart(userId: uid!);
     }
-    if (cartItems!.contains(item)) return false;
+    //check duplicate
     await item.build();
+    for (var element in cartItems!) {
+      if (element.color == item.color &&
+          element.memory == item.memory &&
+          element.product!.name == item.product!.name) {
+        return false;
+      }
+    }
     cartItems!.add(item);
     await service.addCartItem(item);
     emit(CartLoaded(items: cartItems!));
@@ -53,10 +60,10 @@ class CartCubit extends Cubit<CartState> {
 
   Future<void> removeAllCartItem() async {
     if (cartItems == null) return;
-    emit(CartLoading());
     for (var item in cartItems!) {
-      removeItem(item);
+      await service.removeItem(item);
     }
+    cartItems?.clear();
     emit(CartLoaded(items: cartItems!));
   }
 
@@ -74,5 +81,9 @@ class CartCubit extends Cubit<CartState> {
     await service.update(item.id, item);
     getCart();
     return true;
+  }
+
+  void onOrdering() {
+    emit(CartLoading());
   }
 }
