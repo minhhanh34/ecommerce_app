@@ -65,7 +65,7 @@ class _ProductPageState extends State<ProductPage> {
       selectColor = i;
       imageOption = CachedNetworkImage(
         fit: BoxFit.cover,
-        imageUrl: widget.product.colorOption![i]['imageURL'],
+        imageUrl: widget.product.colorOption[i]['imageURL'],
         placeholder: (context, url) {
           return Container(
             decoration: BoxDecoration(
@@ -136,9 +136,8 @@ class _ProductPageState extends State<ProductPage> {
                       title: Text(widget.product.name),
                       subtitle: Text(
                         PriceHealper.format(
-                          (widget.product.memoryOption != null &&
-                                  widget.product.memoryOption!.isNotEmpty)
-                              ? widget.product.memoryOption![selectMemory]
+                          (widget.product.memoryOption.isNotEmpty)
+                              ? widget.product.memoryOption[selectMemory]
                                   ['price']
                               : widget.product.price,
                         ),
@@ -147,8 +146,7 @@ class _ProductPageState extends State<ProductPage> {
                       ),
                     ),
                     Visibility(
-                      visible: widget.product.colorOption != null &&
-                          widget.product.colorOption!.isNotEmpty,
+                      visible: widget.product.colorOption.isNotEmpty,
                       child: ListTile(
                         leading: const Padding(
                           padding: EdgeInsets.only(top: 4.0),
@@ -157,7 +155,7 @@ class _ProductPageState extends State<ProductPage> {
                         title: Row(
                           children: [
                             for (int i = 0;
-                                i < (widget.product.colorOption?.length ?? 0);
+                                i < (widget.product.colorOption.length);
                                 i++)
                               InkWell(
                                 onTap: () {
@@ -174,7 +172,7 @@ class _ProductPageState extends State<ProductPage> {
                                       radius: 12,
                                       backgroundColor: Color(
                                         int.parse(
-                                          widget.product.colorOption![i]
+                                          widget.product.colorOption[i]
                                               ['color'],
                                         ),
                                       ),
@@ -187,8 +185,7 @@ class _ProductPageState extends State<ProductPage> {
                       ),
                     ),
                     Visibility(
-                      visible: widget.product.memoryOption != null &&
-                          widget.product.memoryOption!.isNotEmpty,
+                      visible: widget.product.memoryOption.isNotEmpty,
                       child: ListTile(
                         leading: const Padding(
                           padding: EdgeInsets.only(top: 12.0),
@@ -197,7 +194,7 @@ class _ProductPageState extends State<ProductPage> {
                         title: Wrap(
                           children: [
                             for (int i = 0;
-                                i < (widget.product.memoryOption?.length ?? 0);
+                                i < (widget.product.memoryOption.length);
                                 i++)
                               InkWell(
                                 onTap: () {
@@ -211,7 +208,7 @@ class _ProductPageState extends State<ProductPage> {
                                     backgroundColor: selectMemory == i
                                         ? Colors.blue.shade100
                                         : Colors.white,
-                                    label: Text(widget.product.memoryOption![i]
+                                    label: Text(widget.product.memoryOption[i]
                                         ['memory']),
                                   ),
                                 ),
@@ -259,9 +256,8 @@ class _ProductPageState extends State<ProductPage> {
                       leading: const Text('Tổng cộng:'),
                       title: Text(
                         PriceHealper.format(
-                          (widget.product.memoryOption != null &&
-                                  widget.product.memoryOption!.isNotEmpty)
-                              ? (widget.product.memoryOption![selectMemory]
+                          (widget.product.memoryOption.isNotEmpty)
+                              ? (widget.product.memoryOption[selectMemory]
                                       ['price'] *
                                   quantity)
                               : (widget.product.price * quantity),
@@ -290,13 +286,12 @@ class _ProductPageState extends State<ProductPage> {
                       final cartItem = CartItem(
                         id: Generator.generateString(),
                         uid: uid!,
-                        color: widget.product.colorOption![selectColor]
-                            ['color'],
-                        imageURL: widget.product.colorOption![selectColor]
+                        color: widget.product.colorOption[selectColor]['color'],
+                        imageURL: widget.product.colorOption[selectColor]
                             ['imageURL'],
-                        memory: widget.product.memoryOption![selectMemory]
+                        memory: widget.product.memoryOption[selectMemory]
                             ['memory'],
-                        price: widget.product.memoryOption![selectMemory]
+                        price: widget.product.memoryOption[selectMemory]
                             ['price'],
                         quantity: quantity,
                         ref: ref.reference,
@@ -333,14 +328,14 @@ class _ProductPageState extends State<ProductPage> {
                         uid: uid!,
                         order: [
                           {
-                            'color': widget.product.colorOption![selectColor]
+                            'color': widget.product.colorOption[selectColor]
                                 ['color'],
-                            'memory': widget.product.memoryOption![selectMemory]
+                            'memory': widget.product.memoryOption[selectMemory]
                                 ['memory'],
                             'quantity': quantity,
-                            'imageURL': widget.product.colorOption![selectColor]
+                            'imageURL': widget.product.colorOption[selectColor]
                                 ['imageURL'],
-                            'price': widget.product.memoryOption![selectMemory]
+                            'price': widget.product.memoryOption[selectMemory]
                                 ['price'],
                             'ref': ref,
                           }
@@ -503,50 +498,47 @@ class _ProductPageState extends State<ProductPage> {
             ),
           ),
           Visibility(
-            visible: widget.product.colorOption != null &&
-                widget.product.colorOption!.isNotEmpty,
+            visible: widget.product.colorOption.isNotEmpty,
             child: Column(
               children: [
                 HeaderRow(title: 'Tùy chọn màu'),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: widget.product.colorOption?.map(
-                        (option) {
-                          return Container(
-                            margin:
-                                const EdgeInsets.symmetric(horizontal: 12.0),
-                            width: 30,
-                            height: 30,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Color(int.parse(option['color'])),
-                            ),
-                          );
-                        },
-                      ).toList() ??
-                      [],
+                  children: widget.product.colorOption.map(
+                    (option) {
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: CircleAvatar(
+                          radius: 15.0,
+                          backgroundColor: Colors.black,
+                          child: CircleAvatar(
+                            radius: 14.0,
+                            backgroundColor: Color(int.parse(option['color'])),
+                          ),
+                        ),
+                      );
+                    },
+                  ).toList(),
                 ),
               ],
             ),
           ),
           Visibility(
-            visible: widget.product.memoryOption != null &&
-                widget.product.memoryOption!.isNotEmpty,
+            visible: widget.product.memoryOption.isNotEmpty,
             child: Column(
               children: [
                 HeaderRow(title: 'Tùy chọn bộ nhớ'),
                 Wrap(
                   alignment: WrapAlignment.center,
-                  children: widget.product.memoryOption?.map((memory) {
-                        return Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: Chip(
-                            backgroundColor: Colors.white,
-                            label: Text(memory['memory']),
-                          ),
-                        );
-                      }).toList() ??
-                      [],
+                  children: widget.product.memoryOption.map((memory) {
+                    return Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Chip(
+                        backgroundColor: Colors.white,
+                        label: Text(memory['memory']),
+                      ),
+                    );
+                  }).toList(),
                 ),
               ],
             ),

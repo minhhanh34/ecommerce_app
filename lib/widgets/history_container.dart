@@ -61,7 +61,13 @@ class _HistoryContainerState extends State<HistoryContainer> {
                           for (var order in orders)
                             ListTile(
                               // contentPadding: EdgeInsets.zero,
-                              leading: order['product'].images['image1'],
+                              leading: ConstrainedBox(
+                                constraints: const BoxConstraints(
+                                  maxWidth: 80.0,
+                                  maxHeight: 80.0,
+                                ),
+                                child: order['product'].images['image1'],
+                              ),
                               title: Padding(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 8.0),

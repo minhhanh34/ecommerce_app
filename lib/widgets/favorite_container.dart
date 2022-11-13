@@ -146,11 +146,11 @@ class _FavoriteProductContainerState extends State<FavoriteProductContainer> {
                                   final cartItem = CartItem(
                                     id: Generator.generateString(),
                                     uid: uid!,
-                                    color: product.colorOption![0]['color'],
-                                    imageURL: product.colorOption![0]
+                                    color: product.colorOption[0]['color'],
+                                    imageURL: product.colorOption[0]
                                         ['imageURL'],
-                                    memory: product.memoryOption![0]['memory'],
-                                    price: product.memoryOption![0]['price'],
+                                    memory: product.memoryOption[0]['memory'],
+                                    price: product.memoryOption[0]['price'],
                                     quantity: 1,
                                     ref: ref.reference,
                                   );

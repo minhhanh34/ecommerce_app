@@ -12,8 +12,8 @@ class ProductModel {
   int price;
   int grade;
   int sold;
-  List<Map<String, dynamic>>? colorOption;
-  List<Map<String, dynamic>>? memoryOption;
+  List<Map<String, dynamic>> colorOption;
+  List<Map<String, dynamic>> memoryOption;
   String? screenSize;
   String? resolution;
   String? brand;
@@ -37,10 +37,10 @@ class ProductModel {
     required this.name,
     required this.imageURL,
     required this.price,
+    required this.memoryOption,
+    required this.colorOption,
     this.grade = 0,
     this.sold = 0,
-    this.colorOption,
-    this.memoryOption,
     this.screenSize,
     this.resolution,
     this.brand,

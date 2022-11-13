@@ -12,6 +12,12 @@ ProductModel _$ProductModelFromJson(Map<String, dynamic> json) => ProductModel(
       price: json['price'] as int,
       grade: json['grade'] as int? ?? 0,
       sold: json['sold'] as int? ?? 0,
+      colorOption: (json['colorOption'] as List)
+          .map((option) => option as Map<String, dynamic>)
+          .toList(),
+      memoryOption: (json['memoryOption'] as List)
+          .map((option) => option as Map<String, dynamic>)
+          .toList(),
     )
       ..screenSize = json['screenSize'] as String?
       ..resolution = json['resolution'] as String?
@@ -30,13 +36,7 @@ ProductModel _$ProductModelFromJson(Map<String, dynamic> json) => ProductModel(
       ..weight = json['weight'] as String?
       ..ram = json['ram'] as String?
       ..rom = json['rom'] as String?
-      ..wifi = json['wifi'] as String?
-      ..colorOption = (json['colorOption'] as List?)
-          ?.map((option) => option as Map<String, dynamic>)
-          .toList()
-      ..memoryOption = (json['memoryOption'] as List?)
-          ?.map((option) => option as Map<String, dynamic>)
-          .toList();
+      ..wifi = json['wifi'] as String?;
 
 Map<String, dynamic> _$ProductModelToJson(ProductModel instance) =>
     <String, dynamic>{

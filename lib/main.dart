@@ -14,38 +14,6 @@ void main() async {
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   final spref = await SharedPreferences.getInstance();
   String? uid = spref.getString('uid');
-  // await spref.remove('uid');
-  // final service = OrderServiceIml(OrderRepository(), ProductRepository());
-  // final orderRepository = OrderRepository();
-  // // final docs = await service.getUserOrder('fec245c1f9');
-  // final orderModel = OrderModel(
-  //   uid: 'fec245c1f9',
-  //   order: <Map<String, dynamic>>[
-  //     {
-  //       'color': '0xFFFF0000',
-  //       'memory': '4GB - 64GB',
-  //       'quantity': 1,
-  //       'ref': FirebaseFirestore.instance
-  //           .collection('products')
-  //           .doc('xiaomi12pro'),
-  //     }
-  //   ],
-  //   date: DateTime.now(),
-  //   id: '',
-  //   status: 'Chờ xác nhận',
-  // );
-  // // await orderRepository.create(orderModel);
-  // print(uid!);
-  // final service = HistoryServiceIml(HistoryRepository(), ProductRepository());
-  // final historyOrders = await service.getHistoryOrders(uid!);
-  // final orderRepository = OrderRepository();
-  // final order = await orderRepository.getOne('aShagOpITyPvbqMFaYgt');
-  // final orderService = OrderServiceIml(OrderRepository(), ProductRepository());
-  // final adminCubit = AdminCubit(
-  //     productService: ProductServiceIml(ProductRepository()),
-  //     orderService: orderService);
-  // adminCubit.updateOrder(order.copyWith(status: 'da giao hang'));
-
   runApp(EcommerceApp(uid: uid));
 }
 
@@ -121,31 +89,3 @@ class EcommerceApp extends StatelessWidget {
   }
 }
 
-// home
-// uid == null ? const SignInPage() : const HomePage()
-
-
-// update order status
-/*
-  FutureBuilder<List<OrderModel>>(
-          future: HomeCubit(
-            orderService: OrderServiceIml(
-              OrderRepository(),
-              ProductRepository(),
-            ),
-            homeService: HomeServiceIml(),
-            cartCubit: cartCubit,
-            favoriteService: FavoriteServiceIml(
-              FavoriteRepository(),
-              ProductRepository(),
-            ),
-            userService: UserServiceIml(UserRepository()),
-          ).homeService.getOrderProducts('b9e8be1c2f'),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              return OrdersScreen(snapshot.data!);
-            }
-            return const CircularProgressIndicator();
-          },
-        )
- */ 

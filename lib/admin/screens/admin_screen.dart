@@ -3,6 +3,7 @@ import 'package:ecommerce_app/admin/screens/orders_screen.dart';
 import 'package:ecommerce_app/cubit/admin/admin_cubit.dart';
 import 'package:ecommerce_app/screen/product_page.dart';
 import 'package:ecommerce_app/screen/sign_in_page.dart';
+import 'package:ecommerce_app/utils/alert_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -15,7 +16,8 @@ class AdminScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final adminCubit = context.read<AdminCubit>();
     return BlocConsumer<AdminCubit, AdminState>(
-      listener: (context, state) {
+      listener: (context, state) async {
+        final navigator = Navigator.of(context);
         if (state is AdminProgressOrders) {
           final route = MaterialPageRoute(
             builder: (_) => OrdersScreen(
@@ -38,7 +40,7 @@ class AdminScreen extends StatelessWidget {
         }
         if (state is AdminLogout) {
           final route = MaterialPageRoute(builder: (_) => const SignInPage());
-          Navigator.of(context).pushAndRemoveUntil(route, (route) => false);
+          navigator.pushAndRemoveUntil(route, (route) => false);
         }
         if (state is AdminAllProducts) {
           builder(context) => ProductOverviewScreen(
@@ -46,10 +48,10 @@ class AdminScreen extends StatelessWidget {
                 isAdmin: true,
               );
           final route = MaterialPageRoute(builder: builder);
-          Navigator.of(context).push(route);
+          navigator.push(route);
         }
         if (state is AdminProductAddition) {
-          Navigator.of(context).push(
+          navigator.push(
             MaterialPageRoute(
               builder: (_) => const AddAndEditProductScreen(),
             ),
@@ -61,7 +63,7 @@ class AdminScreen extends StatelessWidget {
                 isAdmin: true,
               );
           final route = MaterialPageRoute(builder: builder);
-          Navigator.of(context).push(route);
+          navigator.push(route);
         }
       },
       builder: (context, state) {
@@ -92,7 +94,18 @@ class AdminScreen extends StatelessWidget {
                     child: const Text('Đơn hàng'),
                   ),
                   ElevatedButton(
-                    onPressed: () => context.read<AdminCubit>().logout(),
+                    onPressed: () async {
+                      builder(context) => const CustomAlertDialog(
+                            title: 'Đăng xuất',
+                            content: 'Bạn có chắc muốn đăng xuất?',
+                          );
+                      bool confirm = await showDialog(
+                        context: context,
+                        builder: builder,
+                      );
+                      if (!confirm) return;
+                      adminCubit.logout();
+                    },
                     child: const Text('logout'),
                   ),
                   ElevatedButton(
