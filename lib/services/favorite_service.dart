@@ -45,3 +45,5 @@ class FavoriteServiceIml implements FavoriteService {
     return await favoriteRepository.update(cartQuery.id, favoriteModel);
   }
 }
+
+

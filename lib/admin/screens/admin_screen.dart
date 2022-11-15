@@ -1,4 +1,4 @@
-import 'package:ecommerce_app/admin/screens/add_and_edit_product_screen.dart';
+import 'package:ecommerce_app/admin/screens/add_product_screen.dart';
 import 'package:ecommerce_app/admin/screens/orders_screen.dart';
 import 'package:ecommerce_app/cubit/admin/admin_cubit.dart';
 import 'package:ecommerce_app/screen/product_page.dart';
@@ -53,7 +53,7 @@ class AdminScreen extends StatelessWidget {
         if (state is AdminProductAddition) {
           navigator.push(
             MaterialPageRoute(
-              builder: (_) => const AddAndEditProductScreen(),
+              builder: (_) => const AddProductScreen(),
             ),
           );
         }

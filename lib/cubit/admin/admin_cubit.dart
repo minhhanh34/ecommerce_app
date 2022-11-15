@@ -73,4 +73,8 @@ class AdminCubit extends Cubit<AdminState> {
   void onDetailProduct(ProductModel product) {
     emit(AdminDetailProduct(product));
   }
+
+  Future<bool> deleteProduct(ProductModel product) async {
+    return await productService.deleteProduct(product);
+  }
 }

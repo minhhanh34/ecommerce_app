@@ -36,12 +36,11 @@ class ProductWidget extends StatelessWidget {
           children: [
             Hero(
               tag: product.name,
-              child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxHeight: 120.0,
-                    maxWidth: MediaQuery.of(context).size.width * 0.45,
-                  ),
-                  child: product.images['image1']!),
+              child: SizedBox(
+                height: 120.0,
+                width: double.infinity,
+                child: product.images['image1']!,
+              ),
             ),
             Expanded(
               child: Column(

@@ -1,14 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:ecommerce_app/admin/screens/add_and_edit_product_screen.dart';
+import 'package:ecommerce_app/admin/screens/edit_product_screen.dart';
+import 'package:ecommerce_app/cubit/admin/admin_cubit.dart';
 import 'package:ecommerce_app/model/cart_item.dart';
 import 'package:ecommerce_app/model/order_model.dart';
-
 import 'package:ecommerce_app/model/product_model.dart';
+import 'package:ecommerce_app/utils/alert_dialog.dart';
 import 'package:ecommerce_app/utils/generator.dart';
 import 'package:ecommerce_app/utils/libs.dart';
 import 'package:ecommerce_app/utils/price_format.dart';
 import 'package:ecommerce_app/widgets/header_row.dart';
-
 import '../widgets/cart_icon.dart';
 
 enum TypeClick {
@@ -29,10 +29,6 @@ class ProductPage extends StatefulWidget {
 }
 
 class _ProductPageState extends State<ProductPage> {
-  // late PageController controller;
-  // int currentPage = 1;
-  // late bool isFavorite;
-  // late List<ProductModel> sameProducts;
   bool loadingBottomSheet = false;
   int selectColor = 0;
   int selectMemory = 0;
@@ -45,10 +41,6 @@ class _ProductPageState extends State<ProductPage> {
   @override
   void initState() {
     super.initState();
-    // controller = PageController(initialPage: 0);
-    // isFavorite =
-    //     context.read<HomeCubit>().favoriteProducts?.contains(widget.product) ??
-    //         false;
     _scaffoldKey = GlobalKey<ScaffoldState>();
     imageOption = widget.product.images['image1']!;
   }
@@ -390,15 +382,62 @@ class _ProductPageState extends State<ProductPage> {
             width: double.infinity,
             child: Builder(builder: (context) {
               if (widget.isAdmin) {
-                return ElevatedButton(
-                  onPressed: () {
-                    builder(context) => AddAndEditProductScreen(
-                          product: widget.product,
-                        );
-                    final route = MaterialPageRoute(builder: builder);
-                    Navigator.of(context).push(route);
-                  },
-                  child: const Text('Cập nhật sản phẩm'),
+                return Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(0),
+                            ),
+                          ),
+                          backgroundColor:
+                              MaterialStateProperty.all<Color>(Colors.blue),
+                        ),
+                        onPressed: () {
+                          builder(context) => EditProductScreen(widget.product);
+                          final route = MaterialPageRoute(builder: builder);
+                          Navigator.of(context).push(route);
+                        },
+                        child: const Text('Cập nhật sản phẩm'),
+                      ),
+                    ),
+                    Expanded(
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(0),
+                            ),
+                          ),
+                          backgroundColor:
+                              MaterialStateProperty.all<Color>(Colors.red),
+                        ),
+                        onPressed: () async {
+                          builder(context) => const CustomAlertDialog(
+                                title: 'Xác nhận xóa',
+                                content: 'Bạn có chắc muốn xóa?',
+                              );
+                          bool confirm = await showDialog(
+                            context: context,
+                            builder: builder,
+                          );
+                          if (!confirm) return;
+                          if (!mounted) return;
+                          await context
+                              .read<AdminCubit>()
+                              .deleteProduct(widget.product);
+                          if (!mounted) return;
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text('Xóa sản phẩm'),
+                      ),
+                    ),
+                  ],
                 );
               }
               return Row(

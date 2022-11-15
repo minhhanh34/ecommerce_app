@@ -69,7 +69,7 @@ class ProductModel {
     images.clear();
     for (var url in imageURL.entries) {
       final image = CachedNetworkImage(
-        fit: BoxFit.cover,
+        fit: BoxFit.contain,
         imageUrl: url.value,
         placeholder: (context, url) {
           return Container(

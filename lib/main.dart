@@ -18,54 +18,58 @@ void main() async {
 }
 
 class EcommerceApp extends StatelessWidget {
-  EcommerceApp({Key? key, this.uid}) : super(key: key);
+  const EcommerceApp({Key? key, this.uid}) : super(key: key);
   final String? uid;
-
-  final SignService service = SignServiceIml(
-    userRepo: UserRepository(),
-    cartRepo: CartRepository(),
-    favoriteRepo: FavoriteRepository(),
-    historyRepo: HistoryRepository(),
-    orderRepo: OrderRepository(),
-  );
-
-  final cartCubit = CartCubit(
-    service: CartServiceIml(CartRepository(), ProductRepository()),
-  );
 
   @override
   Widget build(BuildContext context) {
     FlutterNativeSplash.remove();
+
+    final productRepository = ProductRepository();
+    final orderRepository = OrderRepository();
+    final userRepository = UserRepository();
+    final cartRepository = CartRepository();
+    final favoriteRepository = FavoriteRepository();
+    final historyRepository = HistoryRepository();
+    final cartService = CartServiceIml(cartRepository, productRepository);
+    final productService = ProductServiceIml(productRepository);
+    final orderService = OrderServiceIml(orderRepository, productRepository);
+    final homeService = HomeServiceIml();
+    final userService = UserServiceIml(userRepository);
+    final favoriteService = FavoriteServiceIml(
+      favoriteRepository,
+      productRepository,
+    );
+    final service = SignServiceIml(
+      userRepo: userRepository,
+      cartRepo: cartRepository,
+      favoriteRepo: favoriteRepository,
+      historyRepo: historyRepository,
+      orderRepo: orderRepository,
+    );
+    final cartCubit = CartCubit(service: cartService);
+    final signInCubit = SignInCubit(service: service);
+    final signUpCubit = SignUpCubit(service: service);
+    final forgetPasswordCubit = ForgetPasswordCubit();
+    final adminCubit = AdminCubit(
+      productService: productService,
+      orderService: orderService,
+    );
+    final homeCubit = HomeCubit(
+      homeService: homeService,
+      favoriteService: favoriteService,
+      cartCubit: cartCubit,
+      orderService: orderService,
+      userService: userService,
+    );
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (_) => HomeCubit(
-            orderService: OrderServiceIml(
-              OrderRepository(),
-              ProductRepository(),
-            ),
-            homeService: HomeServiceIml(),
-            cartCubit: cartCubit,
-            favoriteService: FavoriteServiceIml(
-              FavoriteRepository(),
-              ProductRepository(),
-            ),
-            userService: UserServiceIml(UserRepository()),
-          ),
-        ),
-        BlocProvider(create: (_) => SignInCubit(service: service)),
-        BlocProvider(create: (_) => SignUpCubit(service: service)),
+        BlocProvider(create: (_) => homeCubit),
+        BlocProvider(create: (_) => signInCubit),
+        BlocProvider(create: (_) => signUpCubit),
         BlocProvider(create: (_) => cartCubit),
-        BlocProvider(create: (_) => ForgetPasswordCubit()),
-        BlocProvider(
-          create: (_) => AdminCubit(
-            orderService: OrderServiceIml(
-              OrderRepository(),
-              ProductRepository(),
-            ),
-            productService: ProductServiceIml(ProductRepository()),
-          ),
-        )
+        BlocProvider(create: (_) => forgetPasswordCubit),
+        BlocProvider(create: (_) => adminCubit)
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -88,4 +92,3 @@ class EcommerceApp extends StatelessWidget {
     );
   }
 }
-

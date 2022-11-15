@@ -95,6 +95,7 @@ class HomeCubit extends Cubit<HomeState> {
   Future<void> addFavoriteProduct(ProductModel product) async {
     final spref = await SharedPreferences.getInstance();
     final uid = spref.getString('uid');
+    favoriteProducts ??= await getFavoriteProduct();
     favoriteProducts!.add(product);
     favoriteService.updateFavoriteProducts(uid!, favoriteProducts!);
   }

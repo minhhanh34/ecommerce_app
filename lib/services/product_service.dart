@@ -5,6 +5,7 @@ abstract class ProductService {
   Future<List<ProductModel>> getAllProducts();
   Future<ProductModel> addProduct(ProductModel product);
   Future<bool> updateProduct(ProductModel product);
+  Future<bool> deleteProduct(ProductModel product);
 }
 
 class ProductServiceIml implements ProductService {
@@ -29,5 +30,11 @@ class ProductServiceIml implements ProductService {
     final querySnapshot =
         await repository.getQueryDocumentSnapshot(product.name);
     return await repository.update(querySnapshot.id, product);
+  }
+
+  @override
+  Future<bool> deleteProduct(ProductModel product) async {
+    final snapshot = await repository.getQueryDocumentSnapshot(product.name);
+    return await repository.delete(snapshot.id);
   }
 }

@@ -49,16 +49,6 @@ class _CartListTileState extends State<CartListTile> {
       onDismissed: (_) => context.read<CartCubit>().removeItem(widget.item),
       child: Row(
         children: [
-          // Radio<bool>(
-          //   toggleable: true,
-          //   value: checkBoxValue,
-          //   groupValue: false,
-          //   onChanged: (value) {
-          //     setState(() {
-          //       checkBoxValue = !checkBoxValue;
-          //     });
-          //   },
-          // ),
           const SizedBox(height: 8.0),
           Expanded(
             child: Container(
@@ -80,11 +70,9 @@ class _CartListTileState extends State<CartListTile> {
                                   ProductPage(product: widget.item.product!)),
                         );
                       },
-                      child: ConstrainedBox(
-                        constraints: const BoxConstraints(
-                          maxWidth: 80.0,
-                          maxHeight: 80.0,
-                        ),
+                      child: SizedBox(
+                        width: 80.0,
+                        height: 80.0,
                         child: CachedNetworkImage(
                           imageUrl: widget.item.imageURL,
                           placeholder: (context, url) => Container(
