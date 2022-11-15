@@ -35,9 +35,7 @@ class RevenueScreen extends StatelessWidget {
                         const SizedBox(height: 16.0),
                         Text(
                           DateFormat('dd/MM/yyyy').format(order.date),
-                          style: const TextStyle(
-                            fontSize: 16.0
-                          ),
+                          style: const TextStyle(fontSize: 16.0),
                         ),
                         const SizedBox(height: 18.0),
                         for (var orderField in order.order)
@@ -46,8 +44,13 @@ class RevenueScreen extends StatelessWidget {
                             child: ListTile(
                               leading: ClipRRect(
                                 borderRadius: BorderRadius.circular(8.0),
-                                child: CachedNetworkImage(
-                                    imageUrl: orderField['imageURL']),
+                                child: SizedBox(
+                                  width: 80.0,
+                                  height: 80.0,
+                                  child: CachedNetworkImage(
+                                    imageUrl: orderField['imageURL'],
+                                  ),
+                                ),
                               ),
                               title: Text(orderField['product'].name),
                               subtitle: Text(orderField['memory']),
