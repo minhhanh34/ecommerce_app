@@ -86,4 +86,11 @@ class CartCubit extends Cubit<CartState> {
   void onOrdering() {
     emit(CartLoading());
   }
+
+  bool checkOutOfProducts() {
+    if (cartItems != null) {
+      return cartItems!.any((item) => item.product!.isOutOf == true);
+    }
+    return false;
+  }
 }

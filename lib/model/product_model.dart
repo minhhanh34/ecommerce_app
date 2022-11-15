@@ -32,6 +32,7 @@ class ProductModel {
   String? ram;
   String? rom;
   String? wifi;
+  bool isOutOf;
   final images = <String, CachedNetworkImage>{};
   ProductModel({
     required this.name,
@@ -59,6 +60,7 @@ class ProductModel {
     this.ram,
     this.rom,
     this.wifi,
+    this.isOutOf = false,
   });
   factory ProductModel.fromJson(Map<String, dynamic> json) =>
       _$ProductModelFromJson(json)..buildImage();
@@ -115,6 +117,7 @@ class ProductModel {
     String? ram,
     String? rom,
     String? wifi,
+    bool? isOutOf,
   }) {
     return ProductModel(
       name: name ?? this.name,
@@ -142,6 +145,7 @@ class ProductModel {
       ram: ram ?? this.ram,
       rom: rom ?? this.rom,
       wifi: wifi ?? this.wifi,
+      isOutOf: isOutOf ?? this.isOutOf,
     );
   }
 
@@ -174,6 +178,7 @@ class ProductModel {
         other.weight == weight &&
         other.ram == ram &&
         other.rom == rom &&
+        other.isOutOf == isOutOf &&
         other.wifi == wifi;
   }
 
@@ -203,6 +208,7 @@ class ProductModel {
         weight.hashCode ^
         ram.hashCode ^
         rom.hashCode ^
+        isOutOf.hashCode ^
         wifi.hashCode;
   }
 }

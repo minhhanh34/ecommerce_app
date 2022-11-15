@@ -369,13 +369,21 @@ class _ProductPageState extends State<ProductPage> {
     );
   }
 
+  bool visible() {
+    if (widget.isAdmin) {
+      return true;
+    }
+    return navVisible && !widget.product.isOutOf;
+  }
+
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final adminCubit = context.read<AdminCubit>();
     return Scaffold(
       key: _scaffoldKey,
       bottomNavigationBar: Visibility(
-        visible: navVisible,
+        visible: visible(),
         child: SafeArea(
           child: SizedBox(
             height: 56,
@@ -418,23 +426,53 @@ class _ProductPageState extends State<ProductPage> {
                               MaterialStateProperty.all<Color>(Colors.red),
                         ),
                         onPressed: () async {
-                          builder(context) => const CustomAlertDialog(
-                                title: 'Xác nhận xóa',
-                                content: 'Bạn có chắc muốn xóa?',
+                          builder(context) => CustomAlertDialog(
+                                title: 'Xác nhận',
+                                content:
+                                    'Cập nhật hết hàng cho ${widget.product.name}?',
                               );
                           bool confirm = await showDialog(
                             context: context,
                             builder: builder,
                           );
                           if (!confirm) return;
-                          if (!mounted) return;
-                          await context
-                              .read<AdminCubit>()
-                              .deleteProduct(widget.product);
+                          final newProduct = widget.product.copyWith(
+                            isOutOf: !widget.product.isOutOf,
+                          );
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (context) {
+                              return const AlertDialog(
+                                title: Text('Đang cập nhật...'),
+                                content: SizedBox(
+                                  height: 120.0,
+                                  child: Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                          await adminCubit.updateProduct(newProduct);
                           if (!mounted) return;
                           Navigator.of(context).pop();
+                          setState(() {
+                            widget.product.isOutOf = !widget.product.isOutOf;
+                          });
+                          ScaffoldMessenger.of(context)
+                            ..hideCurrentSnackBar()
+                            ..showSnackBar(
+                              const SnackBar(
+                                content: Text('Cập nhật thành công!'),
+                              ),
+                            );
                         },
-                        child: const Text('Xóa sản phẩm'),
+                        child: Text(
+                          widget.product.isOutOf
+                              ? 'Cập nhật có hàng'
+                              : 'Cập nhật hết hàng',
+                        ),
                       ),
                     ),
                   ],
@@ -511,7 +549,7 @@ class _ProductPageState extends State<ProductPage> {
           ),
           ListTile(
             title: Text(
-              widget.product.name,
+              '${widget.product.name} ${widget.product.isOutOf ? "(hết hàng)" : ""}',
               style: textTheme.bodyLarge!.copyWith(
                 fontSize: 24,
               ),

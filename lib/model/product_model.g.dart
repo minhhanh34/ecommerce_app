@@ -36,6 +36,7 @@ ProductModel _$ProductModelFromJson(Map<String, dynamic> json) => ProductModel(
       ..weight = json['weight'] as String?
       ..ram = json['ram'] as String?
       ..rom = json['rom'] as String?
+      ..isOutOf = json['isOutOf'] ?? false
       ..wifi = json['wifi'] as String?;
 
 Map<String, dynamic> _$ProductModelToJson(ProductModel instance) =>
@@ -65,4 +66,5 @@ Map<String, dynamic> _$ProductModelToJson(ProductModel instance) =>
       'wifi': instance.wifi,
       'colorOption': instance.colorOption,
       'memoryOption': instance.memoryOption,
+      'isOutOf': instance.isOutOf,
     };

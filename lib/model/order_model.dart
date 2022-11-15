@@ -61,6 +61,14 @@ class OrderModel {
     );
   }
 
+  int totalPrice() {
+    int total = 0;
+    for (var ord in order) {
+      total += (ord['price'] as int) * (ord['quantity'] as int);
+    }
+    return total;
+  }
+
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;

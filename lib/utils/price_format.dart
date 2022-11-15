@@ -13,4 +13,9 @@ class PriceHealper {
     }
     return total;
   }
+
+  static String compactFormat(int price) {
+    NumberFormat format = NumberFormat.compact(locale: 'vi');
+    return format.format(price);
+  }
 }

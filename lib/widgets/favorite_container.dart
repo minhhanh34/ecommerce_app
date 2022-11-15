@@ -125,41 +125,39 @@ class _FavoriteProductContainerState extends State<FavoriteProductContainer> {
                                         ),
                                       const Spacer(),
                                       Text('đã bán: ${product.sold}'),
-                                      // const Spacer(),
-                                      // IconButton(
-                                      //   onPressed: () {},
-                                      //   icon: const Icon(
-                                      //       Icons.add_shopping_cart_rounded),
-                                      // ),
+                                     
                                     ],
                                   ),
                                 ],
                               ),
-                              trailing: IconButton(
-                                color: Colors.pink.shade900,
-                                onPressed: () async {
-                                  final spref =
-                                      await SharedPreferences.getInstance();
-                                  final uid = spref.getString('uid');
-                                  final ref = await ProductRepository()
-                                      .getQueryDocumentSnapshot(product.name);
-                                  final cartItem = CartItem(
-                                    id: Generator.generateString(),
-                                    uid: uid!,
-                                    color: product.colorOption[0]['color'],
-                                    imageURL: product.colorOption[0]
-                                        ['imageURL'],
-                                    memory: product.memoryOption[0]['memory'],
-                                    price: product.memoryOption[0]['price'],
-                                    quantity: 1,
-                                    ref: ref.reference,
-                                  );
-                                  if (!mounted) return;
-                                  BlocProvider.of<CartCubit>(context)
-                                      .addItem(cartItem);
-                                },
-                                icon: const Icon(
-                                  Icons.add_shopping_cart_outlined,
+                              trailing: Visibility(
+                                visible: !product.isOutOf,
+                                child: IconButton(
+                                  color: Colors.pink.shade900,
+                                  onPressed: () async {
+                                    final spref =
+                                        await SharedPreferences.getInstance();
+                                    final uid = spref.getString('uid');
+                                    final ref = await ProductRepository()
+                                        .getQueryDocumentSnapshot(product.name);
+                                    final cartItem = CartItem(
+                                      id: Generator.generateString(),
+                                      uid: uid!,
+                                      color: product.colorOption[0]['color'],
+                                      imageURL: product.colorOption[0]
+                                          ['imageURL'],
+                                      memory: product.memoryOption[0]['memory'],
+                                      price: product.memoryOption[0]['price'],
+                                      quantity: 1,
+                                      ref: ref.reference,
+                                    );
+                                    if (!mounted) return;
+                                    BlocProvider.of<CartCubit>(context)
+                                        .addItem(cartItem);
+                                  },
+                                  icon: const Icon(
+                                    Icons.add_shopping_cart_outlined,
+                                  ),
                                 ),
                               ),
                             ),

@@ -115,6 +115,19 @@ class _CartPageState extends State<CartPage> {
                       const Spacer(),
                       ElevatedButton(
                         onPressed: () async {
+                          bool isOutOfProducts = cartCubit.checkOutOfProducts();
+                          if (isOutOfProducts) {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return const CustomAlertDialog(
+                                    title: 'Hết hàng',
+                                    content: 'Một số sản phẩm đã hết hàng!',
+                                    actions: ['Ok'],
+                                  );
+                                });
+                            return;
+                          }
                           bool confirm = await showDialog(
                             context: context,
                             builder: (context) {

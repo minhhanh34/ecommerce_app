@@ -18,20 +18,69 @@ class AdminCubit extends Cubit<AdminState> {
   List<OrderModel>? finishedOrders;
   List<ProductModel>? products;
 
+  int get progressOrdersCounts => progressOrders?.length ?? 0;
+  int get finishedOrdersCounts => finishedOrders?.length ?? 0;
+  int get productsCounts => products?.length ?? 0;
+  int get revenue => finishedOrders!.fold<int>(
+      0, (previousValue, order) => previousValue + order.totalPrice());
+
+  Future<void> initialize() async {
+    emit(AdminLoading());
+    products = await productService.getAllProducts();
+    progressOrders = await orderService.getProgressOrders();
+    finishedOrders = await orderService.getFinishedOrders();
+    emit(AdminLoaded(
+      products: products!,
+      progressOrders: progressOrders!,
+      finishedOrders: finishedOrders!,
+    ));
+  }
+
   Future<ProductModel> addProduct(ProductModel product) async {
     return await productService.addProduct(product);
+  }
+
+  void onRevenue() async {
+    emit(AdminRevenue(revenue, finishedOrders!));
+    emit(AdminLoaded(
+      products: products!,
+      progressOrders: progressOrders!,
+      finishedOrders: finishedOrders!,
+    ));
   }
 
   Future<bool> updateProduct(ProductModel product) async {
     return await productService.updateProduct(product);
   }
 
-  Future<void> getProgressOrders() async {
-    emit(AdminLoading());
-
-    progressOrders ??= await orderService.getProgressOrders();
+  void onProgressOrders() async {
     emit(AdminProgressOrders(progressOrders!));
+    emit(AdminLoaded(
+      products: products!,
+      progressOrders: progressOrders!,
+      finishedOrders: finishedOrders!,
+    ));
   }
+
+  void onFinishedOrders() async {
+    emit(AdminFinishedOrders(finishedOrders!));
+    emit(AdminLoaded(
+      products: products!,
+      progressOrders: progressOrders!,
+      finishedOrders: finishedOrders!,
+    ));
+  }
+
+  Future<void> onRefresh() async {
+    dispose();
+    await initialize();
+  }
+
+  // Future<void> getProgressOrders() async {
+  //   emit(AdminLoading());
+  //   progressOrders ??= await orderService.getProgressOrders();
+  //   emit(AdminProgressOrders(progressOrders!));
+  // }
 
   Future<bool> updateOrder(OrderModel order) async {
     emit(AdminLoading());
@@ -39,11 +88,11 @@ class AdminCubit extends Cubit<AdminState> {
     return result;
   }
 
-  Future<void> refreshOrders(bool isFinish) async {
-    emit(AdminLoading());
-    if (isFinish) finishedOrders = null;
-    getFinishedOrders();
-  }
+  // Future<void> refreshOrders(bool isFinish) async {
+  //   emit(AdminLoading());
+  //   if (isFinish) finishedOrders = null;
+  //   getFinishedOrders();
+  // }
 
   Future<void> getFinishedOrders() async {
     emit(AdminLoading());
@@ -52,26 +101,47 @@ class AdminCubit extends Cubit<AdminState> {
   }
 
   Future<void> logout() async {
+    emit(AdminLoading());
     final spref = await SharedPreferences.getInstance();
     await spref.remove('uid');
+    dispose();
+    emit(AdminLogout());
+    // emit(AdminInitial());
+  }
+
+  void dispose() {
     finishedOrders = null;
     progressOrders = null;
     products = null;
-    emit(AdminLogout());
   }
 
   Future<void> onAllProducts() async {
     emit(AdminLoading());
     products ??= await productService.getAllProducts();
     emit(AdminAllProducts(products!));
+    emit(AdminLoaded(
+      products: products!,
+      progressOrders: progressOrders!,
+      finishedOrders: finishedOrders!,
+    ));
   }
 
   void onProductAddition() {
     emit(AdminProductAddition());
+    emit(AdminLoaded(
+      products: products!,
+      progressOrders: progressOrders!,
+      finishedOrders: finishedOrders!,
+    ));
   }
 
   void onDetailProduct(ProductModel product) {
     emit(AdminDetailProduct(product));
+    emit(AdminLoaded(
+      products: products!,
+      progressOrders: progressOrders!,
+      finishedOrders: finishedOrders!,
+    ));
   }
 
   Future<bool> deleteProduct(ProductModel product) async {

@@ -87,7 +87,10 @@ class _EditProductScreenState extends State<EditProductScreen> {
     brandController = TextEditingController(text: product.brand);
     memoryOptionController = TextEditingController();
     priceOptionController = TextEditingController();
-    urls = [...product.imageURL.values];
+    // urls = [...product.imageURL.values];
+    for (int i = 0; i < product.imageURL.keys.length; i++) {
+      urls.add(product.imageURL['image${i + 1}']);
+    }
     colorOptions = [...product.colorOption];
     memoryOptions = [...product.memoryOption];
   }
@@ -251,7 +254,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                         context: context,
                         builder: (context) => const CustomAlertDialog(
                           title: 'Xác nhận',
-                          content: 'Bạn có chắc muốn thêm?',
+                          content: 'Bạn có chắc muốn cập nhật sản phẩm?',
                         ),
                       );
                       if (!confirm) return;
@@ -260,10 +263,10 @@ class _EditProductScreenState extends State<EditProductScreen> {
                         barrierDismissible: false,
                         builder: (_) {
                           return const AlertDialog(
-                            title: Text('Đang cập nhật...'),
+                            title: Text('Đang cập nhật sản phẩm...'),
                             content: SizedBox(
                               height: 120.0,
-                              child: CircularProgressIndicator(),
+                              child: Center(child: CircularProgressIndicator()),
                             ),
                           );
                         },

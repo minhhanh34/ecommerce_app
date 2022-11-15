@@ -30,3 +30,21 @@ class AdminDetailProduct extends AdminState {
   final ProductModel product;
   AdminDetailProduct(this.product);
 }
+
+class AdminLoaded extends AdminState {
+  final List<ProductModel> products;
+  final List<OrderModel> progressOrders;
+  final List<OrderModel> finishedOrders;
+  AdminLoaded({
+    required this.products,
+    required this.progressOrders,
+    required this.finishedOrders,
+  });
+}
+
+// ignore: must_be_immutable
+class AdminRevenue extends AdminState {
+  final int revenue;
+  List<OrderModel> orders;
+  AdminRevenue(this.revenue, this.orders);
+}

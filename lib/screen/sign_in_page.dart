@@ -1,4 +1,5 @@
 import 'package:ecommerce_app/admin/screens/admin_screen.dart';
+import 'package:ecommerce_app/cubit/admin/admin_cubit.dart';
 import 'package:ecommerce_app/cubit/home/home_cubit.dart';
 import 'package:ecommerce_app/screen/forget_password_page.dart';
 import 'package:ecommerce_app/screen/home_page.dart';
@@ -57,7 +58,11 @@ class _SignInPageState extends State<SignInPage> {
         }
         if (state is AdminLoged) {
           Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => const AdminScreen()));
+            MaterialPageRoute(
+              builder: (context) => const AdminScreen(),
+            ),
+          );
+          context.read<AdminCubit>().initialize();
         }
         if (state is SignUp) {
           FocusScope.of(context).unfocus();

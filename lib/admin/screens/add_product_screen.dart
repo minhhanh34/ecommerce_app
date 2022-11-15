@@ -134,6 +134,21 @@ class _AddProductScreenState extends State<AddProductScreen> {
     );
     if (!confirm) return;
     if (!mounted) return;
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return const AlertDialog(
+          title: Text('Đang thêm sản phẩm...'),
+          content: SizedBox(
+            height: 120.0,
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          ),
+        );
+      },
+    );
     final ref = FirebaseStorage.instance.ref().child(nameController.text);
     final imageUrls = [];
     for (var image in images) {
@@ -186,6 +201,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
     );
     await adminCubit.addProduct(product);
     if (!mounted) return;
+    Navigator.of(context).pop();
     showAddedDialog(context);
   }
 
