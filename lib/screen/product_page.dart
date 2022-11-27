@@ -161,11 +161,15 @@ class _ProductPageState extends State<ProductPage> {
                                         ? Colors.black
                                         : Colors.grey.shade100,
                                     child: CircleAvatar(
-                                      radius: 12,
-                                      backgroundColor: Color(
-                                        int.parse(
-                                          widget.product.colorOption[i]
-                                              ['color'],
+                                      radius: 13.0,
+                                      backgroundColor: Colors.black,
+                                      child: CircleAvatar(
+                                        radius: 12,
+                                        backgroundColor: Color(
+                                          int.parse(
+                                            widget.product.colorOption[i]
+                                                ['color'],
+                                          ),
                                         ),
                                       ),
                                     ),

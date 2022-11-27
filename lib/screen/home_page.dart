@@ -62,6 +62,7 @@ class _HomePageState extends State<HomePage> {
           }
         },
         builder: (context, state) {
+          print(state.runtimeType);
           if (state is InitialState) {
             context.read<HomeCubit>().mainTab();
             context.read<HomeCubit>().getFavoriteProduct();

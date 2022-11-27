@@ -15,7 +15,7 @@ class _CartIconState extends State<CartIcon> {
 
   @override
   Widget build(BuildContext context) {
-    // int? cartCount = BlocProvider.of<CartCubit>(context).products?.length;
+    final cartCubit = context.read<CartCubit>();
     return InkWell(
       onTap: () async {
         Navigator.of(context).push(
@@ -46,6 +46,26 @@ class _CartIconState extends State<CartIcon> {
           ),
           BlocBuilder<CartCubit, CartState>(
             builder: (context, state) {
+              if (state is CartInitial) {
+                cartCubit.getCart();
+                return Positioned(
+                  top: 5,
+                  right: 0,
+                  child: Container(
+                    width: 20,
+                    height: 20,
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Center(
+                      child: CircularProgressIndicator(
+                        color: Colors.red,
+                      ),
+                    ),
+                  ),
+                );
+              }
               if (state is CartLoaded && state.items.isNotEmpty) {
                 return Positioned(
                   top: 5,

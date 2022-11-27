@@ -41,6 +41,7 @@ class _SignInPageState extends State<SignInPage> {
 
   @override
   Widget build(BuildContext context) {
+    final homeCubit = context.read<HomeCubit>();
     return BlocListener<SignInCubit, SignInState>(
       listener: (context, state) {
         if (state is SignIned) {
@@ -54,6 +55,7 @@ class _SignInPageState extends State<SignInPage> {
             context
                 .read<SignInCubit>()
                 .onSignIn(phoneController.text, passController.text);
+            // homeCubit.mainTab();
           }
         }
         if (state is AdminLoged) {
@@ -140,7 +142,7 @@ class _SignInPageState extends State<SignInPage> {
                     onPressed: () {
                       FocusScope.of(context).unfocus();
                       context.read<SignInCubit>().onValidator();
-                      context.read<HomeCubit>().mainTab();
+                      homeCubit.mainTab();
                     },
                     child: const Icon(Icons.arrow_forward),
                   ),

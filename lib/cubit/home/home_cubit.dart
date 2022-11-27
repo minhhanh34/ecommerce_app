@@ -86,9 +86,13 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   Future<List<ProductModel>> getFavoriteProduct() async {
-    final spref = await SharedPreferences.getInstance();
-    uid = spref.getString('uid');
-    favoriteProducts = await homeService.getFavoriteProducts(uid!);
+    try {
+      final spref = await SharedPreferences.getInstance();
+      uid = spref.getString('uid');
+      favoriteProducts = await homeService.getFavoriteProducts(uid!);
+    } catch (error) {
+      log('error', error: error);
+    }
     return favoriteProducts ?? <ProductModel>[];
   }
 
@@ -203,7 +207,9 @@ class HomeCubit extends Cubit<HomeState> {
     } catch (e) {
       log('error', error: e);
     }
+    cartCubit.emit(CartInitial());
     emit(LogoutState());
+    emit(InitialState());
   }
 
   void onDetailProduct(ProductModel product) {

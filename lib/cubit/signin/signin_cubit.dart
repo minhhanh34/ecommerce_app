@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:ecommerce_app/services/sign_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -31,20 +33,26 @@ class SignInCubit extends Cubit<SignInState> {
   }
 
   void onSignIn(String phone, String password) async {
-    String? uid = await service.signIn(phone: phone, password: password);
+    String? uid;
+    try {
+      uid = await service.signIn(phone: phone, password: password);
+    } catch (error) {
+      log('error', error: error);
+    }
+    if (uid == null) {
+      emit(SignInMessage('Sai tài khoản hoặc mật khẩu'));
+      return;
+    }
     if (uid == 'admin') {
       final spref = await SharedPreferences.getInstance();
-      await spref.setString('uid', uid!);
+      await spref.setString('uid', uid);
       emit(AdminLoged());
       return;
     }
-    if (uid != null) {
-      final spref = await SharedPreferences.getInstance();
-      await spref.setString('uid', uid);
-      emit(SignIned());
-      return;
-    }
-    emit(SignInMessage('Sai tài khoản hoặc mật khẩu'));
+    final spref = await SharedPreferences.getInstance();
+    await spref.setString('uid', uid);
+    emit(SignIned());
+    return;
   }
 
   void onForgetPassword() {
