@@ -83,7 +83,6 @@ class AdminCubit extends Cubit<AdminState> {
   // }
 
   Future<bool> updateOrder(OrderModel order) async {
-    emit(AdminLoading());
     final result = await orderService.updateOrder(order);
     return result;
   }

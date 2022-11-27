@@ -14,6 +14,7 @@ import '../widgets/cart_icon.dart';
 enum TypeClick {
   addToCart,
   buy,
+  chooseInCart,
 }
 
 class ProductPage extends StatefulWidget {
@@ -158,17 +159,54 @@ class _ProductPageState extends State<ProductPage> {
                                   child: CircleAvatar(
                                     radius: 16,
                                     backgroundColor: selectColor == i
-                                        ? Colors.black
-                                        : Colors.grey.shade100,
+                                        ? Color(
+                                            int.parse(
+                                              widget.product.colorOption[i]
+                                                          ['color'] !=
+                                                      '0xffffffff'
+                                                  ? widget.product
+                                                      .colorOption[i]['color']
+                                                  : '0xff000000',
+                                            ),
+                                          )
+                                        : Colors.white,
                                     child: CircleAvatar(
-                                      radius: 13.0,
-                                      backgroundColor: Colors.black,
+                                      radius: 12.0,
+                                      backgroundColor: selectColor == i
+                                          ? widget.product.colorOption[i]
+                                                      ['color'] ==
+                                                  '0xffffffff'
+                                              ? Colors.white
+                                              : null
+                                          : Colors.white,
                                       child: CircleAvatar(
-                                        radius: 12,
-                                        backgroundColor: Color(
-                                          int.parse(
-                                            widget.product.colorOption[i]
-                                                ['color'],
+                                        radius: selectColor == i
+                                            ? (widget.product.colorOption[
+                                                        selectColor]['color'] ==
+                                                    '0xffffffff'
+                                                ? 9.0
+                                                : 13.0)
+                                            : 11.0,
+                                        backgroundColor: selectColor == i
+                                            ? (widget.product.colorOption[
+                                                        selectColor]['color'] !=
+                                                    '0xffffffff'
+                                                ? Colors.white
+                                                : Colors.black38)
+                                            : Colors.black,
+                                        child: CircleAvatar(
+                                          radius: selectColor == i
+                                              ? widget.product.colorOption[i]
+                                                          ['color'] ==
+                                                      '0xffffffff'
+                                                  ? 8.0
+                                                  : 10.0
+                                              : 10.0,
+                                          backgroundColor: Color(
+                                            int.parse(
+                                              widget.product.colorOption[i]
+                                                  ['color'],
+                                            ),
                                           ),
                                         ),
                                       ),

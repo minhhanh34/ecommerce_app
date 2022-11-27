@@ -213,8 +213,10 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   void onDetailProduct(ProductModel product) {
+    final oldState = state;
     emit(ProductDetail(product));
-    emit(MainState(banners: banners!, products: products!));
+    emit(oldState);
+    // emit(MainState(banners: banners!, products: products!));
   }
 
   void onCartTab() {

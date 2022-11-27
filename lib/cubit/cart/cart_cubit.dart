@@ -85,7 +85,14 @@ class CartCubit extends Cubit<CartState> {
   }
 
   Future<bool> updateCartItem(CartItem item) async {
-    await service.update(item.id, item);
+    final result = await service.update(item.id, item);
+    if (!result) return false;
+    cartItems = cartItems!.map((element) {
+      if (element.id == item.id) {
+        return item;
+      }
+      return element;
+    }).toList();
     getCart();
     return true;
   }

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:collection/collection.dart';
 
 import 'package:ecommerce_app/model/product_model.dart';
 
@@ -29,21 +30,16 @@ class CartItem {
     product = ProductModel.fromJson(data.data()!);
   }
 
-  
-
-  
-
   factory CartItem.fromJson(Map<String, dynamic> json) {
     return CartItem(
-      color: json['color'] as String,
-      imageURL: json['imageURL'] as String,
-      memory: json['memory'] as String,
-      price: json['price'] as int,
-      quantity: json['quantity'] as int,
-      ref: json['ref'] as DocumentReference,
-      uid: json['uid'] as String,
-      id: json['id'] as String
-    );
+        color: json['color'] as String,
+        imageURL: json['imageURL'] as String,
+        memory: json['memory'] as String,
+        price: json['price'] as int,
+        quantity: json['quantity'] as int,
+        ref: json['ref'] as DocumentReference,
+        uid: json['uid'] as String,
+        id: json['id'] as String);
   }
 
   Map<String, dynamic> toJson() {
@@ -85,30 +81,30 @@ class CartItem {
 
   @override
   bool operator ==(Object other) {
+    const deepEqual = DeepCollectionEquality();
     if (identical(this, other)) return true;
-  
     return other is CartItem &&
-      other.id == id &&
-      other.uid == uid &&
-      other.product == product &&
-      other.color == color &&
-      other.imageURL == imageURL &&
-      other.memory == memory &&
-      other.price == price &&
-      other.quantity == quantity &&
-      other.ref == ref;
+        other.id == id &&
+        other.uid == uid &&
+        deepEqual.equals(other.product, product) &&
+        other.color == color &&
+        other.imageURL == imageURL &&
+        other.memory == memory &&
+        other.price == price &&
+        other.quantity == quantity &&
+        other.ref == ref;
   }
 
   @override
   int get hashCode {
     return id.hashCode ^
-      uid.hashCode ^
-      product.hashCode ^
-      color.hashCode ^
-      imageURL.hashCode ^
-      memory.hashCode ^
-      price.hashCode ^
-      quantity.hashCode ^
-      ref.hashCode;
+        uid.hashCode ^
+        product.hashCode ^
+        color.hashCode ^
+        imageURL.hashCode ^
+        memory.hashCode ^
+        price.hashCode ^
+        quantity.hashCode ^
+        ref.hashCode;
   }
 }

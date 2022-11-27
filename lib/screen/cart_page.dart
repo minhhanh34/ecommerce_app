@@ -19,6 +19,63 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
+  // bool loadingBottomSheet = false;
+  // int selectColor = 0;
+  // int selectMemory = 0;
+  // int quantity = 1;
+  // bool navVisible = true;
+  // late PersistentBottomSheetController _controller;
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  // late CachedNetworkImage imageOption;
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _scaffoldKey = GlobalKey<ScaffoldState>();
+  //   // imageOption = product.images['image1']!;
+  // }
+
+  // @override
+  // void dispose() {
+  //   // controller.dispose();
+  //   _scaffoldKey.currentState?.dispose();
+  //   super.dispose();
+  // }
+
+  // void chooseProductOption(ProductModel product) {
+  //   displayBottomSheet(context, product, TypeClick.chooseInCart);
+  // }
+
+  // void changeColor(ProductModel product, int i) {
+  //   _controller.setState!(() {
+  //     selectColor = i;
+  //     imageOption = CachedNetworkImage(
+  //       fit: BoxFit.cover,
+  //       imageUrl: product.colorOption[i]['imageURL'],
+  //       placeholder: (context, url) {
+  //         return Container(
+  //           decoration: BoxDecoration(
+  //             color: Colors.grey,
+  //             borderRadius: BorderRadius.circular(12),
+  //           ),
+  //           width: MediaQuery.of(context).size.width,
+  //           height: MediaQuery.of(context).size.height,
+  //           child: const Icon(Icons.image),
+  //         );
+  //       },
+  //     );
+  //   });
+  // }
+
+  void goToOrder() {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    final homeCubit = context.read<HomeCubit>();
+    int orderTabIndex = 2;
+    final route = MaterialPageRoute(builder: (_) => const HomePage());
+    Navigator.of(context).pushAndRemoveUntil(route, (_) => false);
+    homeCubit.onNavTap(orderTabIndex);
+  }
+
   Widget buildLoading() {
     return const Center(
       child: CircularProgressIndicator(),
@@ -44,8 +101,8 @@ class _CartPageState extends State<CartPage> {
     final cartCubit = context.read<CartCubit>();
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Colors.blue.shade100,
-      //drawer: MyDrawer(homeCubit: context.read<HomeCubit>()),
       appBar: AppBar(
         title: const Text('Giỏ hàng'),
         centerTitle: true,
@@ -92,7 +149,10 @@ class _CartPageState extends State<CartPage> {
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       itemCount: state.items.length,
                       itemBuilder: (context, index) {
-                        return CartListTile(state.items[index]);
+                        return CartListTile(
+                          state.items[index],
+                          scaffoldKey: _scaffoldKey,
+                        );
                       },
                     ),
                   ),

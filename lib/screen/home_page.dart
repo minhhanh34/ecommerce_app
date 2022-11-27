@@ -41,7 +41,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    List<ProductModel> products = [];
+    final homeCubit = context.read<HomeCubit>();
+    List<ProductModel> products = homeCubit.products ?? [];
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Shop'),
@@ -62,15 +63,12 @@ class _HomePageState extends State<HomePage> {
           }
         },
         builder: (context, state) {
-          print(state.runtimeType);
           if (state is InitialState) {
             context.read<HomeCubit>().mainTab();
             context.read<HomeCubit>().getFavoriteProduct();
             return buildLoading();
           }
           if (state is MainState) {
-            products.clear();
-            products.addAll(state.products);
             return HomeContainer(
               banners: state.banners,
               products: state.products,

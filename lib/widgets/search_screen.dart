@@ -4,8 +4,9 @@ import '../model/product_model.dart';
 import 'product_sliver_grid_overview.dart';
 
 class SearchScreen extends SearchDelegate {
-  SearchScreen(this.products);
+  SearchScreen(this.products, {this.isAdmin = false});
   final List<ProductModel> products;
+  final bool isAdmin;
   @override
   List<Widget>? buildActions(BuildContext context) {
     return [
@@ -71,7 +72,10 @@ class SearchScreen extends SearchDelegate {
               //   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               //       crossAxisCount: 2, mainAxisExtent: 240.0),
               // ),
-              ProductSliverGridOverview(products: matchQuery),
+              ProductSliverGridOverview(
+                products: matchQuery,
+                isAdmin: isAdmin,
+              ),
             ],
           )
         : const SizedBox();
