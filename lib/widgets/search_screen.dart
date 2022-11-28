@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/utils/libs.dart';
 import 'package:flutter/material.dart';
 
 import '../model/product_model.dart';
@@ -7,6 +8,7 @@ class SearchScreen extends SearchDelegate {
   SearchScreen(this.products, {this.isAdmin = false});
   final List<ProductModel> products;
   final bool isAdmin;
+
   @override
   List<Widget>? buildActions(BuildContext context) {
     return [

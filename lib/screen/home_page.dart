@@ -16,21 +16,22 @@ import '../widgets/notify_icon.dart';
 import '../widgets/order_container.dart';
 import '../widgets/search_screen.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  Widget _buildSearchIconButton(List<ProductModel> products) {
+  Widget _buildSearchIconButton(
+    BuildContext context,
+    List<ProductModel> products,
+  ) {
     return IconButton(
       alignment: Alignment.centerRight,
       onPressed: () {
         showSearch(
           context: context,
-          delegate: SearchScreen(products),
+          delegate: SearchScreen(
+            products,
+            isAdmin: false,
+          ),
         );
       },
       icon: const Icon(
@@ -48,7 +49,7 @@ class _HomePageState extends State<HomePage> {
         title: const Text('My Shop'),
         elevation: 0,
         actions: [
-          _buildSearchIconButton(products),
+          _buildSearchIconButton(context, products),
           const NotifyIcon(),
           const CartIcon(),
         ],
@@ -64,11 +65,14 @@ class _HomePageState extends State<HomePage> {
         },
         builder: (context, state) {
           if (state is InitialState) {
-            context.read<HomeCubit>().mainTab();
-            context.read<HomeCubit>().getFavoriteProduct();
+            homeCubit.mainTab();
+            homeCubit.getFavoriteProduct();
             return buildLoading();
           }
           if (state is MainState) {
+            if (products.isEmpty) {
+              products.addAll(state.products);
+            }
             return HomeContainer(
               banners: state.banners,
               products: state.products,
