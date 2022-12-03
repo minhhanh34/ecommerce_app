@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
+import '../screen/change_password_screen.dart';
 import '../screen/user_avatar_screen.dart';
 import '../utils/consts.dart';
 
@@ -46,6 +47,11 @@ class _AccountContainerState extends State<AccountContainer> {
           final route = MaterialPageRoute(builder: builder);
           Navigator.of(context).push(route);
         }
+        if (state is HomeChangePassword) {
+          builder(context) => ChangePasswordScreen(homeCubit.user!);
+          final route = MaterialPageRoute(builder: builder);
+          Navigator.of(context).push(route);
+        }
       },
       builder: (context, state) {
         if (state is LoadingState) {
@@ -58,92 +64,108 @@ class _AccountContainerState extends State<AccountContainer> {
             ),
             width: double.infinity,
             height: double.infinity,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 8.0),
-                Text(
-                  '  Tài khoản',
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleMedium
-                      ?.copyWith(fontSize: 24.0),
-                ),
-                Card(
-                  margin: const EdgeInsets.symmetric(
-                    vertical: 8.0,
-                    horizontal: 8.0,
+            child: RefreshIndicator(
+              onRefresh: homeCubit.refreshAccount,
+              child: ListView(
+                // crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 8.0),
+                  Text(
+                    '  Tài khoản',
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleMedium
+                        ?.copyWith(fontSize: 24.0),
                   ),
-                  child: SizedBox(
-                    height: 100.0,
-                    width: double.infinity,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        const SizedBox(width: 16.0),
-                        InkWell(
-                          onTap: () => homeCubit.onAvatarView(state.user),
-                          child: CircleAvatar(
-                            radius: 33.0,
-                            child: Hero(
-                              tag: state.user.name,
-                              child: CircleAvatar(
-                                backgroundImage: CachedNetworkImageProvider(
-                                  getAvatarUrl(state.user),
+                  Card(
+                    margin: const EdgeInsets.symmetric(
+                      vertical: 8.0,
+                      horizontal: 8.0,
+                    ),
+                    child: SizedBox(
+                      height: 100.0,
+                      width: double.infinity,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const SizedBox(width: 16.0),
+                          InkWell(
+                            onTap: () => homeCubit.onAvatarView(state.user),
+                            child: CircleAvatar(
+                              radius: 33.0,
+                              child: Hero(
+                                tag: state.user.name,
+                                child: CircleAvatar(
+                                  backgroundImage: CachedNetworkImageProvider(
+                                    getAvatarUrl(state.user),
+                                  ),
+                                  backgroundColor: Colors.white,
+                                  radius: 32.0,
                                 ),
-                                backgroundColor: Colors.white,
-                                radius: 32.0,
                               ),
                             ),
                           ),
+                          const SizedBox(width: 40.0),
+                          Text(state.user.name,
+                              style: const TextStyle(fontSize: 20.0)),
+                          const Spacer(),
+                          IconButton(
+                            onPressed: () =>
+                                context.read<HomeCubit>().editInfo(state.user),
+                            icon: const Icon(Icons.edit, size: 28.0),
+                          ),
+                          const SizedBox(width: 16.0),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Card(
+                    margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Column(
+                      children: [
+                        InfoRow(label: 'Địa chỉ:', value: state.user.address),
+                        const Divider(thickness: 1.5),
+                        InfoRow(
+                            label: 'Số điện thoại:', value: state.user.phone),
+                        const Divider(thickness: 1.5),
+                        InfoRow(label: 'Email:', value: state.user.email ?? ''),
+                        const Divider(thickness: 1.5),
+                        InfoRow(
+                            label: 'Giới tính:',
+                            value: state.user.gender ?? ''),
+                        const Divider(thickness: 1.5),
+                        InfoRow(
+                          label: 'Ngày sinh:',
+                          value: state.user.birthDay != null
+                              ? DateFormat('dd/MM/yyyy')
+                                  .format(state.user.birthDay!)
+                              : '',
                         ),
-                        const SizedBox(width: 40.0),
-                        Text(state.user.name,
-                            style: const TextStyle(fontSize: 20.0)),
-                        const Spacer(),
-                        IconButton(
-                          onPressed: () =>
-                              context.read<HomeCubit>().editInfo(state.user),
-                          icon: const Icon(Icons.edit, size: 28.0),
-                        ),
-                        const SizedBox(width: 16.0),
                       ],
                     ),
                   ),
-                ),
-                Card(
-                  margin: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Column(
-                    children: [
-                      InfoRow(label: 'Địa chỉ:', value: state.user.address),
-                      const Divider(thickness: 1.5),
-                      InfoRow(label: 'Số điện thoại:', value: state.user.phone),
-                      const Divider(thickness: 1.5),
-                      InfoRow(label: 'Email:', value: state.user.email ?? ''),
-                      const Divider(thickness: 1.5),
-                      InfoRow(
-                          label: 'Giới tính:', value: state.user.gender ?? ''),
-                      const Divider(thickness: 1.5),
-                      InfoRow(
-                        label: 'Ngày sinh:',
-                        value: state.user.birthDay != null
-                            ? DateFormat('dd/MM/yyyy')
-                                .format(state.user.birthDay!)
-                            : '',
+                  Card(
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 8.0, vertical: 8.0),
+                    child: ListTile(
+                      onTap: context.read<HomeCubit>().toChangePasswordScreen,
+                      leading: const Icon(
+                        Icons.lock_reset_rounded,
+                        color: Colors.red,
                       ),
-                    ],
+                      title: const Text('Đổi mật khẩu'),
+                    ),
                   ),
-                ),
-                Card(
-                  margin: const EdgeInsets.symmetric(
-                      horizontal: 8.0, vertical: 8.0),
-                  child: ListTile(
-                    onTap: context.read<HomeCubit>().logout,
-                    leading: const Icon(Icons.logout, color: Colors.red),
-                    title: const Text('Đăng xuất'),
+                  Card(
+                    margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: ListTile(
+                      onTap: context.read<HomeCubit>().logout,
+                      leading: const Icon(Icons.logout, color: Colors.red),
+                      title: const Text('Đăng xuất'),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           );
         }

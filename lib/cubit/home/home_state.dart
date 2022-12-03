@@ -81,3 +81,7 @@ class AvatarView extends HomeState {
   final UserModel user;
   AvatarView(this.user);
 }
+
+class HomeNotification extends HomeState {}
+
+class HomeChangePassword extends HomeState{}

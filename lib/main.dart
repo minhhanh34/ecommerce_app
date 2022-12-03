@@ -1,5 +1,8 @@
 import 'package:ecommerce_app/cubit/admin/admin_cubit.dart';
+import 'package:ecommerce_app/cubit/notification/notification_cubit.dart';
+import 'package:ecommerce_app/repository/notification_repository.dart';
 import 'package:ecommerce_app/services/favorite_service.dart';
+import 'package:ecommerce_app/services/notification_service.dart';
 import 'package:ecommerce_app/services/order_service.dart';
 import 'package:ecommerce_app/services/product_service.dart';
 import 'package:ecommerce_app/services/user_service.dart';
@@ -62,6 +65,17 @@ class EcommerceApp extends StatelessWidget {
       orderService: orderService,
       userService: userService,
     );
+    final notificationRepository = NotificationRepository();
+    final notificationService =
+        NotificationService(repository: notificationRepository);
+    final notificationCubit = NotificationCubit(notificationService);
+    // notificationRepository.create(
+    //   const NotificationItem(
+    //     title: 'thong bao cua minh hanh',
+    //     message: 'chi vui thoi',
+    //     seen: false,
+    //   ),
+    // );
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => homeCubit),
@@ -69,7 +83,8 @@ class EcommerceApp extends StatelessWidget {
         BlocProvider(create: (_) => signUpCubit),
         BlocProvider(create: (_) => cartCubit),
         BlocProvider(create: (_) => forgetPasswordCubit),
-        BlocProvider(create: (_) => adminCubit)
+        BlocProvider(create: (_) => adminCubit),
+        BlocProvider(create: (_) => notificationCubit)
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

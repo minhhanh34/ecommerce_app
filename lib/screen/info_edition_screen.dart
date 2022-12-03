@@ -205,8 +205,37 @@ class _InfoEditionScreenState extends State<InfoEditionScreen> {
                                 .ref()
                                 .child('avatars')
                                 .child(Generator.generateString());
-                            await ref.putFile(file!);
-                            final url = await ref.getDownloadURL();
+                            bool confirm = await showAlertDialog(
+                                  context,
+                                  'Xác nhận',
+                                  'Bạn có chắc muốn thay đổi?',
+                                  ['Yes', 'No'],
+                                ) ??
+                                false;
+                            if (!confirm) {
+                              nav.pop();
+                              return;
+                            }
+                            showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (context) {
+                                return const AlertDialog(
+                                  title: Text('đang cập nhật'),
+                                  content: SizedBox(
+                                    height: 120,
+                                    width: 120,
+                                    child: Center(
+                                        child: CircularProgressIndicator()),
+                                  ),
+                                );
+                              },
+                            );
+                            String? url;
+                            if (file != null) {
+                              await ref.putFile(file!);
+                              url = await ref.getDownloadURL();
+                            }
                             final upUser = widget.user.copyWith(
                                 address: addressController.text,
                                 birthDay: DateFormat('dd/MM/yyyy')
@@ -218,17 +247,8 @@ class _InfoEditionScreenState extends State<InfoEditionScreen> {
                                 url: url,
                                 password: widget.user.password);
                             if (!mounted) return;
-                            bool confirm = await showAlertDialog(
-                                    context,
-                                    'Xác nhận',
-                                    'Bạn có chắc muốn thay đổi?',
-                                    ['Yes', 'No']) ??
-                                false;
-                            if (!confirm) {
-                              nav.pop();
-                              return;
-                            }
                             String message = 'Cập nhật thất bại!';
+                            nav.pop();
                             if (await homeCubit.updateInfo(upUser)) {
                               message = 'Cập nhật thành công!';
                               homeCubit.userRefresh();

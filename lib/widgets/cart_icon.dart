@@ -71,8 +71,8 @@ class _CartIconState extends State<CartIcon> {
                   top: 5,
                   right: 0,
                   child: Container(
-                    width: 20,
-                    height: 20,
+                    width: 24.0,
+                    height: 24.0,
                     decoration: const BoxDecoration(
                       color: Colors.red,
                       shape: BoxShape.circle,

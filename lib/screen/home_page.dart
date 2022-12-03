@@ -1,5 +1,6 @@
 import 'package:ecommerce_app/cubit/home/home_cubit.dart';
 import 'package:ecommerce_app/cubit/home/home_state.dart';
+import 'package:ecommerce_app/screen/notification_screen.dart';
 import 'package:ecommerce_app/screen/product_page.dart';
 
 import 'package:flutter/material.dart';
@@ -57,6 +58,11 @@ class HomePage extends StatelessWidget {
       // drawer: const MyDrawer(),
       body: BlocConsumer<HomeCubit, HomeState>(
         listener: (context, state) {
+          if (state is HomeNotification) {
+            builder(context) => const NotificationScreen();
+            final route = MaterialPageRoute(builder: builder);
+            Navigator.of(context).push(route);
+          }
           if (state is ProductDetail) {
             builder(context) => ProductPage(product: state.product);
             final route = MaterialPageRoute(builder: builder);
@@ -67,6 +73,7 @@ class HomePage extends StatelessWidget {
           if (state is InitialState) {
             homeCubit.mainTab();
             homeCubit.getFavoriteProduct();
+            // notificationCubit.getNotification();
             return buildLoading();
           }
           if (state is MainState) {

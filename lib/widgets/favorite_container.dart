@@ -125,7 +125,6 @@ class _FavoriteProductContainerState extends State<FavoriteProductContainer> {
                                         ),
                                       const Spacer(),
                                       Text('đã bán: ${product.sold}'),
-                                     
                                     ],
                                   ),
                                 ],

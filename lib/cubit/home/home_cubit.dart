@@ -260,7 +260,11 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   Future<bool> updateInfo(UserModel user) async {
-    return await userService.updateUserInfo(user);
+    final isSuccess = await userService.updateUserInfo(user);
+    if (isSuccess) {
+      this.user = user;
+    }
+    return isSuccess;
   }
 
   void onAllProduct() async {
@@ -283,5 +287,26 @@ class HomeCubit extends Cubit<HomeState> {
     int accountTab = 4;
     navIndex = accountTab;
     emit(AccountState(user));
+  }
+
+  void toNotificationScreen() {
+    final oldState = state;
+    emit(HomeNotification());
+    emit(oldState);
+  }
+
+  toChangePasswordScreen() {
+    final oldState = state;
+    emit(HomeChangePassword());
+    emit(oldState);
+  }
+
+  Future<void> refreshAccount() async {
+    emit(LoadingState());
+    user = null;
+    final spref = await SharedPreferences.getInstance();
+    final uid = spref.getString('uid');
+    user = await getUserInfo(uid!);
+    emit(AccountState(user!));
   }
 }
