@@ -17,8 +17,8 @@ enum TypeClick {
   chooseInCart,
 }
 
-class ProductPage extends StatefulWidget {
-  const ProductPage({
+class ProductScreen extends StatefulWidget {
+  const ProductScreen({
     Key? key,
     required this.product,
     this.isAdmin = false,
@@ -26,10 +26,10 @@ class ProductPage extends StatefulWidget {
   final ProductModel product;
   final bool isAdmin;
   @override
-  State<ProductPage> createState() => _ProductPageState();
+  State<ProductScreen> createState() => _ProductScreenState();
 }
 
-class _ProductPageState extends State<ProductPage> {
+class _ProductScreenState extends State<ProductScreen> {
   bool loadingBottomSheet = false;
   int selectColor = 0;
   int selectMemory = 0;
@@ -78,7 +78,7 @@ class _ProductPageState extends State<ProductPage> {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     final homeCubit = context.read<HomeCubit>();
     int orderTabIndex = 2;
-    final route = MaterialPageRoute(builder: (_) => const HomePage());
+    final route = MaterialPageRoute(builder: (_) => const HomeScreen());
     Navigator.of(context).pushAndRemoveUntil(route, (_) => false);
     homeCubit.onNavTap(orderTabIndex);
   }

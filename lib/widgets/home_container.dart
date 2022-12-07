@@ -1,11 +1,10 @@
 import 'package:ecommerce_app/cubit/home/home_cubit.dart';
 import 'package:ecommerce_app/cubit/home/home_state.dart';
-import 'package:ecommerce_app/cubit/notification/notification_cubit.dart';
 import 'package:ecommerce_app/model/banner_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../screen/all_products_page.dart';
+import '../screen/all_products_screen.dart';
 import '../widgets/products_catalog.dart';
 import '../model/product_model.dart';
 import 'banner.dart';
@@ -40,7 +39,6 @@ class _HomeContainerState extends State<HomeContainer> {
 
   @override
   Widget build(BuildContext context) {
-    print(context.read<NotificationCubit>().state.runtimeType);
     var column = Column(
       // mainAxisSize: MainAxisSize.min,
       children: [
@@ -57,7 +55,7 @@ class _HomeContainerState extends State<HomeContainer> {
           onPress: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                  builder: (_) => AllProductsPage(products: widget.products)),
+                  builder: (_) => AllProductsScreen(products: widget.products)),
             );
           },
         ),

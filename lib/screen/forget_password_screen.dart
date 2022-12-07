@@ -3,14 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../cubit/forget_password/forget_password_cubit.dart';
 
-class ForgetPasswordPage extends StatefulWidget {
-  const ForgetPasswordPage({Key? key}) : super(key: key);
+class ForgetPasswordScreen extends StatefulWidget {
+  const ForgetPasswordScreen({Key? key}) : super(key: key);
 
   @override
-  State<ForgetPasswordPage> createState() => _ForgetPasswordPageState();
+  State<ForgetPasswordScreen> createState() => _ForgetPasswordScreenState();
 }
 
-class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
+class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
   late TextEditingController controller;
   late TextEditingController passController;
 

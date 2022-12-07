@@ -9,16 +9,16 @@ import 'package:ecommerce_app/utils/price_format.dart';
 
 import '../widgets/cart_list_tile.dart';
 
-class CartPage extends StatefulWidget {
-  const CartPage({
+class CartScreen extends StatefulWidget {
+  const CartScreen({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<CartPage> createState() => _CartPageState();
+  State<CartScreen> createState() => _CartScreenState();
 }
 
-class _CartPageState extends State<CartPage> {
+class _CartScreenState extends State<CartScreen> {
   // bool loadingBottomSheet = false;
   // int selectColor = 0;
   // int selectMemory = 0;
@@ -71,7 +71,7 @@ class _CartPageState extends State<CartPage> {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     final homeCubit = context.read<HomeCubit>();
     int orderTabIndex = 2;
-    final route = MaterialPageRoute(builder: (_) => const HomePage());
+    final route = MaterialPageRoute(builder: (_) => const HomeScreen());
     Navigator.of(context).pushAndRemoveUntil(route, (_) => false);
     homeCubit.onNavTap(orderTabIndex);
   }
@@ -120,22 +120,32 @@ class _CartPageState extends State<CartPage> {
           if (state is CartLoaded) {
             if (state.items.isEmpty) {
               return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Icon(
-                      Icons.add_shopping_cart_rounded,
-                      color: Colors.red,
-                    ),
-                    SizedBox(height: 10),
-                    Text(
-                      'Bạn chưa có sản phẩm nào trong vỏ hàng',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.grey,
+                child: RefreshIndicator(
+                  onRefresh: () => context.read<CartCubit>().refresh(),
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      ListView(),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          Icon(
+                            Icons.add_shopping_cart_rounded,
+                            color: Colors.red,
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            'Bạn chưa có sản phẩm nào trong vỏ hàng',
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               );
             }
@@ -229,7 +239,7 @@ class _CartPageState extends State<CartPage> {
                                         .hideCurrentSnackBar();
                                     Navigator.of(context).pushAndRemoveUntil(
                                       MaterialPageRoute(
-                                        builder: (_) => const HomePage(),
+                                        builder: (_) => const HomeScreen(),
                                       ),
                                       (_) => false,
                                     );

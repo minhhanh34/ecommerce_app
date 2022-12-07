@@ -3,9 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../cubit/home/home_cubit.dart';
 import '../cubit/home/home_state.dart';
-import '../screen/cart_page.dart';
-import '../screen/sign_in_page.dart';
+import '../screen/cart_screen.dart';
+import '../screen/sign_in_screen.dart';
 import 'drawer_list_tile.dart';
+
 class MyDrawer extends StatelessWidget {
   const MyDrawer({
     Key? key,
@@ -17,13 +18,13 @@ class MyDrawer extends StatelessWidget {
       listener: (context, state) {
         if (state is LogoutState) {
           Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => const SignInPage()),
+            MaterialPageRoute(builder: (context) => const SignInScreen()),
             (route) => false,
           );
         }
         if (state is CheckCartState) {
           Navigator.of(context).push(
-            MaterialPageRoute(builder: (_) => const CartPage()),
+            MaterialPageRoute(builder: (_) => const CartScreen()),
           );
         }
       },
@@ -75,7 +76,7 @@ class MyDrawer extends StatelessWidget {
               ontap: () async {
                 Navigator.of(context).pop();
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const CartPage()),
+                  MaterialPageRoute(builder: (_) => const CartScreen()),
                 );
                 // homeCubit.onCartTab();
               },

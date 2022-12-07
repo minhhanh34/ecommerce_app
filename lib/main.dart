@@ -97,12 +97,12 @@ class EcommerceApp extends StatelessWidget {
         home: Builder(
           builder: (context) {
             if (uid == null) {
-              return const SignInPage();
+              return const SignInScreen();
             }
             if (uid == 'admin') {
               return const AdminScreen();
             }
-            return const HomePage();
+            return const HomeScreen();
           },
         ),
       ),

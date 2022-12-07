@@ -1,5 +1,5 @@
 import 'package:ecommerce_app/cubit/cart/cart_cubit.dart';
-import 'package:ecommerce_app/screen/cart_page.dart';
+import 'package:ecommerce_app/screen/cart_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,7 +20,7 @@ class _CartIconState extends State<CartIcon> {
       onTap: () async {
         Navigator.of(context).push(
           CupertinoPageRoute(
-            builder: (context) => const CartPage(),
+            builder: (context) => const CartScreen(),
           ),
         );
       },

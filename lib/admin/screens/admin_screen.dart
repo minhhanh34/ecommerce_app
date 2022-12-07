@@ -1,8 +1,8 @@
 import 'package:ecommerce_app/admin/screens/add_product_screen.dart';
 import 'package:ecommerce_app/admin/screens/orders_screen.dart';
 import 'package:ecommerce_app/cubit/admin/admin_cubit.dart';
-import 'package:ecommerce_app/screen/product_page.dart';
-import 'package:ecommerce_app/screen/sign_in_page.dart';
+import 'package:ecommerce_app/screen/product_screen.dart';
+import 'package:ecommerce_app/screen/sign_in_screen.dart';
 import 'package:ecommerce_app/utils/alert_dialog.dart';
 import 'package:ecommerce_app/utils/price_format.dart';
 import 'package:flutter/cupertino.dart';
@@ -43,7 +43,7 @@ class AdminScreen extends StatelessWidget {
           Navigator.of(context).push(route);
         }
         if (state is AdminLogout) {
-          final route = MaterialPageRoute(builder: (_) => const SignInPage());
+          final route = MaterialPageRoute(builder: (_) => const SignInScreen());
           navigator.pushAndRemoveUntil(route, (route) => false);
         }
         if (state is AdminAllProducts) {
@@ -62,7 +62,7 @@ class AdminScreen extends StatelessWidget {
           );
         }
         if (state is AdminDetailProduct) {
-          builder(context) => ProductPage(
+          builder(context) => ProductScreen(
                 product: state.product,
                 isAdmin: true,
               );

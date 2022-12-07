@@ -1,6 +1,6 @@
 import 'package:ecommerce_app/model/cart_item.dart';
 import 'package:ecommerce_app/model/product_model.dart';
-import 'package:ecommerce_app/screen/product_page.dart';
+import 'package:ecommerce_app/screen/product_screen.dart';
 import 'package:ecommerce_app/utils/alert_dialog.dart';
 import 'package:ecommerce_app/utils/generator.dart';
 import 'package:ecommerce_app/utils/libs.dart';
@@ -77,7 +77,7 @@ class _FavoriteProductContainerState extends State<FavoriteProductContainer> {
                         onTap: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (_) => ProductPage(product: product),
+                              builder: (_) => ProductScreen(product: product),
                             ),
                           );
                         },

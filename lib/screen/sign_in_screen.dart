@@ -1,9 +1,9 @@
 import 'package:ecommerce_app/admin/screens/admin_screen.dart';
 import 'package:ecommerce_app/cubit/admin/admin_cubit.dart';
 import 'package:ecommerce_app/cubit/home/home_cubit.dart';
-import 'package:ecommerce_app/screen/forget_password_page.dart';
-import 'package:ecommerce_app/screen/home_page.dart';
-import 'package:ecommerce_app/screen/sign_up_page.dart';
+import 'package:ecommerce_app/screen/forget_password_screen.dart';
+import 'package:ecommerce_app/screen/home_screen.dart';
+import 'package:ecommerce_app/screen/sign_up_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -11,14 +11,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../cubit/signin/signin_cubit.dart';
 
-class SignInPage extends StatefulWidget {
-  const SignInPage({Key? key}) : super(key: key);
+class SignInScreen extends StatefulWidget {
+  const SignInScreen({Key? key}) : super(key: key);
 
   @override
-  State<SignInPage> createState() => _SignInPageState();
+  State<SignInScreen> createState() => _SignInScreenState();
 }
 
-class _SignInPageState extends State<SignInPage> {
+class _SignInScreenState extends State<SignInScreen> {
   late GlobalKey<FormState> formKey;
   late TextEditingController phoneController;
   late TextEditingController passController;
@@ -46,7 +46,7 @@ class _SignInPageState extends State<SignInPage> {
       listener: (context, state) {
         if (state is SignIned) {
           Navigator.of(context).pushReplacement(
-            CupertinoPageRoute(builder: (_) => const HomePage()),
+            CupertinoPageRoute(builder: (_) => const HomeScreen()),
           );
         }
         if (state is SignInValidator) {
@@ -69,12 +69,12 @@ class _SignInPageState extends State<SignInPage> {
         if (state is SignUp) {
           FocusScope.of(context).unfocus();
           Navigator.of(context).push(
-            CupertinoPageRoute(builder: (_) => const SignUpPage()),
+            CupertinoPageRoute(builder: (_) => const SignUpScreen()),
           );
         }
         if (state is SignInForgetPassword) {
           Navigator.of(context).push(
-            CupertinoPageRoute(builder: (_) => const ForgetPasswordPage()),
+            CupertinoPageRoute(builder: (_) => const ForgetPasswordScreen()),
           );
         }
       },

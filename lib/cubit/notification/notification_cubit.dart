@@ -21,7 +21,6 @@ class NotificationCubit extends Cubit<NotificationState> {
     // }
     emit(NotificationLoading());
     notifications = await service.getNotification();
-
     emit(AllNotification(notifications!));
   }
 

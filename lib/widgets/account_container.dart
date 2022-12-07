@@ -3,7 +3,7 @@ import 'package:ecommerce_app/cubit/home/home_cubit.dart';
 import 'package:ecommerce_app/cubit/home/home_state.dart';
 import 'package:ecommerce_app/model/user_model.dart';
 import 'package:ecommerce_app/screen/info_edition_screen.dart';
-import 'package:ecommerce_app/screen/sign_in_page.dart';
+import 'package:ecommerce_app/screen/sign_in_screen.dart';
 import 'package:ecommerce_app/utils/alert_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +35,7 @@ class _AccountContainerState extends State<AccountContainer> {
       listener: (context, state) {
         if (state is LogoutState) {
           Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (_) => const SignInPage()),
+            MaterialPageRoute(builder: (_) => const SignInScreen()),
             (route) => false,
           );
         }

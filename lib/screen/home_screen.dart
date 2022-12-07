@@ -1,9 +1,8 @@
 import 'package:ecommerce_app/cubit/home/home_state.dart';
 import 'package:ecommerce_app/cubit/notification/notification_cubit.dart';
 import 'package:ecommerce_app/screen/notification_screen.dart';
-import 'package:ecommerce_app/screen/product_page.dart';
+import 'package:ecommerce_app/screen/product_screen.dart';
 import 'package:ecommerce_app/utils/libs.dart';
-
 
 import '../model/product_model.dart';
 import '../widgets/account_container.dart';
@@ -16,8 +15,8 @@ import '../widgets/notify_icon.dart';
 import '../widgets/order_container.dart';
 import '../widgets/search_screen.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({Key? key}) : super(key: key);
 
   Widget _buildSearchIconButton(
     BuildContext context,
@@ -65,7 +64,7 @@ class HomePage extends StatelessWidget {
             Navigator.of(context).push(route);
           }
           if (state is ProductDetail) {
-            builder(context) => ProductPage(product: state.product);
+            builder(context) => ProductScreen(product: state.product);
             final route = MaterialPageRoute(builder: builder);
             Navigator.of(context).push(route);
           }

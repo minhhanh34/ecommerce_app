@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import '../widgets/product_sliver_grid_overview.dart';
 import '../widgets/search_screen.dart';
 
-class AllProductsPage extends StatelessWidget {
-  const AllProductsPage({Key? key, required this.products}) : super(key: key);
+class AllProductsScreen extends StatelessWidget {
+  const AllProductsScreen({Key? key, required this.products}) : super(key: key);
   final List<ProductModel> products;
   @override
   Widget build(BuildContext context) {

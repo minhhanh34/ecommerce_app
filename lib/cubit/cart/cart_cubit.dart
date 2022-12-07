@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:ecommerce_app/model/cart_item.dart';
 import 'package:ecommerce_app/model/product_model.dart';
@@ -18,21 +17,20 @@ class CartCubit extends Cubit<CartState> {
   List<CartItem>? cartItems;
 
   Future<void> getCart() async {
-    if (cartItems == null) {
+    // if (cartItems == null) {
       emit(CartLoading());
-      try {
+      // try {
         final pfres = await SharedPreferences.getInstance();
         final uid = pfres.getString('uid');
         cartItems = await service.getCart(userId: uid!);
         emit(CartLoaded(items: cartItems!));
-        return;
-      } catch (error) {
-        log('error', error: error);
-      }
-      emit(CartInitial());
-    } else {
-      emit(CartLoaded(items: cartItems!));
-    }
+      // } catch (error) {
+        // log('error', error: error);
+      // }
+      // emit(CartInitial());
+    // } else {
+      // emit(CartLoaded(items: cartItems!));
+    // }
   }
 
   void onItemTap(ProductModel product) {

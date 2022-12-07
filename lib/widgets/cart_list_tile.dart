@@ -7,8 +7,8 @@ import '../cubit/cart/cart_cubit.dart';
 import '../cubit/home/home_cubit.dart';
 import '../model/cart_item.dart';
 import '../model/product_model.dart';
-import '../screen/home_page.dart';
-import '../screen/product_page.dart';
+import '../screen/home_screen.dart';
+import '../screen/product_screen.dart';
 import '../utils/price_format.dart';
 
 class CartListTile extends StatefulWidget {
@@ -70,7 +70,7 @@ class _CartListTileState extends State<CartListTile> {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     final homeCubit = context.read<HomeCubit>();
     int orderTabIndex = 2;
-    final route = MaterialPageRoute(builder: (_) => const HomePage());
+    final route = MaterialPageRoute(builder: (_) => const HomeScreen());
     Navigator.of(context).pushAndRemoveUntil(route, (_) => false);
     homeCubit.onNavTap(orderTabIndex);
   }
@@ -143,7 +143,7 @@ class _CartListTileState extends State<CartListTile> {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                               builder: (_) =>
-                                  ProductPage(product: widget.item.product!)),
+                                  ProductScreen(product: widget.item.product!)),
                         );
                       },
                       child: SizedBox(
