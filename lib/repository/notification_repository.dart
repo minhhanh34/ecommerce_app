@@ -49,7 +49,7 @@ class NotificationRepository implements Repository<NotificationItem> {
   @override
   Future<List<NotificationItem>> list() async {
     final ref = await getNotificationReference();
-    final docs = await ref.get();
+    final docs = await ref.orderBy('time', descending: true).get();
     return docs.docs.map((doc) {
       final json = doc.data() as Map<String, dynamic>;
       json['id'] = doc.id;

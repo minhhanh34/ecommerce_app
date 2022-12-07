@@ -25,6 +25,7 @@ class CartCubit extends Cubit<CartState> {
         final uid = pfres.getString('uid');
         cartItems = await service.getCart(userId: uid!);
         emit(CartLoaded(items: cartItems!));
+        return;
       } catch (error) {
         log('error', error: error);
       }

@@ -22,7 +22,7 @@ class ProductsCatalog extends StatelessWidget {
             onTap: () =>
                 context.read<HomeCubit>().productsByBrand(brands[index]),
             child: Card(
-              color: Theme.of(context).secondaryHeaderColor,
+              color: Colors.white,
               elevation: 4.0,
               child: Center(
                 child: Padding(

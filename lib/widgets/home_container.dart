@@ -1,5 +1,6 @@
 import 'package:ecommerce_app/cubit/home/home_cubit.dart';
 import 'package:ecommerce_app/cubit/home/home_state.dart';
+import 'package:ecommerce_app/cubit/notification/notification_cubit.dart';
 import 'package:ecommerce_app/model/banner_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,7 +10,7 @@ import '../widgets/products_catalog.dart';
 import '../model/product_model.dart';
 import 'banner.dart';
 import 'header_row.dart';
-import 'product_by_brand.dart';
+import '../screen/product_by_brand.dart';
 import 'product_sliver_grid_overview.dart';
 
 class HomeContainer extends StatefulWidget {
@@ -39,6 +40,7 @@ class _HomeContainerState extends State<HomeContainer> {
 
   @override
   Widget build(BuildContext context) {
+    print(context.read<NotificationCubit>().state.runtimeType);
     var column = Column(
       // mainAxisSize: MainAxisSize.min,
       children: [
@@ -79,16 +81,19 @@ class _HomeContainerState extends State<HomeContainer> {
           ));
         }
       },
-      child: RefreshIndicator(
-        onRefresh: () => context.read<HomeCubit>().mainRefresh(),
-        child: CustomScrollView(
-          controller: controller,
-          slivers: [
-            SliverList(
-              delegate: SliverChildListDelegate([column]),
-            ),
-            ProductSliverGridOverview(products: widget.products),
-          ],
+      child: Container(
+        color: Colors.blue.shade100,
+        child: RefreshIndicator(
+          onRefresh: () => context.read<HomeCubit>().mainRefresh(),
+          child: CustomScrollView(
+            controller: controller,
+            slivers: [
+              SliverList(
+                delegate: SliverChildListDelegate([column]),
+              ),
+              ProductSliverGridOverview(products: widget.products),
+            ],
+          ),
         ),
       ),
     );

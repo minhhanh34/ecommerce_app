@@ -1,10 +1,9 @@
-import 'package:ecommerce_app/cubit/home/home_cubit.dart';
 import 'package:ecommerce_app/cubit/home/home_state.dart';
+import 'package:ecommerce_app/cubit/notification/notification_cubit.dart';
 import 'package:ecommerce_app/screen/notification_screen.dart';
 import 'package:ecommerce_app/screen/product_page.dart';
+import 'package:ecommerce_app/utils/libs.dart';
 
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../model/product_model.dart';
 import '../widgets/account_container.dart';
@@ -45,6 +44,8 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final homeCubit = context.read<HomeCubit>();
     List<ProductModel> products = homeCubit.products ?? [];
+    context.read<NotificationCubit>().onNotification();
+    context.read<CartCubit>().getCart();
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Shop'),
@@ -73,7 +74,7 @@ class HomePage extends StatelessWidget {
           if (state is InitialState) {
             homeCubit.mainTab();
             homeCubit.getFavoriteProduct();
-            // notificationCubit.getNotification();
+            // homeCubit.getNotification();
             return buildLoading();
           }
           if (state is MainState) {

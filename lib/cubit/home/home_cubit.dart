@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:ecommerce_app/cubit/notification/notification_cubit.dart';
 import 'package:ecommerce_app/model/banner_model.dart';
 import 'package:ecommerce_app/model/order_model.dart';
 import 'package:ecommerce_app/model/product_model.dart';
@@ -18,12 +19,14 @@ class HomeCubit extends Cubit<HomeState> {
     required this.cartCubit,
     required this.orderService,
     required this.userService,
+    required this.notificationCubit,
   }) : super(InitialState());
   HomeService homeService;
   FavoriteService favoriteService;
   CartCubit cartCubit;
   OrderService orderService;
   UserService userService;
+  NotificationCubit notificationCubit;
 
   int navIndex = 0;
 
@@ -54,6 +57,10 @@ class HomeCubit extends Cubit<HomeState> {
   // void onAddProduct() {
   //   emit(HomeProductAddition());
   // }
+
+  Future<void> getNotification() async {
+    notificationCubit.onNotification();
+  }
 
   Future<void> favoriteRefresh() async {
     favoriteProducts = null;
@@ -117,6 +124,7 @@ class HomeCubit extends Cubit<HomeState> {
       banners = await homeService.getBanners();
       products = await homeService.getAllProducts();
       await cartCubit.getCart();
+      await notificationCubit.onNotification();
       if (navIndex == 0) {
         emit(
           MainState(
@@ -193,20 +201,17 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   Future<void> logout() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.remove('uid');
-      banners = null;
-      products = null;
-      favoriteProducts = null;
-      orders = null;
-      historyOrders = null;
-      user = null;
-      cartCubit.cartItems = null;
-      navIndex = 0;
-    } catch (e) {
-      log('error', error: e);
-    }
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('uid');
+    banners = null;
+    products = null;
+    favoriteProducts = null;
+    orders = null;
+    historyOrders = null;
+    user = null;
+    cartCubit.cartItems = null;
+    navIndex = 0;
+    notificationCubit.dispose();
     cartCubit.emit(CartInitial());
     emit(LogoutState());
     emit(InitialState());

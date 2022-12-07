@@ -13,6 +13,7 @@ class ProductsByBrandScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.blue.shade100,
       appBar: AppBar(
         title: Text(brand),
         elevation: 0,

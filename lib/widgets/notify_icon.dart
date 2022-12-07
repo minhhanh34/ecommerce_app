@@ -30,6 +30,7 @@ class _NotifyIconState extends State<NotifyIcon> {
             builder: (context, state) {
               if (state is NotificationInitial) {
                 notificationCubit.onNotification();
+                return const SizedBox();
               }
               if (state is NotificationLoading) {
                 return Container(
@@ -47,11 +48,11 @@ class _NotifyIconState extends State<NotifyIcon> {
                 );
               }
               if (state is AllNotification) {
-                int newNotification = state.notifications
+                final newNotification = state.notifications
                     .where((element) => element.seen == false)
-                    .length;
+                    .toList();
                 return Visibility(
-                  visible: newNotification != 0,
+                  visible: newNotification.isNotEmpty,
                   child: Container(
                     constraints: const BoxConstraints(
                       maxHeight: 24.0,

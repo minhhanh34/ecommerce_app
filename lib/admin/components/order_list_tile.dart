@@ -83,6 +83,7 @@ class _OrderListTileState extends State<OrderListTile> {
                                   setState(() {
                                     widget.order.status = 'Chờ xác nhận';
                                   });
+                                  adminCubit.createNotification(newOrder);
                                 },
                                 child: const Text('Chờ xác nhận'),
                               ),
@@ -95,6 +96,7 @@ class _OrderListTileState extends State<OrderListTile> {
                                   setState(() {
                                     widget.order.status = 'Đang đóng gói';
                                   });
+                                  adminCubit.createNotification(newOrder);
                                 },
                                 child: const Text('Đang đóng gói'),
                               ),
@@ -107,6 +109,7 @@ class _OrderListTileState extends State<OrderListTile> {
                                   setState(() {
                                     widget.order.status = 'Đang vận chuyển';
                                   });
+                                  adminCubit.createNotification(newOrder);
                                 },
                                 child: const Text('Đang vận chuyển'),
                               ),
@@ -119,6 +122,7 @@ class _OrderListTileState extends State<OrderListTile> {
                                   setState(() {
                                     widget.order.status = 'Đã giao hàng';
                                   });
+                                  adminCubit.createNotification(newOrder);
                                 },
                                 child: const Text('Đã giao hàng'),
                               ),

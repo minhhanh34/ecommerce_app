@@ -14,9 +14,14 @@ class NotificationCubit extends Cubit<NotificationState> {
     notifications = await service.getNotification();
   }
 
-  void onNotification() async {
+  Future<void> onNotification() async {
+    // if (notifications != null) {
+    //   emit(AllNotification(notifications!));
+    //   return;
+    // }
     emit(NotificationLoading());
     notifications = await service.getNotification();
+
     emit(AllNotification(notifications!));
   }
 
@@ -36,5 +41,10 @@ class NotificationCubit extends Cubit<NotificationState> {
     }
     emit(AllNotification(notifications!));
     return true;
+  }
+
+  void dispose() {
+    notifications = null;
+    emit(NotificationInitial());
   }
 }

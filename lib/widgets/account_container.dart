@@ -4,6 +4,7 @@ import 'package:ecommerce_app/cubit/home/home_state.dart';
 import 'package:ecommerce_app/model/user_model.dart';
 import 'package:ecommerce_app/screen/info_edition_screen.dart';
 import 'package:ecommerce_app/screen/sign_in_page.dart';
+import 'package:ecommerce_app/utils/alert_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -159,7 +160,20 @@ class _AccountContainerState extends State<AccountContainer> {
                   Card(
                     margin: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: ListTile(
-                      onTap: context.read<HomeCubit>().logout,
+                      onTap: () async {
+                        bool confirm = await showDialog(
+                          context: context,
+                          builder: (context) {
+                            return const CustomAlertDialog(
+                              title: 'Xác nhận',
+                              content: 'Bạn có chắc muốn đăng xuất?',
+                            );
+                          },
+                        );
+                        if (!confirm) return;
+                        if (!mounted) return;
+                        homeCubit.logout();
+                      },
                       leading: const Icon(Icons.logout, color: Colors.red),
                       title: const Text('Đăng xuất'),
                     ),

@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ecommerce_app/model/notification.dart';
 import 'package:ecommerce_app/model/order_model.dart';
 import 'package:ecommerce_app/model/product_model.dart';
 import 'package:ecommerce_app/services/order_service.dart';
@@ -145,5 +147,20 @@ class AdminCubit extends Cubit<AdminState> {
 
   Future<bool> deleteProduct(ProductModel product) async {
     return await productService.deleteProduct(product);
+  }
+
+  Future<void> createNotification(OrderModel order) async {
+    final userRef = FirebaseFirestore.instance.collection('user');
+    final userSnapshot = await userRef.where('uid', isEqualTo: order.uid).get();
+    final userID = userSnapshot.docs.first.id;
+    await userRef.doc(userID).collection('notification').add(
+          NotificationItem(
+            title: 'Cập nhật đơn hàng.',
+            message:
+                'Đơn hàng ${order.id} đang trong trạng thái ${order.status}.',
+            seen: false,
+            time: DateTime.now(),
+          ).toJson(),
+        );
   }
 }

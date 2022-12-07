@@ -16,10 +16,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue.shade400,
-        title: const Text('Thong bao'),
+        title: const Text('Thông báo'),
         elevation: 0,
       ),
-      backgroundColor: Colors.grey.shade200,
+      backgroundColor: Colors.blue.shade100,
       body: SafeArea(
         child: BlocBuilder<NotificationCubit, NotificationState>(
           builder: (context, state) {
@@ -34,10 +34,12 @@ class _NotificationScreenState extends State<NotificationScreen> {
             if (state is AllNotification) {
               return RefreshIndicator(
                 onRefresh: () => context.read<NotificationCubit>().refresh(),
-                child: ListView.builder(
+                child: ListView.separated(
+                  separatorBuilder: (context, index) => const SizedBox(height: 16.0),
                   itemCount: state.notifications.length,
                   itemBuilder: (context, index) {
                     return ListTile(
+                      minVerticalPadding: 16.0,
                       onTap: () => context.read<NotificationCubit>().update(
                             state.notifications[index].id!,
                             state.notifications[index].copyWith(
@@ -72,7 +74,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       title: Text(state.notifications[index].title ?? ''),
                       subtitle: Text(state.notifications[index].message ?? ''),
                       trailing: Text(
-                        DateFormat('dd/MM - hh:mm')
+                        DateFormat('dd/MM\n\nhh:mm')
                             .format(state.notifications[index].time!),
                       ),
                     );

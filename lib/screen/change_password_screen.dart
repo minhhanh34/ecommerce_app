@@ -24,7 +24,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     return Scaffold(
       backgroundColor: Colors.blue.shade100,
       appBar: AppBar(
-        title: const Text('doi mat khau'),
+        title: const Text('Đổi mật khẩu'),
         elevation: 0,
       ),
       body: Form(
@@ -40,10 +40,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   obscureText: true,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Vui long nhap mat khau cu';
+                      return 'Vui lòng nhập mật khẩu cũ';
                     }
                     if (value.length < 8) {
-                      return 'vui long nhap du 8 ky tu';
+                      return 'vui lòng nhập đủ 8 ký tự';
                     }
                     return null;
                   },
@@ -51,7 +51,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
-                    labelText: 'mat khau cu',
+                    labelText: 'Mật khẩu cũ',
                     filled: true,
                     fillColor: Colors.white,
                   ),
@@ -62,10 +62,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   obscureText: true,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Vui long nhap mat khau moi';
+                      return 'Vui lòng nhập mật khẩu mới';
                     }
                     if (value.length < 8) {
-                      return 'vui long nhap du 8 ky tu';
+                      return 'Vui lòng nhập đủ 8 ký tự';
                     }
                     return null;
                   },
@@ -73,7 +73,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
-                    labelText: 'mat khau moi',
+                    labelText: 'Mật khẩu mới',
                     filled: true,
                     fillColor: Colors.white,
                   ),
@@ -84,13 +84,13 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   obscureText: true,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Vui long nhap lai mat khau moi';
+                      return 'Vui lòng nhập lại mật khẩu mới';
                     }
                     if (value.length < 8) {
-                      return 'vui long nhap du 8 ky tu';
+                      return 'Vui lòng nhập đủ 8 ký tự';
                     }
                     if (newPassword != confirmPassword) {
-                      return 'mat khau chua chinh xac';
+                      return 'Mật khẩu chưa chính xác';
                     }
                     return null;
                   },
@@ -98,7 +98,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
-                    labelText: 'xac nhan mat khau cu',
+                    labelText: 'Xác nhận lại mật khẩu cũ',
                     filled: true,
                     fillColor: Colors.white,
                   ),
@@ -107,7 +107,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 Visibility(
                   visible: hasError,
                   child: const Text(
-                    'Thong tin khong chinh xac',
+                    'Thông tin không chính xác',
                     style: TextStyle(
                       color: Colors.red,
                       fontSize: 16.0,
@@ -140,7 +140,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                         barrierDismissible: false,
                         builder: (context) {
                           return const AlertDialog(
-                            title: Text('Dang xu li'),
+                            title: Text('Đang xử lí'),
                             content: SizedBox(
                               width: 120.0,
                               height: 120.0,
@@ -163,8 +163,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                           context: context,
                           builder: (context) {
                             return const CustomAlertDialog(
-                              title: 'Trang thai',
-                              content: 'Doi mat khau thanh cong!',
+                              title: 'Trạng thái',
+                              content: 'Đổi mật khẩu thành công!',
                               actions: ['Ok'],
                             );
                           },
@@ -179,8 +179,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                         context: context,
                         builder: (context) {
                           return const CustomAlertDialog(
-                            title: 'Trang thai',
-                            content: 'Doi mat khau thanh cong!',
+                            title: 'Trạng thái',
+                            content: 'Đổi mật khẩu không thành công!',
                             actions: ['Ok'],
                           );
                         },

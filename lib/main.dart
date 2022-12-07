@@ -39,6 +39,9 @@ class EcommerceApp extends StatelessWidget {
     final orderService = OrderServiceIml(orderRepository, productRepository);
     final homeService = HomeServiceIml();
     final userService = UserServiceIml(userRepository);
+    final notificationRepository = NotificationRepository();
+    final notificationService =
+        NotificationService(repository: notificationRepository);
     final favoriteService = FavoriteServiceIml(
       favoriteRepository,
       productRepository,
@@ -54,6 +57,7 @@ class EcommerceApp extends StatelessWidget {
     final signInCubit = SignInCubit(service: service);
     final signUpCubit = SignUpCubit(service: service);
     final forgetPasswordCubit = ForgetPasswordCubit();
+    final notificationCubit = NotificationCubit(notificationService);
     final adminCubit = AdminCubit(
       productService: productService,
       orderService: orderService,
@@ -64,11 +68,9 @@ class EcommerceApp extends StatelessWidget {
       cartCubit: cartCubit,
       orderService: orderService,
       userService: userService,
+      notificationCubit: notificationCubit,
     );
-    final notificationRepository = NotificationRepository();
-    final notificationService =
-        NotificationService(repository: notificationRepository);
-    final notificationCubit = NotificationCubit(notificationService);
+
     // notificationRepository.create(
     //   const NotificationItem(
     //     title: 'thong bao cua minh hanh',
