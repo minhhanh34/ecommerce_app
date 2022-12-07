@@ -471,7 +471,7 @@ class _ProductScreenState extends State<ProductScreen> {
                           builder(context) => CustomAlertDialog(
                                 title: 'Xác nhận',
                                 content:
-                                    'Cập nhật hết hàng cho ${widget.product.name}?',
+                                    '${widget.product.isOutOf ? "Mở bán lại" : "Ngừng kinh doanh"} ${widget.product.name}?',
                               );
                           bool confirm = await showDialog(
                             context: context,
@@ -512,8 +512,8 @@ class _ProductScreenState extends State<ProductScreen> {
                         },
                         child: Text(
                           widget.product.isOutOf
-                              ? 'Cập nhật có hàng'
-                              : 'Cập nhật hết hàng',
+                              ? 'Mở bán lại'
+                              : 'Ngừng kinh doanh',
                         ),
                       ),
                     ),
@@ -591,7 +591,7 @@ class _ProductScreenState extends State<ProductScreen> {
           ),
           ListTile(
             title: Text(
-              '${widget.product.name} ${widget.product.isOutOf ? "(hết hàng)" : ""}',
+              '${widget.product.name} ${widget.product.isOutOf ? "(ngừng kinh doanh)" : ""}',
               style: textTheme.bodyLarge!.copyWith(
                 fontSize: 24,
               ),
