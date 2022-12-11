@@ -39,7 +39,9 @@ class AdminCubit extends Cubit<AdminState> {
   }
 
   Future<ProductModel> addProduct(ProductModel product) async {
-    return await productService.addProduct(product);
+    final newProduct = await productService.addProduct(product);
+    products?.add(newProduct);
+    return newProduct;
   }
 
   void onRevenue() async {

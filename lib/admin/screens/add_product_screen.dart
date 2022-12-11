@@ -2,10 +2,9 @@ import 'dart:io';
 import 'package:ecommerce_app/model/product_model.dart';
 import 'package:ecommerce_app/utils/alert_dialog.dart';
 import 'package:ecommerce_app/utils/generator.dart';
+import 'package:ecommerce_app/utils/libs.dart';
 import 'package:ecommerce_app/utils/price_format.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -185,7 +184,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
       displayType: displayTypeController.text,
       fontCamera: frontCameraController.text,
       gpu: gpuController.text,
-      grade: 4,
+      grade: 0,
       memoryOption: memoryOptions,
       model: modelController.text,
       ram: ramController.text,
